@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Making your first Phaser 3 Game - Part 1</title>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+  <style type="text/css">
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script type="text/javascript">
+
+    var config = {
+      type: Phaser.AUTO,
+      width: 1600,
+      height: 800,
+      scene: {
+        preload: preload,
+        create: create,
+        update: update
+      }
+    };
+
+    var game = new Phaser.Game(config);
+    var hand = 5;
+    var deck = 30;
+    var width = 1600;
+    var height = 800;
+    var cards = [];
+    var hands = [];
+
+    function preload() {
+      this.load.image('card', '/object-cardgame/game/img/card.png');
+      this.load.image('card2', '/object-cardgame/game/img/card2.png');
+      this.load.image('ground', '/games/assets/platform.png');
+      this.load.image('star', '/games/assets/star.png');
+      this.load.image('bomb', '/games/assets/bomb.png');
+      this.load.spritesheet('dude', '/games/assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+
+      this.load.image('cardc01', '/object-cardgame/game/img/c01.png');
+      this.load.image('cardc02', '/object-cardgame/game/img/c02.png');
+      this.load.image('cardc03', '/object-cardgame/game/img/c03.png');
+      this.load.image('cardc04', '/object-cardgame/game/img/c04.png');
+      this.load.image('cardc05', '/object-cardgame/game/img/c05.png');
+      this.load.image('cardc06', '/object-cardgame/game/img/c06.png');
+      this.load.image('cardc07', '/object-cardgame/game/img/c07.png');
+      this.load.image('cardc08', '/object-cardgame/game/img/c08.png');
+      this.load.image('cardc09', '/object-cardgame/game/img/c09.png');
+      this.load.image('cardc10', '/object-cardgame/game/img/c10.png');
+      this.load.image('cardc11', '/object-cardgame/game/img/c11.png');
+      this.load.image('cardc12', '/object-cardgame/game/img/c12.png');
+      this.load.image('cardc13', '/object-cardgame/game/img/c13.png');
+      this.load.image('cardd01', '/object-cardgame/game/img/d01.png');
+      this.load.image('cardd02', '/object-cardgame/game/img/d02.png');
+      this.load.image('cardd03', '/object-cardgame/game/img/d03.png');
+      this.load.image('cardd04', '/object-cardgame/game/img/d04.png');
+      this.load.image('cardd05', '/object-cardgame/game/img/d05.png');
+      this.load.image('cardd06', '/object-cardgame/game/img/d06.png');
+      this.load.image('cardd07', '/object-cardgame/game/img/d07.png');
+      this.load.image('cardd08', '/object-cardgame/game/img/d08.png');
+      this.load.image('cardd09', '/object-cardgame/game/img/d09.png');
+      this.load.image('cardd10', '/object-cardgame/game/img/d10.png');
+      this.load.image('cardd11', '/object-cardgame/game/img/d11.png');
+      this.load.image('cardd12', '/object-cardgame/game/img/d12.png');
+      this.load.image('cardd13', '/object-cardgame/game/img/d13.png');
+      this.load.image('cardh01', '/object-cardgame/game/img/h01.png');
+      this.load.image('cardh02', '/object-cardgame/game/img/h02.png');
+      this.load.image('cardh03', '/object-cardgame/game/img/h03.png');
+      this.load.image('cardh04', '/object-cardgame/game/img/h04.png');
+      this.load.image('cardh05', '/object-cardgame/game/img/h05.png');
+      this.load.image('cardh06', '/object-cardgame/game/img/h06.png');
+      this.load.image('cardh07', '/object-cardgame/game/img/h07.png');
+      this.load.image('cardh08', '/object-cardgame/game/img/h08.png');
+      this.load.image('cardh09', '/object-cardgame/game/img/h09.png');
+      this.load.image('cardh10', '/object-cardgame/game/img/h10.png');
+      this.load.image('cardh11', '/object-cardgame/game/img/h11.png');
+      this.load.image('cardh12', '/object-cardgame/game/img/h12.png');
+      this.load.image('cardh13', '/object-cardgame/game/img/h13.png');
+      this.load.image('cards01', '/object-cardgame/game/img/s01.png');
+      this.load.image('cards02', '/object-cardgame/game/img/s02.png');
+      this.load.image('cards03', '/object-cardgame/game/img/s03.png');
+      this.load.image('cards04', '/object-cardgame/game/img/s04.png');
+      this.load.image('cards05', '/object-cardgame/game/img/s05.png');
+      this.load.image('cards06', '/object-cardgame/game/img/s06.png');
+      this.load.image('cards07', '/object-cardgame/game/img/s07.png');
+      this.load.image('cards08', '/object-cardgame/game/img/s08.png');
+      this.load.image('cards09', '/object-cardgame/game/img/s09.png');
+      this.load.image('cards10', '/object-cardgame/game/img/s10.png');
+      this.load.image('cards11', '/object-cardgame/game/img/s11.png');
+      this.load.image('cards12', '/object-cardgame/game/img/s12.png');
+      this.load.image('cards13', '/object-cardgame/game/img/s13.png');
+    }
+
+    function create() {
+
+      var x = 0;
+      
+      for (var i = 1; i <= 9; i++) {
+        cards[x] = 'cardc0'+i;
+        x++;
+        cards[x] = 'cardd0'+i;
+        x++;
+        cards[x] = 'cardh0'+i;
+        x++;
+        cards[x] = 'cards0'+i;
+        x++;
+      }//make deck1
+
+      for (var i = 10; i <=13; i++) {
+        cards[x] = 'cardc'+i;
+        x++;
+        cards[x] = 'cardd'+i;
+        x++;
+        cards[x] = 'cardh'+i;
+        x++;
+        cards[x] = 'cards'+i;
+        x++;
+      }//make deck2
+
+      for (i = 0; i < 53; i++) {
+        r = Math.floor(Math.random() * 13 * 4);
+        w = cards[i];
+        cards[i] = cards[r];
+        cards[r] = w;
+      }//shuffle
+
+      for (var i = 1; i <= hand; i++) {
+        hands[i]=cards[i];
+        card = this.add.image(-20 + i * 120, height / 8, hands[i]);
+        deck = this.add.image(700, height / 8 * 2, 'card');
+      }//p1 hand
+
+      text = this.add.text(680, 150, '山札');
+
+      for (var i = 1; i <= hand; i++) {
+        card = this.add.image(-20 + i * 120, height / 8 * 7, hands[i]);
+        deck = this.add.image(700, height / 8 * 6, 'card');
+      }//p2 hand
+
+      text = this.add.text(680, 550, '山札');
+
+      
+    }
+
+    function update() {
+      let text = this.add.text(600, 400, 'Draw').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let card = this.add.image(100, height / 8 * 7, cards[1]).setOrigin(0.5).setInteractive();
+
+      text.on('pointerdown', function (pointer) {
+        card3 = this.add.image(100 + hand * 120, height / 8 * 7, cards[hand]);
+        hand++;
+      }, this);//draw
+
+      card.on('pointerdown', function (pointer) {
+        card2 = this.add.image(340, height / 2, cards[1]);
+        hand--;
+        
+        for (var i = 1; i <= hand; i++) {
+        hands[i]=cards[i]
+        card = this.add.image(-20 + i * 120, height / 8, hands[i]);
+        deck = this.add.image(700, height / 8 * 2, 'card');
+      }//p1 hand
+      }, this);//一番左出す
+
+    }
+
+  </script>
+
+</body>
+
+</html>
