@@ -37,6 +37,9 @@
     var dug=hand;
     var p1=1;
     var p2=2;
+    var field_card = [];
+
+
 
     function preload() {
       this.load.image('card', '/object-cardgame/game/img/card.png');
@@ -141,6 +144,7 @@
 
       text = this.add.text(680, 150, '山札');
 
+      
       for (var i = 1; i <= hand; i++) {
         card = this.add.image(-20 + i * 120, height / 8 * 7, hands[i]);
         deck = this.add.image(700, height / 8 * 6, 'card');
@@ -148,12 +152,19 @@
 
       text = this.add.text(680, 550, '山札');
 
-      var json_hand = {};
+      var json_hand = {
+        "player":"yoko",
+        "field_card":[]
+      };//宣言
 
-      var json_hand = JSON.stringify(hands);
+      var json_hand = JSON.stringify(hands);//配列をJSONに htmlに表示
 
-      var p2_hand = JSON.parse(json_hand);
+      var fs = WScript.CreateObject("Scripting.FileSystemObject");
+      var file = fs.OpenTextFile("phaser.json", 2);
+      var str = file.ReadLine();
+      var p2_hand = JSON.parse(json_hand);//JSONを配列に
 
+      console.log(str);
       console.log(json_hand);
       console.log(p2_hand);
               
@@ -190,7 +201,8 @@
 
       card5.on('pointerdown', function (pointer) {
         if(hands[5]!=null){
-        card2 = this.add.image(340, height / 2, hands[5]);
+        field_card[5]=hands[5];
+        card2 = this.add.image(340, height / 2, field_card[5]);
         hand--;
         updatehands(hands,hand,5);
         }
@@ -198,7 +210,8 @@
 
       card4.on('pointerdown', function (pointer) {
         if(hands[4]!=null){
-        card2 = this.add.image(340, height / 2, hands[4]);
+        field_card[4]=hands[4];
+        card2 = this.add.image(340, height / 2, field_card[4]);
         hand--;
         updatehands(hands,hand,4);
         }
@@ -206,7 +219,8 @@
     
       card3.on('pointerdown', function (pointer) {
         if(hands[3]!=null){
-        card2 = this.add.image(340, height / 2, hands[3]);
+        field_card[3]=hands[3];
+        card2 = this.add.image(340, height / 2, field_card[3]);
         hand--;
         updatehands(hands,hand,3);
         }
@@ -214,7 +228,8 @@
 
       card2.on('pointerdown', function (pointer) {
         if(hands[2]!=null){
-        card2 = this.add.image(340, height / 2, hands[2]);
+        field_card[2]=hands[2];
+        card2 = this.add.image(340, height / 2,field_card[1]);
         hand--;
         updatehands(hands,hand,2);
         }
@@ -223,7 +238,8 @@
 
       card1.on('pointerdown', function (pointer) {
         if(hands[1]!=null){
-        card2 = this.add.image(340, height / 2, hands[1]);
+        field_card[1]=hands[1];
+        card2 = this.add.image(340, height / 2, field_card[1]);
         hand--;
         updatehands(hands,hand,1);
         }
