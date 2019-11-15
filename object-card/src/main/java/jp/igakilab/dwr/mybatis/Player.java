@@ -1,8 +1,17 @@
 package jp.igakilab.dwr.mybatis;
 
-public class Food {
+public class Player {
+
   String name;
   int no;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 
   public int getNo() {
     return no;
@@ -12,11 +21,4 @@ public class Food {
     this.no = no;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 }

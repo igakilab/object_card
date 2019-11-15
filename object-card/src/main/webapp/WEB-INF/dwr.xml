@@ -20,9 +20,9 @@
 
     <convert converter="exception" match="java.lang.Exception" />
 
-    <create creator="new" javascript="ProductPrinter">
+    <create creator="new" javascript="CardPrinter">
 
-      <param name="class" value="jp.igakilab.dwr.mybatis.ProductPrinter"/>
+      <param name="class" value="jp.igakilab.dwr.mybatis.CardPrinter"/>
 
     </create>
 

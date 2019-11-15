@@ -19,9 +19,9 @@
     },
     {
       "type": "java",
-      "name": "Debug (Launch)-ProductPrinter<multiple-dwr>",
+      "name": "Debug (Launch)-CardPrinter<multiple-dwr>",
       "request": "launch",
-      "mainClass": "jp.igakilab.dwr.mybatis.ProductPrinter",
+      "mainClass": "jp.igakilab.dwr.mybatis.CardPrinter",
       "projectName": "multiple-dwr"
     }
   ]
