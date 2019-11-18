@@ -12,17 +12,17 @@
     },
     {
       "type": "java",
-      "name": "Debug (Launch)-App<multiple-dwr>",
+      "name": "Debug (Launch)-App<object-card>",
       "request": "launch",
       "mainClass": "jp.igakilab.dwr.multiple.App",
-      "projectName": "multiple-dwr"
+      "projectName": "object-card"
     },
     {
       "type": "java",
-      "name": "Debug (Launch)-CardPrinter<multiple-dwr>",
+      "name": "Debug (Launch)-CardPrinter<object-card>",
       "request": "launch",
       "mainClass": "jp.igakilab.dwr.mybatis.CardPrinter",
-      "projectName": "multiple-dwr"
+      "projectName": "object-card"
     }
   ]
 }

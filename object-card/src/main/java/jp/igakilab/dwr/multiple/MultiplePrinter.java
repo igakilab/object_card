@@ -68,7 +68,7 @@ public class MultiplePrinter {
    *
    * と指定する
    *
-   * http://localhost:8080/multiple-dwr/dwr/jsonp/MultiplePrinter/helloWorld/ryokun/
+   * http://localhost:8080/object-card/dwr/jsonp/MultiplePrinter/helloWorld/ryokun/
    *
    *
    *

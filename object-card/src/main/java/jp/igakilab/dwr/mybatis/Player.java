@@ -1,7 +1,6 @@
 package jp.igakilab.dwr.mybatis;
 
 public class Player {
-
   String name;
   int no;
 
@@ -20,5 +19,4 @@ public class Player {
   public void setNo(int no) {
     this.no = no;
   }
-
 }
