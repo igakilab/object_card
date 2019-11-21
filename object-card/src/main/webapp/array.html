@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta http-equiv="content-language" content="ja">
@@ -9,6 +9,12 @@
   <script type="text/javascript" src="js/jquery-3.4.1.slim.min.js"></script>
   <script type="text/javascript" src="js/jquery.serialize.js"></script>
   <script type="text/javascript" src="dwr/interface/CardPrinter.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+  <style type="text/css">
+    body {
+      margin: 0;
+    }
+  </style>
   <script type="text/javascript">
     function update() {
       CardPrinter.execute({
@@ -63,6 +69,226 @@
   <p>
     <span id="error_message" class="error"></span>
   </p>
+
+  <script type="text/javascript">
+
+    var config = {
+      type: Phaser.AUTO,
+      width: 1600,
+      height: 800,
+      scene: {
+        preload: preload,
+        create: create,
+        update2: update2
+      }
+    };
+
+    var game = new Phaser.Game(config);
+    var hand = 5;
+    var deck = 30;
+    var width = 1600;
+    var height = 800;
+    var cards = [];
+    var hands = [];
+    var dug = hand;
+    var p1 = 1;
+    var p2 = 2;
+    var field_card = [];
+
+
+
+    function preload() {
+      this.load.image('card', 'img/card.png');
+      this.load.image('card2', 'img/card2.png');
+
+
+      this.load.image('cardc01', 'img/c01.png');
+      this.load.image('cardc02', 'img/c02.png');
+      this.load.image('cardc03', 'img/c03.png');
+      this.load.image('cardc04', 'img/c04.png');
+      this.load.image('cardc05', 'img/c05.png');
+      this.load.image('cardc06', 'img/c06.png');
+      this.load.image('cardc07', 'img/c07.png');
+      this.load.image('cardc08', 'img/c08.png');
+      this.load.image('cardc09', 'img/c09.png');
+      this.load.image('cardc10', 'img/c10.png');
+      this.load.image('cardc11', 'img/c11.png');
+      this.load.image('cardc12', 'img/c12.png');
+      this.load.image('cardc13', 'img/c13.png');
+      this.load.image('cardd01', 'img/d01.png');
+      this.load.image('cardd02', 'img/d02.png');
+      this.load.image('cardd03', 'img/d03.png');
+      this.load.image('cardd04', 'img/d04.png');
+      this.load.image('cardd05', 'img/d05.png');
+      this.load.image('cardd06', 'img/d06.png');
+      this.load.image('cardd07', 'img/d07.png');
+      this.load.image('cardd08', 'img/d08.png');
+      this.load.image('cardd09', 'img/d09.png');
+      this.load.image('cardd10', 'img/d10.png');
+      this.load.image('cardd11', 'img/d11.png');
+      this.load.image('cardd12', 'img/d12.png');
+      this.load.image('cardd13', 'img/d13.png');
+      this.load.image('cardh01', 'img/h01.png');
+      this.load.image('cardh02', 'img/h02.png');
+      this.load.image('cardh03', 'img/h03.png');
+      this.load.image('cardh04', 'img/h04.png');
+      this.load.image('cardh05', 'img/h05.png');
+      this.load.image('cardh06', 'img/h06.png');
+      this.load.image('cardh07', 'img/h07.png');
+      this.load.image('cardh08', 'img/h08.png');
+      this.load.image('cardh09', 'img/h09.png');
+      this.load.image('cardh10', 'img/h10.png');
+      this.load.image('cardh11', 'img/h11.png');
+      this.load.image('cardh12', 'img/h12.png');
+      this.load.image('cardh13', 'img/h13.png');
+      this.load.image('cards01', 'img/s01.png');
+      this.load.image('cards02', 'img/s02.png');
+      this.load.image('cards03', 'img/s03.png');
+      this.load.image('cards04', 'img/s04.png');
+      this.load.image('cards05', 'img/s05.png');
+      this.load.image('cards06', 'img/s06.png');
+      this.load.image('cards07', 'img/s07.png');
+      this.load.image('cards08', 'img/s08.png');
+      this.load.image('cards09', 'img/s09.png');
+      this.load.image('cards10', 'img/s10.png');
+      this.load.image('cards11', 'img/s11.png');
+      this.load.image('cards12', 'img/s12.png');
+      this.load.image('cards13', 'img/s13.png');
+    }
+
+    function create() {
+
+      var x = 0;
+
+      for (var i = 1; i <= 9; i++) {
+        cards[x] = 'cardc0' + i;
+        x++;
+        cards[x] = 'cardd0' + i;
+        x++;
+        cards[x] = 'cardh0' + i;
+        x++;
+        cards[x] = 'cards0' + i;
+        x++;
+      }//make deck1
+
+      for (var i = 10; i <= 13; i++) {
+        cards[x] = 'cardc' + i;
+        x++;
+        cards[x] = 'cardd' + i;
+        x++;
+        cards[x] = 'cardh' + i;
+        x++;
+        cards[x] = 'cards' + i;
+        x++;
+      }//make deck2
+
+      for (i = 0; i < 53; i++) {
+        r = Math.floor(Math.random() * 13 * 4);
+        w = cards[i];
+        cards[i] = cards[r];
+        cards[r] = w;
+      }//shuffle
+
+      for (var i = 1; i <= hand; i++) {
+        hands[i] = cards[i];
+        card = this.add.image(-20 + i * 120, height / 8, hands[i]);
+        deck = this.add.image(700, height / 8 * 2, 'card');
+      }//p2 hand top
+
+      text = this.add.text(680, 150, '山札');
+
+
+      for (var i = 1; i <= hand; i++) {
+        card = this.add.image(-20 + i * 120, height / 8 * 7, hands[i]);
+        deck = this.add.image(700, height / 8 * 6, 'card');
+      }//p1 hand under
+
+      text = this.add.text(680, 550, '山札');
+
+      var json_hand = {
+        "player": "yoko",
+        "field_card": []
+      };//宣言
+
+      //hand to DB
+
+    }
+
+    function update2() {
+      let text = this.add.text(600, 400, 'Draw').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let card1 = this.add.image(100, height / 8 * 7, hands[1]).setOrigin(0.5).setInteractive();
+      let card2 = this.add.image(220, height / 8 * 7, hands[2]).setOrigin(0.5).setInteractive();
+      let card3 = this.add.image(340, height / 8 * 7, hands[3]).setOrigin(0.5).setInteractive();
+      let card4 = this.add.image(460, height / 8 * 7, hands[4]).setOrigin(0.5).setInteractive();
+      let card5 = this.add.image(580, height / 8 * 7, hands[5]).setOrigin(0.5).setInteractive();
+
+
+      function updatehands(hands, hand, j) {
+        for (var i = j; i <= hand; i++) {
+          hands[i] = hands[i + 1];
+        }
+        hands[hand + 1] = null;
+      }//手札の順番ソート
+
+      text.on('pointerdown', function (pointer) {
+        if (hand < 5) {
+          hand++;
+          dug++;//掘り進めた数
+          card6 = this.add.image(-20 + hand * 120, height / 8 * 7, cards[dug]);
+          hands[hand] = cards[dug];
+        }
+      }, this);//draw　手札上限五枚で五枚以上はドローできない
+
+      card5.on('pointerdown', function (pointer) {
+        if (hands[5] != null) {
+          field_card[5] = hands[5];
+          card2 = this.add.image(340, height / 2, field_card[5]);
+          hand--;
+          updatehands(hands, hand, 5);
+        }
+      }, this);
+
+      card4.on('pointerdown', function (pointer) {
+        if (hands[4] != null) {
+          field_card[4] = hands[4];
+          card2 = this.add.image(340, height / 2, field_card[4]);
+          hand--;
+          updatehands(hands, hand, 4);
+        }
+      }, this);
+
+      card3.on('pointerdown', function (pointer) {
+        if (hands[3] != null) {
+          field_card[3] = hands[3];
+          card2 = this.add.image(340, height / 2, field_card[3]);
+          hand--;
+          updatehands(hands, hand, 3);
+        }
+      }, this);
+
+      card2.on('pointerdown', function (pointer) {
+        if (hands[2] != null) {
+          field_card[2] = hands[2];
+          card2 = this.add.image(340, height / 2, field_card[1]);
+          hand--;
+          updatehands(hands, hand, 2);
+        }
+      }, this);
+
+
+      card1.on('pointerdown', function (pointer) {
+        if (hands[1] != null) {
+          field_card[1] = hands[1];
+          card2 = this.add.image(340, height / 2, field_card[1]);
+          hand--;
+          updatehands(hands, hand, 1);
+        }
+      }, this);//一番左出す
+    }
+
+  </script>
+
+
 </body>
 
 </html>
