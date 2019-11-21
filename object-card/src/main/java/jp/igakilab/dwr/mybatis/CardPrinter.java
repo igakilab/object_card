@@ -38,6 +38,12 @@ public class CardPrinter {
     }
   }
 
+  public void insertHands(Hands hands) {
+    for (Integer i : hands.getCards2()) {
+      System.out.print(i);
+    }
+  }
+
   public void insertDeck(Deck deck) {
     System.out.println(deck.getName());
     for (Integer i : deck.getCards()) {
