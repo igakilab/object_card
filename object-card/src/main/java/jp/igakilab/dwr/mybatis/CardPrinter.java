@@ -21,6 +21,17 @@ public class CardPrinter {
     return playerList;
   }
 
+  public List<Hand> execute2() {
+    List<Hand> handList = new ArrayList<>();
+    try (SqlSession session = factory.openSession()) {
+      handList = session.selectList("igakilab.mybatis.CardMapper.selectHand");
+      for (Hand f : handList) {
+        System.out.println(f.getHandno());
+      }
+    }
+    return handList;
+  }
+
   /**
    * Playerクラスと同じデータ構造のオブジェクトをJSから受け取り，拡張for文で1つずつinsertする例
    *
@@ -38,9 +49,21 @@ public class CardPrinter {
     }
   }
 
-  public void insertHands(Hands hands) {
-    for (Integer i : hands.getCards2()) {
-      System.out.print(i);
+  /**
+   *
+   * @param handList
+   */
+
+  public void insertHand(Hand handList) {
+    try (SqlSession session = factory.openSession()) {
+      String player = handList.getPlayer();
+      int end_check = handList.getEnd_check();
+      System.out.println("player:" + player + ", end_check" + end_check);
+      for (String i : handList.getHandno()) {
+        int ret = session.insert("igakilab.mybatis.CardMapper.insertHand", new Card(i, player, end_check));// 1つずつinsert
+        System.out.println(ret);
+      }
+      session.commit();
     }
   }
 
