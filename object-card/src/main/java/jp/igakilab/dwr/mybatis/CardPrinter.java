@@ -14,11 +14,24 @@ public class CardPrinter {
     try (SqlSession session = factory.openSession()) {
       playerList = session.selectList("igakilab.mybatis.CardMapper.selectPlayer");
       for (Player f : playerList) {
-        System.out.println(f.getName());
         System.out.println(f.getNo());
+        System.out.println(f.getName());
       }
     }
     return playerList;
+  }
+
+  public List<Card> execute2() {
+    List<Card> handList = new ArrayList<>();
+    try (SqlSession session = factory.openSession()) {
+      handList = session.selectList("igakilab.mybatis.CardMapper.selectHand");
+      for (Card f : handList) {
+        System.out.println(f.getHandno());
+        System.out.println(f.getPlayer());
+        System.out.println(f.getEndCheck());
+      }
+    }
+    return handList;
   }
 
   /**
@@ -38,9 +51,21 @@ public class CardPrinter {
     }
   }
 
-  public void insertHands(Hands hands) {
-    for (Integer i : hands.getCards2()) {
-      System.out.print(i);
+  /**
+   *
+   * @param handList
+   */
+
+  public void insertHand(Hand handList) {
+    try (SqlSession session = factory.openSession()) {
+      String player = handList.getPlayer();
+      int end_check = handList.getEndCheck();
+      System.out.println("player:" + player + ", end_check" + end_check);
+      for (String i : handList.getHandno()) {
+        int ret = session.insert("igakilab.mybatis.CardMapper.insertHand", new Card(i, player, end_check));// 1つずつinsert
+        System.out.println(ret);
+      }
+      session.commit();
     }
   }
 
@@ -54,6 +79,7 @@ public class CardPrinter {
   public static void main(String[] args) {
     CardPrinter pp = new CardPrinter();
     pp.execute();
+    pp.execute2();
   }
 
 }

@@ -6,8 +6,15 @@
   <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
     select no, name from player;
   </select>
+  <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Card">
+    select handno, player, end_check from hand;
+  </select>
   <insert id="insertPlayer">
     insert into player (no,name)
     values (#{no}, #{name})
+  </insert>
+  <insert id="insertHand">
+    insert into hand (handno,player,end_check)
+    values (#{handno}, #{player}, #{end_check})
   </insert>
 </mapper>
