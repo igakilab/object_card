@@ -5,13 +5,25 @@
   <title>ログイン</title>
 </head>
 <body>
-<form action="/login" method="post">
-  <label>username <input name="username"></label>
-  <label>password <input name="password" type="password"></label>
-  <input type="submit" value="login">
-  
-</form>
-<form name="ex" action="/object-cardgame/game/gam.html" method="get">
+
+    <div class="select">
+        <form name="ex" action="game.html" method="get">
+         <div class="box"><div class="p1"><p>1P<br>
+         <input type="radio" name="p1" value=1 checked>　アカツキ
+      　 <input type="radio" name="p1" value=2>　アリス
+         </div></div>
+         <div class="box2"><div class="st">
+         <input type="submit" value="START" id="check"style="width:150px;height:50px;font-size:20pt">
+         </div></div>
+         <div class="box"><div class="p2">
+         <p>2P<br>
+         <input type="radio" name="p2" value=1 checked>　アカツキ
+      　 <input type="radio" name="p2" value=2>　アリス
+         </div></div>
+        </form>
+        </div>
+
+<form name="ex" action="/object-cardgame/game/phaser cardgame working.html" method="get">
 <input type="submit" value="START" id="check"style="width:150px;height:50px;font-size:20pt">
 </form>
 
