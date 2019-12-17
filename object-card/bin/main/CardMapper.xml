@@ -6,8 +6,8 @@
   <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
     select no, name from player;
   </select>
-  <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Hand">
-    select handno from hand;
+  <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Card">
+    select handno, player, end_check from hand;
   </select>
   <insert id="insertPlayer">
     insert into player (no,name)
