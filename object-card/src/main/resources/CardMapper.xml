@@ -9,6 +9,9 @@
   <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Card">
     select handno, player, end_check from hand;
   </select>
+  <select id="selectHand2" resultType="jp.igakilab.dwr.mybatis.Card2">
+    select handno, player, end_check2 from hand2;
+  </select>
   <insert id="insertPlayer">
     insert into player (no,name)
     values (#{no}, #{name})
@@ -17,4 +20,15 @@
     insert into hand (handno,player,end_check)
     values (#{handno}, #{player}, #{end_check})
   </insert>
+  <insert id="insertHand2">
+    insert into hand2 (handno,player,end_check2)
+    values (#{handno}, #{player}, #{end_check2})
+  </insert>
+  <update id="updateHand">
+    update hand
+    set handno = #{handno},
+        player = #{player},
+        end_check = #{end_check}
+    where id = #{id}
+  </update>
 </mapper>
