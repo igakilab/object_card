@@ -85,6 +85,7 @@
     var wins = 0;//winstreak
     var copy_card = [];
     var ErrorText;
+    var array_card = ["null"];
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -383,6 +384,15 @@
       let setcard3 = this.add.text(340, 400, '3').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let setcard4 = this.add.text(460, 400, '4').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let setcard5 = this.add.text(580, 400, '5').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let down = this.add.text(300, 400, 'down').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+
+
+      down.on('pointerdown', function (pointer) {
+        //insertHandno(field_card);
+        updateHand(this);
+        //この関数引数に配列足したほうがいいかも
+
+      }, this);
 
 
       function updatehands(hands, hand, j) {
@@ -519,7 +529,12 @@
           updatehands(hands, hand, 1);
         }
       }, this);//一番左出す
+
+
     }
+
+
+
     function update2() {
       CardPrinter.execute({
         callback: function (data) {
@@ -535,18 +550,23 @@
       });
     }
 
-    function updateHand() {
+    function updateHand(po) {
       CardPrinter.execute2({
         callback: function (data) {
           $('#error_message').text("");
           console.log(data);
+          for (var i = 0; i <= 4; i++) {
+            card = po.add.image(100 + i * 120, height / 8, data[i].handno);
+          }//足した
           var hand_text = "";
           data.forEach(function (hand) {
             hand_text = hand_text + "[handno]" + hand.handno + "[player]" + hand.player + "[end_check]" + hand.endCheck + "<br/>";
+            array_card = hand.handno;
           });
           $('#pprinterReply').html(hand_text);
         },
         errorHandler: updateErrorMessage
+
       });
     }
 
