@@ -31,17 +31,28 @@
     var p1_card = {
       COST: 0,
       HP: 0,
-      ATK: 0
+      ATK: 0,
+      TYPE:"SLIME"
     };
 
     var p2_card = {
       COST: 0,
       HP: 0,
-      ATK: 0
+      ATK: 0,
+      TYPE:"SLIME"
     };
 
     var p1_card =[];
     var p2_card =[];
+
+
+    var slime_card = {
+        HP:1,
+        ATK:1,
+        TYPE:"SLIME"
+    };
+
+    var slime_card =[];
 
     //p1_card[3]={COST:333,HP:333,ATK:300};
     //console.log(p1_card[3]);
@@ -75,7 +86,8 @@
     var copy_card = [];
     var ErrorText;
     var c=0;
-    var STAT_TEXT;
+    var STAT_TEXT=[];
+    var TYPE_TEXT=[];
 
 
     function getUrlVars() {
@@ -155,6 +167,14 @@
       this.load.image('cards11', '/object-cardgame/game/img/s11.png');
       this.load.image('cards12', '/object-cardgame/game/img/s12.png');
       this.load.image('cards13', '/object-cardgame/game/img/s13.png');
+      this.load.image('slimc11', '/object-cardgame/game/img/slime.png');
+
+    }
+
+    function copy_array(c1, c2) {
+        for (var i = 1; i <= 5; i++) {
+          c1[i] = c2[i];
+        }
     }
 
     function create() {
@@ -213,12 +233,34 @@
         "field_card": []
       };//宣言
 
+      for(var i=1;i<=5;i++){
+        STAT_TEXT[i] = this.add.text(-40 + i * 120, 450, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+        TYPE_TEXT[i] = this.add.text(-40 + i * 120-25, 325, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+      }
+
+      
+
+      copy_array(field_card,slime_card);//??
+      slime_card.HP=1;
+      slime_card.ATK=1;
+      slime_card.TYPE="SLIME";
+      for(i=2;i<=4;i++){
+        slime = this.add.image(-20 + i * 120, height / 2, 'slimc11');
+        STAT_TEXT[i].setText(slime_card.HP+":"+slime_card.ATK);
+        TYPE_TEXT[i].setText(slime_card.TYPE);
+      }
 
 
+
+
+      console.log(field_card);
+      console.log(slime_card);
+      
 
 
       //hand to DB
-
+      
+ 
       SCText = this.add.text(300, 550, 'SET:' + set).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       HPText = this.add.text(650, 450, 'HP:' + HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       WINText = this.add.text(650, 300, 'WL').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
@@ -231,12 +273,16 @@
       p1_card.COST = Number(str.slice(4, 5));
       if (str.slice(4, 5) == 'c') {
         p1_card.ATK = 1;
+        p1_card.TYPE="FLY";
       } else if (str.slice(4, 5) == 'd') {
         p1_card.ATK = 2;
+        p1_card.TYPE="PHS";
       } else if (str.slice(4, 5) == 's') {
         p1_card.ATK = 3;
+        p1_card.TYPE="MAG";
       } else if (str.slice(4, 5) == 'h') {
         p1_card.ATK = 4;
+        p1_card.TYPE="SLI"
       }
       p1_card.HP = Number(str.slice(6, 7));
       console.log('p1_card.HP:' + p1_card.HP + ' ATK:' + p1_card.ATK);
@@ -254,7 +300,7 @@
       p2_field_card[j] = str1.slice(0, 5) + k;
     }
 
-    function p2_status(field_card, j) {
+    function p2_status(p2_field_card, j) {
       var str1 = '' + p2_field_card[j];
       p2_card.COST = Number(str1.slice(4, 5));
       if (str1.slice(4, 5) == 'c') {
@@ -372,14 +418,15 @@
 
     }//p1からp2への戦い一方的
 
-    function buff(a,set){
+      function buff(a,set){
         var c=a;
         
         p2_status(hands,set);
+        console.log("hands:"+hands[set]);
         var b=p2_card;
         console.log(b);
-        console.log("もとのやつ:"+c.HP);
-        console.log("足した奴:"+b.HP);
+        console.log("もとのやつ:"+c.ATK+","+c.HP);
+        console.log("足した奴:"+b.ATK+","+b.HP);
         p1_card.ATK=c.ATK+b.ATK;
         p1_card.HP=c.HP+b.HP;
         
@@ -417,7 +464,6 @@
       let setcard4 = this.add.text(460, 400, '4').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let setcard5 = this.add.text(580, 400, '5').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       SCText.setText('SET:' + set);//出したいカードの場所テキスト
-      let STAT_TEXT = this.add.text(-40 + set * 120, 450, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
 
 
       function Overload(){
@@ -428,6 +474,7 @@
       function Encapsulation(){
 
       }
+
 
       
 
@@ -440,7 +487,8 @@
           hands[i] = hands[i + 1];
         }
         hands[hand + 1] = null;
-        STAT_TEXT.setText(p1_card.HP+":"+p1_card.ATK);
+        STAT_TEXT[set].setText(p1_card.HP+":"+p1_card.ATK);
+        TYPE_TEXT[set].setText(p1_card.TYPE);
       }//手札の順番ソート
 
       function updatefield(field_card, j) {
@@ -450,11 +498,7 @@
         field_card[j] = null;
       }//手札の順番ソート
 
-      function copy_array(c1, c2) {
-        for (var i = 1; i <= 5; i++) {
-          c1[i] = c2[i];
-        }
-      }
+      
 
       function array_check(c1) {
         for (var i = 1; i <= 5; i++) {
@@ -548,59 +592,42 @@
         console.log(field_card[1]);
       }, this);//draw　手札上限五枚で五枚以上はドローできない
 
-      card5.on('pointerdown', function (pointer) {
+      function card_deal(po){
         field_card_check(p1_card,set);
         console.log("**"+c);
-        if (hands[5] != null && set != null && c==0) {
-          field_card[set] = hands[5];
+        if (hands[set] != null && set != null && c==0) {
+          field_card[set] = hands[set];
           p1_status(field_card,set);
           p1_card[set]=p1_card;//test
           console.log(p1_card[set]);
-          card2 = this.add.image(-20 + set * 120, height / 2, field_card[set]);
+          card2 = po.add.image(-20 + set * 120, height / 2, field_card[set]);
           hand--;
-          updatehands(hands, hand, 5);
+          updatehands(hands, hand, set);
         }else{
           hand--;
-          updatehands(hands,hand,5);
+          updatehands(hands,hand,set);
         }
-        
+      }
+
+      card5.on('pointerdown', function (pointer) {
+        card_deal(this);
       }, this);
 
       card4.on('pointerdown', function (pointer) {
-        if (hands[4] != null && set != null) {
-          field_card[set] = hands[4];
-          card2 = this.add.image(-20 + set * 120, height / 2, field_card[set]);
-          hand--;
-          updatehands(hands, hand, 4);
-        }
+        card_deal(this);
       }, this);
 
       card3.on('pointerdown', function (pointer) {
-        if (hands[3] != null && set != null) {
-          field_card[set] = hands[3];
-          card2 = this.add.image(-20 + set * 120, height / 2, field_card[set]);
-          hand--;
-          updatehands(hands, hand, 3);
-        }
+        card_deal(this);
       }, this);
 
       card2.on('pointerdown', function (pointer) {
-        if (hands[2] != null && set != null) {
-          field_card[set] = hands[2];
-          card2 = this.add.image(-20 + set * 120, height / 2, field_card[set]);
-          hand--;
-          updatehands(hands, hand, 2);
-        }
+        card_deal(this);
       }, this);
 
 
       card1.on('pointerdown', function (pointer) {
-        if (hands[1] != null && set != null) {
-          field_card[set] = hands[1];
-          card2 = this.add.image(-20 + set * 120, height / 2, field_card[set]);
-          hand--;
-          updatehands(hands, hand, 1);
-        }
+        card_deal(this);
       }, this);//一番左出す
     }
 
