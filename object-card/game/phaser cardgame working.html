@@ -45,18 +45,13 @@
     var p1_card =[];
     var p2_card =[];
 
-
-    var slime_card = {
-        HP:1,
-        ATK:1,
-        TYPE:"SLIME"
-    };
-
-    var slime_card =[];
-
-    //p1_card[3]={COST:333,HP:333,ATK:300};
-    //console.log(p1_card[3]);
-
+    //ff_cardはバフするときの途中に使うやつ
+    var ff_card={2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},4:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
+    var p2_ff_card={2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},4:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
+    
+    //instans_cardは最後のインスタン化するときのやつ
+    var instans_card={2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},4:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
+    var p2_instans_card={2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},4:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
 
 
     var game = new Phaser.Game(config);
@@ -88,6 +83,9 @@
     var c=0;
     var STAT_TEXT=[];
     var TYPE_TEXT=[];
+    var end_fin=0;//お互いがend押したかどうか0か1
+    var ready_flag=0;//ready押したかどうか
+    var setnum="";//どれをインスタンス化するかの数値
 
 
     function getUrlVars() {
@@ -109,6 +107,7 @@
 
     var val = getUrlVars();
     console.log(val.player);
+    var p2_HP=10;
 
 
 
@@ -168,6 +167,12 @@
       this.load.image('cards12', '/object-cardgame/game/img/s12.png');
       this.load.image('cards13', '/object-cardgame/game/img/s13.png');
       this.load.image('slimc11', '/object-cardgame/game/img/slime.png');
+      this.load.image('magic11', '/object-cardgame/game/img/mag.png');
+      this.load.image('phsic11', '/object-cardgame/game/img/phs.png');
+      this.load.image('flyic11', '/object-cardgame/game/img/fly.png');
+      this.load.image('toric11', '/object-cardgame/game/img/tori.png');
+
+
 
     }
 
@@ -240,32 +245,29 @@
 
       
 
-      copy_array(field_card,slime_card);//??
-      slime_card.HP=1;
-      slime_card.ATK=1;
-      slime_card.TYPE="SLIME";
+      
       for(i=2;i<=4;i++){
-        slime = this.add.image(-20 + i * 120, height / 2, 'slimc11');
-        STAT_TEXT[i].setText(slime_card.HP+":"+slime_card.ATK);
-        TYPE_TEXT[i].setText(slime_card.TYPE);
+        field_card[i]='slimc11';
+        STAT_TEXT[i].setText(ff_card[i].HP+":"+ff_card[i].ATK);
+        TYPE_TEXT[i].setText(ff_card[i].TYPE);
       }
 
 
 
 
-      console.log(field_card);
-      console.log(slime_card);
+      
       
 
 
       //hand to DB
       
- 
+      
       SCText = this.add.text(300, 550, 'SET:' + set).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      HPText = this.add.text(650, 450, 'HP:' + HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      WINText = this.add.text(650, 300, 'WL').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+      p2_HPText = this.add.text(650, 300, '2P HP:' + p2_HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();      
+      HPText = this.add.text(650, 450, '1P HP:' + HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+      WINText = this.add.text(450, 250, 'WL').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       ErrorText = this.add.text(300, 600, 'E').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-
+      instanText = this.add.text(100, 500, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
     }
 
     function p1_status(field_card, j) {
@@ -291,7 +293,7 @@
     function p1_status_update(field_card, j, k) {
       var str = '' + field_card[j];
       field_card[j] = str.slice(0, 5) + k;
-    }
+    }//未使用
 
     
 
@@ -323,20 +325,9 @@
     }//未使用
 
 
-    function prep(field_card, p2_field_card, rndm) {
-      for (var i = 1; i <= 5; i++) {
-        if (field_card[i] != null) {
-          p1_status(field_card, i);
-          field_card[i] = p1_card.HP;
-          console.log('p1_card.HP:' + field_card[i]);//数値１のｃａｒｄ
-        }
-        p2_status(p2_field_card, rndm);
-        p2_field_card[rndm] = p2_card.HP;//p2のフィールドは無条件で数値３のｃａｒｄデモ
-      }
-    }//カードを数値にする ＊cardオブジェクトを使いたい要変更 //未使用**
 
     function result(count1, count2) {
-      if (count2 == 4) {
+      if (count2>count1) {
         if (wins >= 1) {
           wins++;
           WINText.setText('WINS:' + wins);
@@ -344,24 +335,31 @@
           wins = 1;
           WINText.setText('WIN');
         }
-      } else if (count1 == 4) {
+        p2_HP--;
+        if(p2_HP==1){
+          ErrorText.setText('YOU WIN');
+          
+        }
+      } else if (count1>count2) {
         WINText.setText('LOSE');
         if (HP == 1) {
           ErrorText.setText('YOU LOSE');
+          
         }
         HP -= 1;
 
       } else {
         WINText.setText('Draw');
       }
-      HPText.setText('HP' + HP);
+      HPText.setText('1P HP' + HP);
+      p2_HPText.setText('2P HP'+p2_HP);
       count1 = 0;
       count2 = 0;
     }
 
     function duel(f, p2_f) {
       var i = 0;
-      while (count1 != 4 && count2 != 4) {
+      while (count1 != 3 && count2 != 3) {
         i++;
         if (f[i] != null) {
           if (atack == 1)//DB上の数字と通信して同じ数字を使わないといけない
@@ -376,7 +374,7 @@
 
           if (p2_f[rndm] != null) {
             p1_status(f, i);
-            p2_status(p2_f, rndm);
+            p2_status_win(p2_f, rndm);//_winにすると勝つ
             console.log('p1_card.HP:' + p1_card.HP + ' ATK:' + p1_card.ATK + ' VS ' + 'p2_card.HP:' + p2_card.HP + ' ATK:' + p2_card.ATK);
 
 
@@ -418,32 +416,68 @@
 
     }//p1からp2への戦い一方的
 
-      function buff(a,set){
+
+    function duel_2(f, p2_f) {
+      while (count1 != 1  && count2 != 1) {
+        var r1 = Math.floor(Math.random() * 2 + 2);
+        if (f[r1] != null) {
+          var r2 = Math.floor(Math.random() * 2 + 2);
+          if (p2_f[r2] != null) {
+            console.log(f[r1].NAME+"VS"+p2_f[r2].NAME);
+            f[r1].HP-=p2_f[r2].ATK;
+            p2_f[r2].HP-=f[r1].ATK;
+
+            if (f[r1].HP <= 0) {
+              f[r1] = null;
+              count1++;//カードが倒された
+            } 
+            if (p2_f[r2].HP <= 0) {
+              p2_f[r2] = null;
+              count2++;//カードが倒された
+            } 
+          }
+        }
+        console.log('count1:' + count1);
+        console.log('count2:' + count2);
+        
+      }
+      result(count1, count2);
+      if (p_turn == 1) {
+        p_turn = 0;//
+      } else {
+        p_turn = 1;//
+      }//攻守交替最初に殴るのがどっちか
+
+    }//p1からp2への戦い一方的
+
+    
+
+      function buff(a){
         var c=a;
         
         p2_status(hands,set);
         console.log("hands:"+hands[set]);
-        var b=p2_card;
+        var b=p2_card;//足した奴
         console.log(b);
-        console.log("もとのやつ:"+c.ATK+","+c.HP);
+        console.log("もとのやつ:"+c[set].ATK+","+c[set].HP);
         console.log("足した奴:"+b.ATK+","+b.HP);
-        p1_card.ATK=c.ATK+b.ATK;
-        p1_card.HP=c.HP+b.HP;
-        
+        p1_card.ATK=c[set].ATK+b.ATK;
+        p1_card.HP=c[set].HP+b.HP;
+        ff_card[set].NAME=""+field_card[set];
+        ff_card[set].ATK=p1_card.ATK;
+        ff_card[set].HP=p1_card.HP;
+        console.log("ATK合計:"+ff_card[set].ATK);
+        console.log("NAME合計:"+ff_card[set].NAME);
+        console.log("HP合計:"+ff_card[set].HP);
         console.log("合計:"+p1_card.ATK+","+p1_card.HP);
       }
 
-      function field_card_check(p1_card,set){
-        console.log("aaa");
-        if(p1_card[set]!=null){
-          console.log("buff");
-          buff(p1_card,set);
+      function field_card_check(ff_card,set){
+        
+          buff(ff_card,set);
           c=1;
-        }else{
-          console.log("nobuff");
-          c=0;
-        }
-      }//場札にカードがあるかないかあればバフ
+        
+      }//場札にカードがあるかないかあればバフ //未使用
 
  
 
@@ -452,7 +486,7 @@
       let end = this.add.text(700, 400, 'End').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let ref = this.add.text(900, 400, 'Ref').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let START = this.add.text(300, 300, 'START').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
-      //let SET = this.add.text(200, 300, 'SET').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let ready = this.add.text(150, 300, 'READY').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let card1 = this.add.image(100, height / 8 * 7, hands[1]).setOrigin(0.5).setInteractive();
       let card2 = this.add.image(220, height / 8 * 7, hands[2]).setOrigin(0.5).setInteractive();
       let card3 = this.add.image(340, height / 8 * 7, hands[3]).setOrigin(0.5).setInteractive();
@@ -463,19 +497,13 @@
       let setcard3 = this.add.text(340, 400, '3').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let setcard4 = this.add.text(460, 400, '4').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let setcard5 = this.add.text(580, 400, '5').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let slime1 = this.add.image(-20 + 2 * 120, height / 2, field_card[2]).setInteractive();
+      let slime2 = this.add.image(-20 + 3 * 120, height / 2, field_card[3]).setInteractive();
+      let slime3 = this.add.image(-20 + 4 * 120, height / 2, field_card[4]).setInteractive();
       SCText.setText('SET:' + set);//出したいカードの場所テキスト
 
 
-      function Overload(){
-
       
-      }
-
-      function Encapsulation(){
-
-      }
-
-
       
 
       function status_card(set,p1_card){
@@ -487,8 +515,8 @@
           hands[i] = hands[i + 1];
         }
         hands[hand + 1] = null;
-        STAT_TEXT[set].setText(p1_card.HP+":"+p1_card.ATK);
-        TYPE_TEXT[set].setText(p1_card.TYPE);
+        STAT_TEXT[set].setText(ff_card[set].HP+":"+ff_card[set].ATK);
+        TYPE_TEXT[set].setText(ff_card[set].TYPE);
       }//手札の順番ソート
 
       function updatefield(field_card, j) {
@@ -501,7 +529,7 @@
       
 
       function array_check(c1) {
-        for (var i = 1; i <= 5; i++) {
+        for (var i = 2; i <= 4; i++) {
           if (c1[i] == null) {
             return true;
           }
@@ -522,25 +550,59 @@
 
       }, this);
 
+      ready.on('pointerdown', function (pointer) {
+        instanText.setText("どれを戦闘に参加させますか？(インスタンス化)");
+        ready_flag=1;
+
+
+      }, this);
+
+      function endc(po){
+        updatehand(po);
+      }
+
+      function instans(str){
+        for(var i=1;i<=3;i++){
+          instans_card[i]=ff_card[str.slice(i-1,i)];
+        }
+        console.log("instans:"+instans_card[2].HP);
+        console.log("ff_card:"+ff_card[2].HP);
+      }
+
       end.on('pointerdown', function (pointer) {
         console.log("end key" + p_turn);
+        console.log("end:"+field_card);
         if (array_check(field_card)) {
           ErrorText.setText('PLZ SET CARD');
         } else {
           var rndm = Math.floor(Math.random() * 2);
-          copy_array(copy_card, field_card);
+          instans(setnum);
+          console.log("instans_card:"+instans_card);
+          copy_array(copy_card, instans_card);
           console.log("p2" + p2_field_card);
-          console.log("p1" + field_card);
+          console.log("p1" + instans_card);
           //DBと更新DB上の値が２になるまで待つ関数？
           //ここで相手の場札のカードをp2_field_cardに入れる
           //**insertHandno(hands, "" + val.player, 1);
+          
+          //while(end_fin==0){
+            //setInterval(function(){
+              //endc(this);
+              //},1000);
+        //}
           //while文で相手のendボタンを待つ
+
+          end_fin=0;
           if (val.player == 1) {
-            duel(field_card, p2_field_card);
+            if(p_turn==1){
+              duel_2(instans_card,p2_instans_card);
+            }else if(p_turn==0){
+              duel_2(p2_instans_card,instans_card);
+            }
           }
-          updatefield(field_card, 1);//＊フィールドのｃａｒｄを更新してnullのとこはｃａｒｄがでないようにしたい
+          //updatefield(field_card, 1);//＊フィールドのｃａｒｄを更新してnullのとこはｃａｒｄがでないようにしたい
           copy_array(p2_field_card, copy_card);
-          copy_array(field_card, copy_card);
+          copy_array(instans_card, copy_card);
         }
       }, this);
 
@@ -564,18 +626,47 @@
         set = 5;
       }, this);
 
-      
+      function ready_set(){
+        if(ready_flag>=1&&ready_flag<4){
+          setnum=setnum+" "+set;
+          ErrorText.setText(setnum);
+          ready_flag++;
+        }else if(ready_flag==4){
+          ready_flag=1;
+          setnum="";
+        }
+      }
 
+      slime1.on('pointerdown', function (pointer) {
+        set = 2;
+        ready_set();
+      }, this);
+      
+      slime2.on('pointerdown', function (pointer) {
+        set = 3;
+        ready_set();
+      }, this);
+
+      slime3.on('pointerdown', function (pointer) {
+        set = 4;
+        ready_set();
+      }, this);
+
+      function test(f){
+        console.log("TEST:"+f[3].ATK);
+      }
 
       ref.on('pointerdown', function (pointer) {
         //copy_array(p2_field_card,hand_inf);
         //insertHandno(hands, "" + val.player, 0);
         //配列を受け取ってp2_field_cardに入れる
-        for (var i = 1; i <= hand; i++) {
-          p2_field_card[i] = 'cardh09';//デバッグ
-          card = this.add.image(-20 + i * 120, height / 8, p2_field_card[i]);
-          deck = this.add.image(700, height / 8 * 2, 'card');
-        }//p2 hand
+        //for (var i = 1; i <= hand; i++) {
+        //  p2_field_card[i] = 'cardh09';//デバッグ
+        //  card = this.add.image(-20 + i * 120, height / 8, p2_field_card[i]);
+        //  deck = this.add.image(700, height / 8 * 2, 'card');
+        //}//p2 hand
+        test(instans_card);
+
 
         var d;
         console.log(d++);
@@ -592,22 +683,60 @@
         console.log(field_card[1]);
       }, this);//draw　手札上限五枚で五枚以上はドローできない
 
+    function p1_status_type() {
+      var str = '' + field_card[set];
+      if(str.slice(4, 5) == 'c') {
+        p1_card.TYPE="FLY";
+      } else if (str.slice(4, 5) == 'd') {
+        p1_card.TYPE="PHS";
+      } else if (str.slice(4, 5) == 's') {
+        p1_card.TYPE="MAG";
+      } else if (str.slice(4, 5) == 'h') {
+        p1_card.TYPE="SLI";
+      }
+    }
+
+      function TYPE_CHECK(ty,p){
+        if(ty=="MAG"){
+          field_card[set]='magic11';
+          slime = p.add.image(-20 + set * 120, height / 2, 'magic11');
+          ErrorText.setText('魔法継承しました');
+        }else if(ty=="FLY"){
+          field_card[set]='flyic11';
+          slime = p.add.image(-20 + set * 120, height / 2, 'flyic11');
+          ErrorText.setText('飛行継承しました');
+        }else if(ty=="PHS"){
+          field_card[set]='phsic11';
+          slime = p.add.image(-20 + set * 120, height / 2, 'phsic11');
+          ErrorText.setText('物理継承しました');
+        }else{
+          field_card[set]='slimc11';
+          slime = p.add.image(-20 + set * 120, height / 2, 'slimc11');
+          ErrorText.setText('パワーアップ');
+        }
+      }
+
+      
+
       function card_deal(po){
-        field_card_check(p1_card,set);
+        buff(ff_card);
         console.log("**"+c);
         if (hands[set] != null && set != null && c==0) {
           field_card[set] = hands[set];
           p1_status(field_card,set);
           p1_card[set]=p1_card;//test
           console.log(p1_card[set]);
-          card2 = po.add.image(-20 + set * 120, height / 2, field_card[set]);
-          hand--;
-          updatehands(hands, hand, set);
-        }else{
-          hand--;
-          updatehands(hands,hand,set);
+          //card2 = po.add.image(-20 + set * 120, height / 2, field_card[set]);
         }
+        p1_status_type();
+        TYPE_CHECK(p1_card.TYPE,po);
+        hand--;
+        updatehands(hands,hand,set);
+        console.log("******typing******");
+        console.log(p1_card.TYPE);
       }
+
+          
 
       card5.on('pointerdown', function (pointer) {
         card_deal(this);
