@@ -6,10 +6,18 @@ import java.util.ArrayList;
  * Hand
  */
 public class Hand {
-
+  private int id;
   private ArrayList<String> handno = new ArrayList<>();
   private String player = new String();
   private int end_check;
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
 
   public int getEndCheck() {
     return end_check;

@@ -21,7 +21,8 @@
 <body>
   <p>
     <form id="pprinter_form">
-      <input value="GetHandList" type="button" onclick="selectHand2()" />
+      <input value="GetHandList" type="button" onclick="selectHand()" />
+      <input value="InsertHandList" type="button" onclick="insertHandno()" />
     </form>
   </p>
   <p>
@@ -384,15 +385,6 @@
       let setcard5 = this.add.text(580, 400, '5').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let down = this.add.text(300, 400, 'down').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
 
-
-      down.on('pointerdown', function (pointer) {
-        //insertHandno(field_card);
-        selectHand(this);
-        //この関数引数に配列足したほうがいいかも
-
-      }, this);
-
-
       function updatehands(hands, hand, j) {
         for (var i = j; i <= hand; i++) {
           hands[i] = hands[i + 1];
@@ -479,9 +471,15 @@
 
       SCText.setText('SET:' + set);//出したいカードの場所テキスト
 
+      down.on('pointerdown', function (pointer) {
+        //insertHandno(field_card);
+        selectHand(this);
+        //この関数引数に配列足したほうがいいかも
+
+      }, this);
 
       ref.on('pointerdown', function (pointer) {
-        insertHandno(hands, "" + val.player, 1);
+        updateHandno(hands, "" + val.player, 10);
       }, this);
 
       draw.on('pointerdown', function (pointer) {
@@ -590,26 +588,6 @@
       $('#pprinterReply').text("");
     }
 
-    function insertArray() {
-      var playerArray = [{ no: 3, name: "hukusho" }, { no: 4, name: "sue-chan" }];
-      CardPrinter.insertPlayer(playerArray, {
-        callback: function () {
-          console.log("insert_player実行完了")
-        },
-        errorHandler: updateErrorMessage
-      });
-    }
-
-    function insertCards() {
-      var deck = { "name": "user1", "cards": [0, 2, 4, 1, 3] };
-      CardPrinter.insertDeck(deck, {
-        callback: function () {
-          console.log("insertDeck実行完了")
-        },
-        errorHandler: updateErrorMessage
-      });
-    }
-
     function insertHandno(arr, ply, end) {
       var hand_inf = { "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "end_check": end };
       CardPrinter.insertHand(hand_inf, {
@@ -631,7 +609,7 @@
     }
 
     function updateHandno(arr, ply, end) {
-      var hand_inf = { "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "end_check": end };
+      var hand_inf = { "id": 1, "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "end_check": end };
       CardPrinter.updateHand(hand_inf, {
         callback: function () {
           console.log("updateHand実行完了")

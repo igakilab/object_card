@@ -45,8 +45,9 @@ public class CardPrinter {
       String player = handList.getPlayer();
       int end_check = handList.getEndCheck();
       System.out.println("player:" + player + ", end_check:" + end_check);
+      int id = 0;
       for (String i : handList.getHandno()) {
-        int ret = session.insert("igakilab.mybatis.CardMapper.insertHand", new Card(i, player, end_check));// 1つずつinsert
+        int ret = session.insert("igakilab.mybatis.CardMapper.insertHand", new Card(id, i, player, end_check));// 1つずつinsert
         System.out.println(ret);
       }
       session.commit();
@@ -75,8 +76,10 @@ public class CardPrinter {
       String player = handList.getPlayer();
       int end_check = handList.getEndCheck();
       System.out.println("player:" + player + ", end_check" + end_check);
+      int id = 0;
       for (String i : handList.getHandno()) {
-        int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(i, player, end_check));
+        id++;
+        int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(id, i, player, end_check));
         System.out.println(ret);
       }
       session.commit();
