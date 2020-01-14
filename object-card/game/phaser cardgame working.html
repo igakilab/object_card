@@ -294,18 +294,27 @@
             f[r1].HP-=p2_f[r2].ATK;
             p2_f[r2].HP-=f[r1].ATK;
 
-            if (f[r1].HP <= 0) {
-              count1++;//カードが倒されたp1の
-            } 
-            if (p2_f[r2].HP <= 0) {
-              count2++;//カードが倒されたp2の
-            } 
+            if(f[r1].HP <= 0 && p2_f[r2].HP <= 0){
+              console.log("Draw");
+              count1++;
+              count2++;
+            }else{
+              if (f[r1].HP <= 0) {
+                count1++;//カードが倒されたp1の
+                console.log("p2_f["+r2+"]の勝利");
+              } 
+              if (p2_f[r2].HP <= 0) {
+                count2++;//カードが倒されたp2の
+                console.log("f["+r1+"]の勝利");
+              }
+            }
         }
         console.log('count1:' + count1);
         console.log('count2:' + count2);
       }
       result(count1, count2);
     }//p1からp2への戦い一方的
+    //今p2の場札1を1.1じゃなくて2.2にしてるよ
     
 
       function buff(){
@@ -349,6 +358,7 @@
       function update_hands(hands, hand, j) {
         for (var i = j; i <= hand; i++) {
           hands[i] = hands[i + 1];
+          hands_status(i);
         }
         hands[hand+1]="black";
         hands_STAT_TEXT[i].setText("");
@@ -413,7 +423,6 @@
           field_card[set]='slimc11';
           ErrorText.setText('パワーアップ');
         }
-        
       }
 
       function card_deal(po){
@@ -484,7 +493,6 @@
         ready_set();
       }, this);
 
-      
       draw.on('pointerdown', function (pointer) {
         if (hand < 5) {
           hand++;
