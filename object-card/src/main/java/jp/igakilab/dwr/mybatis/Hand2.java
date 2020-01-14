@@ -3,13 +3,13 @@ package jp.igakilab.dwr.mybatis;
 import java.util.ArrayList;
 
 /**
- * Hand
+ * Hand2
  */
-public class Hand {
+public class Hand2 {
   private int id;
   private ArrayList<String> handno = new ArrayList<>();
   private String player = new String();
-  private int endCheck;
+  private int endCheck2;
 
   public int getId() {
     return id;
@@ -19,12 +19,12 @@ public class Hand {
     this.id = id;
   }
 
-  public int getEndCheck() {
-    return endCheck;
+  public int getEndCheck2() {
+    return endCheck2;
   }
 
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
+  public void setEndCheck2(int endCheck2) {
+    this.endCheck2 = endCheck2;
   }
 
   public String getPlayer() {

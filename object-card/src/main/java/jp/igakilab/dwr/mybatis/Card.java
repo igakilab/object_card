@@ -7,13 +7,13 @@ public class Card {
   private int id;
   private String handno = "";
   private String player = "";
-  private int end_check;
+  private int endCheck;
 
-  public Card(int id, String handno, String player, int end_check) {
+  public Card(int id, String handno, String player, int endCheck) {
     this.id = id;
     this.handno = handno;
     this.player = player;
-    this.end_check = end_check;
+    this.endCheck = endCheck;
   }
 
   public int getId() {
@@ -25,11 +25,11 @@ public class Card {
   }
 
   public int getEndCheck() {
-    return end_check;
+    return endCheck;
   }
 
-  public void setEndCheck(int end_check) {
-    this.end_check = end_check;
+  public void setEndCheck(int endCheck) {
+    this.endCheck = endCheck;
   }
 
   public String getPlayer() {
