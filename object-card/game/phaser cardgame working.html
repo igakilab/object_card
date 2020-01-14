@@ -31,9 +31,9 @@
     var ff_card={1:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
     var p2_ff_card={1:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
     
-    //instans_cardは最後のインスタン化するときのやつ
-    var instans_card={1:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
-    var p2_instans_card={1:{HP:2,ATK:2,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
+    //instance_cardは最後のインスタン化するときのやつ
+    var instance_card={1:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
+    var p2_instance_card={1:{HP:2,ATK:2,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
 
     var hands_card={1:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},2:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},3:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},4:{HP:1,ATK:1,TYPE:"SLIME",NAME:""},5:{HP:1,ATK:1,TYPE:"SLIME",NAME:""}};
 
@@ -67,9 +67,13 @@
     var p2_TYPE_TEXT=[];
     var end_fin=0;//お互いがend押したかどうか0か1
     var ready_flag=0;//ready押したかどうか
-    var setnum="";//どれをインスタンス化するかの数値
+    var set_num="";//どれをインスタンス化するかの数値
     var hand_num=0;//手札の何枚目を場に出したかがわかる数値
     var end_count=0;//
+    var vslog_TEXT=[];//iは行？
+    var plog_num=0;//行
+    var plog_end=0;
+    var objects = {};
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -154,7 +158,7 @@
       this.load.image('phsic11', '/object-cardgame/game/img/phs.png');
       this.load.image('flyic11', '/object-cardgame/game/img/fly.png');
       this.load.image('toric11', '/object-cardgame/game/img/tori.png');
-      this.load.image('black', '/object-cardgame/game/img/black.png');
+      this.load.image('green', '/object-cardgame/game/img/green.png');
     }
 
     function copy_array(c1, c2) {
@@ -194,6 +198,8 @@
       }//手札のカードの値をカードの下に表示する？？
 
     function create() {
+      objects.camera = this.cameras.add(0, 0, 1600, 800);//どっからどこまでカメラ
+      objects.camera.setBackgroundColor('rgba(0,255,0, 0.5)');//背景色を帰れるよ
 
       var x = 0;
 
@@ -284,7 +290,36 @@
       p2_HPText.setText('2P HP'+p2_HP);
     }
 
-    function duel(f, p2_f) {
+    function print_log_ref(){
+        for(var i=1;i<plog_num;i++){
+          vslog_TEXT[i].setText("");
+        }
+        plog_num=0;
+    }
+
+    function print_log(po,r1,r2,k,a,c){
+      if(plog_end==1){
+        print_log_ref();
+        plog_end=0;
+      }
+        vslog_TEXT[plog_num] = po.add.text(900, height / 8+50*plog_num , "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+        vslog_TEXT[plog_num].setText("p1の"+copy_card[r1].TYPE+"["+copy_card[r1].HP+":"+copy_card[r1].ATK+"] VS p2の"+p2_copy_card[r2].TYPE+"["+p2_copy_card[r2].HP+":"+p2_copy_card[r2].ATK+"]");
+        plog_num++;
+        if(k==1){
+          vslog_TEXT[plog_num] = po.add.text(900, height / 8+50*plog_num , "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("white");;
+          vslog_TEXT[plog_num].setText("引き分け");
+        }else if(k==2){
+          vslog_TEXT[plog_num] = po.add.text(900, height / 8+50*plog_num  , "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+          vslog_TEXT[plog_num].setText("p2の"+p2_copy_card[r2].TYPE+"["+p2_copy_card[r2].HP+":"+p2_copy_card[r2].ATK+"]の勝利");
+        }else if(k==3){
+          vslog_TEXT[plog_num] = po.add.text(900, height / 8+50*plog_num  , "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");;
+          vslog_TEXT[plog_num].setText("p1の"+copy_card[r1].TYPE+"["+copy_card[r1].HP+":"+copy_card[r1].ATK+"]の勝利");
+        }
+        plog_num++;
+      }//戦闘のログを実際に画面に表示する？
+
+
+    function duel(f, p2_f,po) {
       var cnum=0;
       while ((count1 != 3  && count2 != 3)&& cnum++ != 30) {
         var r1 = Math.floor(Math.random() * 3 + 1);
@@ -293,19 +328,21 @@
             console.log("f["+r1+"]"+"VS"+"p2_f["+r2+"]");
             f[r1].HP-=p2_f[r2].ATK;
             p2_f[r2].HP-=f[r1].ATK;
-
             if(f[r1].HP <= 0 && p2_f[r2].HP <= 0){
               console.log("Draw");
               count1++;
-              count2++;
+              count2++; 
+              print_log(po,r1,r2,1,f,p2_f);
             }else{
               if (f[r1].HP <= 0) {
                 count1++;//カードが倒されたp1の
                 console.log("p2_f["+r2+"]の勝利");
+                print_log(po,r1,r2,2,f,p2_f);
               } 
               if (p2_f[r2].HP <= 0) {
                 count2++;//カードが倒されたp2の
                 console.log("f["+r1+"]の勝利");
+                print_log(po,r1,r2,3,f,p2_f);
               }
             }
         }
@@ -360,7 +397,7 @@
           hands[i] = hands[i + 1];
           hands_status(i);
         }
-        hands[hand+1]="black";
+        hands[hand+1]="green";
         hands_STAT_TEXT[i].setText("");
         hands_TYPE_TEXT[i].setText("");
        // array_check(hands);
@@ -368,10 +405,10 @@
         TYPE_TEXT[set].setText(ff_card[set].TYPE);
       }//手札の順番ソート
 
-      function instans(str){
+      function instance(str){
         j=1;
         for(var i=2;i<=6;i=i+2){
-          instans_card[j]=ff_card[str.slice(i-1,i)];
+          instance_card[j]=ff_card[str.slice(i-1,i)];
           console.log("strslice"+i+":"+str.slice(i-1,i));
           j++;
         }
@@ -381,31 +418,31 @@
         for(i=1;i<=3;i++){
         console.log("f1["+i+":"+ff_card[i].HP+":"+ff_card[i].ATK);
         console.log("f2["+i+":"+p2_ff_card[i].HP+":"+p2_ff_card[i].ATK);
-        console.log("instans_Card["+i+"]:"+instans_card[i].HP+":"+instans_card[i].ATK);
-        console.log("p2_instans_Card["+i+"]:"+p2_instans_card[i].HP+":"+p2_instans_card[i].ATK);
+        console.log("instance_Card["+i+"]:"+instance_card[i].HP+":"+instance_card[i].ATK);
+        console.log("p2_instance_Card["+i+"]:"+p2_instance_card[i].HP+":"+p2_instance_card[i].ATK);
         }
       }
 
-      function print_log(){
-        
-      }//戦闘のログを実際に画面に表示する？
+      
 
       function refresh(){
         ready_flag=0;
-        setnum="";
+        set_num="";
         instanText.setText("");
         count1 = 0;
         count2 = 0;
+        plog_end=1;
       }
 
       function ready_set(){
         if(ready_flag>=1&&ready_flag<4){
-          setnum=setnum+" "+set;
-          ErrorText.setText("順番:"+setnum);
+          set_num=set_num+" "+set;
+          ErrorText.setText("順番:"+set_num);
           ready_flag++;
         }else if(ready_flag>=4){
           ready_flag=1;
-          setnum="";
+          set_num="";
+          ErrorText.setText("順番:"+set_num);
         }
       }
 
@@ -426,7 +463,7 @@
       }
 
       function card_deal(po){
-        if(set!=null && hands[hand_num]!="black"){
+        if(set!=null && hands[hand_num]!="green"){
           buff();
           ff_card[set].NAME = hands[hand_num];
           ff_card[set].TYPE = hands_card[hand_num].TYPE;
@@ -441,22 +478,22 @@
 
       ready.on('pointerdown', function (pointer) {
         instanText.setText("どれを戦闘に参加させますか？(インスタンス化)");
-        ErrorText.setText("順番:"+setnum);
+        ErrorText.setText("順番:"+set_num);
         ready_flag=1;
       }, this);
 
       end.on('pointerdown', function (pointer) {
         console.log("end:"+field_card);
-        if(ready_flag==0){
+        if(ready_flag!=4){
           ErrorText.setText("Instanceを押してインスタンス化してください");
         } else {
-          instans(setnum);
-          console.log("instans_card:"+instans_card);
+          instance(set_num);
+          console.log("instance_card:"+instance_card);
           print();
           copy_array(copy_card,ff_card);
-          copy_array(p2_copy_card,p2_instans_card);
+          copy_array(p2_copy_card,p2_instance_card);
           console.log("p2" + p2_field_card);
-          console.log("p1" + instans_card);
+          console.log("p1" + instance_card);
           //DBと更新DB上の値が２になるまで待つ関数？
           //ここで相手の場札のカードをp2_field_cardに入れる
           //**insertHandno(hands, "" + val.player, 1);
@@ -470,10 +507,10 @@
           
           end_fin=0;
           if (val.player == 1) {
-              duel(instans_card,p2_instans_card);
+              duel(instance_card,p2_instance_card,this);
           }
           copy_array(ff_card,copy_card);
-          copy_array(p2_instans_card,p2_copy_card);
+          copy_array(p2_instance_card,p2_copy_card);
         }
         refresh();
       }, this);
