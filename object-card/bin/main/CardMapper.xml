@@ -13,10 +13,27 @@
     insert into hand (id,handno,player,endCheck)
     values (#{id},#{handno}, #{player}, #{endCheck})
   </insert>
+  <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      HP = #{HP}
+    where id = #{id}
+  </update>
+  <update id ="updateATK" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      ATK = #{ATK}
+    where id = #{id}
+  </update>
+  <update id ="updateTYPE" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      TYPE = #{TYPE}
+    where id = #{id}
+  </update>
   <update id ="updateHand" parameterType="jp.igakilab.dwr.mybatis.Card">
     update hand
     set
-      handno = #{handno},
       player = #{player},
       endCheck = #{endCheck}
     where id = #{id}

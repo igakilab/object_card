@@ -15,9 +15,11 @@ public class CardPrinter {
       handList = session.selectList("igakilab.mybatis.CardMapper.selectHand");
       for (Card f : handList) {
         System.out.println(f.getId());
-        System.out.println(f.getHandno());
         System.out.println(f.getPlayer());
         System.out.println(f.getEndCheck());
+        System.out.println(f.getHP());
+        System.out.println(f.getATK());
+        System.out.println(f.getTYPE());
       }
     }
     return handList;
@@ -39,38 +41,28 @@ public class CardPrinter {
 
   /**
    *
-   * @param hand
-   */
-
-  public void insertHand(Hand hand) {
-    try (SqlSession session = factory.openSession()) {
-      String player = hand.getPlayer();
-      int endCheck = hand.getEndCheck();
-      System.out.println("player:" + player + ", endCheck" + endCheck);
-      int id = 0;
-      for (String i : hand.getHandno()) {
-        id++;
-        int ret = session.insert("igakilab.mybatis.CardMapper.insertHand", new Card(id, i, player, endCheck));// 1つずつinsert
-        System.out.println(ret);
-      }
-      session.commit();
-    }
-  }
-
-  /**
-   *
    * @param handList
    */
 
   public void updateHand(Hand handList) {
     try (SqlSession session = factory.openSession()) {
-      int id = handList.getId();
       String player = handList.getPlayer();
       int endCheck = handList.getEndCheck();
-      for (String i : handList.getHandno()) {
-        int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(id, i, player, endCheck));// 1つずつupdate
+      for (int id = handList.getId(); id <= 5; id++) {
+        int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(id, player, endCheck));
         System.out.println(ret);
-        id++;
+      }
+      int hpid = 1;
+      for (int HP : handList.getHP()) {
+        int ret = session.update("igakilab.mybatis.CardMapper.updateHP", new Card(hpid, HP));
+        System.out.println(ret);
+        hpid++;
+      }
+      int typeid = 1;
+      for (String TYPE : handList.getTYPE()) {
+        int ret = session.update("igakilab.mybatis.CardMapper.updateTYPE", new Card(typeid, TYPE));
+        System.out.println(ret);
+        typeid++;
       }
       session.commit();
     }

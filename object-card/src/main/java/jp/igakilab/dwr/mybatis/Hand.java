@@ -7,9 +7,11 @@ import java.util.ArrayList;
  */
 public class Hand {
   private int id;
-  private ArrayList<String> handno = new ArrayList<>();
   private String player = new String();
   private int endCheck;
+  private ArrayList<Integer> HP = new ArrayList<>();
+  private ArrayList<Integer> ATK = new ArrayList<>();
+  private ArrayList<String> TYPE = new ArrayList<>();
 
   public int getId() {
     return id;
@@ -35,12 +37,28 @@ public class Hand {
     this.player = player;
   }
 
-  public ArrayList<String> getHandno() {
-    return handno;
+  public ArrayList<Integer> getHP() {
+    return HP;
   }
 
-  public void setHandno(ArrayList<String> handno) {
-    this.handno = handno;
+  public void setHP(ArrayList<Integer> HP) {
+    this.HP = HP;
+  }
+
+  public ArrayList<Integer> getATK() {
+    return ATK;
+  }
+
+  public void setATK(ArrayList<Integer> ATK) {
+    this.ATK = ATK;
+  }
+
+  public ArrayList<String> getTYPE() {
+    return TYPE;
+  }
+
+  public void setTYPE(ArrayList<String> TYPE) {
+    this.TYPE = TYPE;
   }
 
 }
