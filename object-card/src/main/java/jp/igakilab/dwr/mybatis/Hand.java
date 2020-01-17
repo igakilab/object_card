@@ -21,20 +21,20 @@ public class Hand {
     this.id = id;
   }
 
-  public int getEndCheck() {
-    return endCheck;
-  }
-
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
-  }
-
   public String getPlayer() {
     return player;
   }
 
   public void setPlayer(String player) {
     this.player = player;
+  }
+
+  public int getEndCheck() {
+    return endCheck;
+  }
+
+  public void setEndCheck(int endCheck) {
+    this.endCheck = endCheck;
   }
 
   public ArrayList<Integer> getHP() {

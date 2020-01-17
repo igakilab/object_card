@@ -9,20 +9,9 @@ public class Card {
   private int endCheck;
   private int HP;
   private int ATK;
-  private String TYPE = "";
+  private String TYPE;
 
-  public Card(int id, int para) {
-    this.id = id;
-    this.HP = para;
-  }
-
-  public Card(int id, String TYPE) {
-    this.id = id;
-    this.TYPE = TYPE;
-  }
-
-  public Card(int id, String player, int endCheck) {
-    this.id = id;
+  public Card(String player, int endCheck) {
     this.player = player;
     this.endCheck = endCheck;
   }
@@ -35,20 +24,20 @@ public class Card {
     this.id = id;
   }
 
-  public int getEndCheck() {
-    return endCheck;
-  }
-
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
-  }
-
   public String getPlayer() {
     return player;
   }
 
   public void setPlayer(String player) {
     this.player = player;
+  }
+
+  public int getEndCheck() {
+    return endCheck;
+  }
+
+  public void setEndCheck(int endCheck) {
+    this.endCheck = endCheck;
   }
 
   public int getHP() {
@@ -74,5 +63,4 @@ public class Card {
   public void setTYPE(String TYPE) {
     this.TYPE = TYPE;
   }
-
 }

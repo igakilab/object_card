@@ -663,7 +663,12 @@
     }
 
     function updateHandno(arr, ply, end) {
-      var hand_inf = { "id": 1, "player": ply, "endCheck": end, "HP": [arr[1].HP, arr[2].HP, arr[3].HP], "ATK": [arr[1].ATk, arr[2].ATK, arr[3].ATK], "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE] };
+      var hand_inf = {
+        "id": 1, "player": ply, "endCheck": end,
+        "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
+        "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
+        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
+      };
       CardPrinter.updateHand(hand_inf, {
         callback: function () {
           console.log("updateHand実行完了")
@@ -673,7 +678,12 @@
     }
 
     function updateHandno2(arr, ply, end2) {
-      var hand_inf = { "id": 1, "player": ply, "endCheck2": end2, "HP": [arr[1].HP, arr[2].HP, arr[3].HP], "ATK": [arr[1].ATk, arr[2].ATK, arr[3].ATK], "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE] };
+      var hand_inf = {
+        "id": 1, "player": ply, "endCheck2": end2,
+        "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
+        "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
+        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
+      };
       CardPrinter.updateHand2(hand_inf, {
         callback: function () {
           console.log("updateHand2実行完了");
