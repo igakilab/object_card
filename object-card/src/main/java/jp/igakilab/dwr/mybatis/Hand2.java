@@ -9,6 +9,7 @@ public class Hand2 {
   private int id;
   private String player = new String();
   private int endCheck2;
+  private int result2;
   private ArrayList<Integer> HP = new ArrayList<>();
   private ArrayList<Integer> ATK = new ArrayList<>();
   private ArrayList<String> TYPE = new ArrayList<>();
@@ -35,6 +36,14 @@ public class Hand2 {
 
   public void setEndCheck2(int endCheck2) {
     this.endCheck2 = endCheck2;
+  }
+
+  public int getResult2() {
+    return result2;
+  }
+
+  public void setResult2(int result2) {
+    this.result2 = result2;
   }
 
   public ArrayList<Integer> getHP() {

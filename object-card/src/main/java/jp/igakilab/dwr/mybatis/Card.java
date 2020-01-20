@@ -7,13 +7,20 @@ public class Card {
   private int id;
   private String player = "";
   private int endCheck;
+  private int result;
   private int HP;
   private int ATK;
   private String TYPE;
 
-  public Card(String player, int endCheck) {
+  public Card(int endCheck, int result) {
+    this.endCheck = endCheck;
+    this.result = result;
+  }
+
+  public Card(String player, int endCheck, int result) {
     this.player = player;
     this.endCheck = endCheck;
+    this.result = result;
   }
 
   public int getId() {
@@ -38,6 +45,14 @@ public class Card {
 
   public void setEndCheck(int endCheck) {
     this.endCheck = endCheck;
+  }
+
+  public int getResult() {
+    return result;
+  }
+
+  public void setResult(int result) {
+    this.result = result;
   }
 
   public int getHP() {

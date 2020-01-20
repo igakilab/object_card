@@ -4,10 +4,10 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="igakilab.mybatis.CardMapper">
   <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Card">
-    select id, player, endCheck, HP, ATK, TYPE from hand;
+    select id, player, endCheck, result, HP, ATK, TYPE from hand;
   </select>
   <select id="selectHand2" resultType="jp.igakilab.dwr.mybatis.Card2">
-    select id, player, endCheck2 from hand2;
+    select id, player, endCheck2, result2, HP, ATK, TYPE from hand2;
   </select>
   <insert id="insertHand">
     insert into hand (id,handno,player,endCheck)
@@ -18,6 +18,7 @@
     set
       player = #{player},
       endCheck = #{endCheck}
+      result = #{result}
   </update>
   <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.HP">
     update hand
@@ -42,6 +43,7 @@
     set
       player = #{player},
       endCheck2 = #{endCheck2}
+      result2 = #{result2}
   </update>
   <update id ="updateHP2" parameterType="jp.igakilab.dwr.mybatis.HP">
     update hand2
@@ -60,5 +62,17 @@
     set
       TYPE = #{TYPE}
     where id = #{id}
+  </update>
+  <update id ="resetResult" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      endCheck = #{endCheck},
+      result = #{result}
+  </update>
+  <update id ="resetResult2" parameterType="jp.igakilab.dwr.mybatis.Card2">
+    update hand2
+    set
+      endCheck2 = #{endCheck2},
+      result2 = #{result2}
   </update>
 </mapper>

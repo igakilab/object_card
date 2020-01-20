@@ -14,11 +14,111 @@
     body {
       margin: 0;
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      /* background-color: white; */
+      color: #ffffff;
+      width: 500px;
+      /* margin: 40% auto; */
+      margin-top: 20%;
+      /* margin-bottom: 100%; */
+      margin-left: 40%;
+      margin-right: 40%;
+      text-align: center;
+    }
+
+    .loader,
+    .loader:before,
+    .loader:after {
+      border-radius: 50%;
+      width: 2.5em;
+      height: 2.5em;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation: load7 1.8s infinite ease-in-out;
+      animation: load7 1.8s infinite ease-in-out;
+    }
+
+    .loader {
+      color: #ffffff;
+      font-size: 10px;
+      margin: 80px auto;
+      position: relative;
+      text-indent: -9999em;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
+    .loader:before,
+    .loader:after {
+      content: '';
+      position: absolute;
+      top: 0;
+    }
+
+    .loader:before {
+      left: -3.5em;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    .loader:after {
+      left: 3.5em;
+    }
+
+    @-webkit-keyframes load7 {
+
+      0%,
+      80%,
+      100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+      }
+
+      40% {
+        box-shadow: 0 2.5em 0 0;
+      }
+    }
+
+    @keyframes load7 {
+
+      0%,
+      80%,
+      100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+      }
+
+      40% {
+        box-shadow: 0 2.5em 0 0;
+      }
+    }
   </style>
 
 </head>
 
 <body>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h1>相手プレイヤーが操作中です</h1>
+        <div class="loader">Loading...</div>
+      </div>
+    </div>
+  </div>
   <p>
     <form id="pprinter_form">
       <input value="GetHandList" type="button" onclick="selectHand()" />
@@ -91,6 +191,8 @@
     var plog_num = 0;//行
     var plog_end = 0;
     var objects = {};
+    var end111 = 0;
+    var end222 = 0;
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -443,6 +545,7 @@
 
 
       function refresh() {
+        resetResult();
         ready_flag = 0;
         set_num = "";
         instanText.setText("");
@@ -522,18 +625,32 @@
           //}
           //while文で相手のendボタンを待つ
           if (val.player == 1) {
-            updateHandno(instance_card, "" + val.player, 1);
+            updateHandno(instance_card, "" + val.player, 1, 0);
+            document.getElementById("modal").style.display = "inline";
+            var end_fin = setInterval(function () {
+              selectHand();
+              if (end111 == 1 && end222 == 1) {
+                getP2Hand().then(hand_inf => {
+                  const p2hand_inf = [null, ...hand_inf];
+                  copy_array(p2_instance_card, p2hand_inf);
+                  document.getElementById("modal").style.display = "none";
+                  clearInterval(end_fin);
+                  end_fin = 0;
+                  if (val.player == 1) {
+                    duel(instance_card, p2_instance_card, this);
+                  }
+                  copy_array(ff_card, copy_card);
+                  copy_array(p2_instance_card, p2_copy_card);
+                  refresh();
+
+                });
+              }
+            }, 1000);
           } else {
-            updateHandno2(p2_instance_card, "" + val.player, 1);
+            updateHandno2(instance_card, "" + val.player, 1, 0);
           }
-          end_fin = 0;
-          if (val.player == 1) {
-            duel(instance_card, p2_instance_card, this);
-          }
-          copy_array(ff_card, copy_card);
-          copy_array(p2_instance_card, p2_copy_card);
+
         }
-        refresh();
       }, this);
 
       slime1.on('pointerdown', function (pointer) {
@@ -599,24 +716,26 @@
       }, this);//一番左出す
     }
 
-    function selectHand(po) {
-      CardPrinter.execute({
+    function getP2Hand() {
+      return new Promise((resolve, reject) => {
+        CardPrinter.execute2({
+          callback: data => resolve(data),
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
+          }
+        });
+      });
+    }
+
+    function selectHand() {
+      CardPrinter.execute2({
         callback: function (data) {
           $('#error_message').text("");
-          console.log(data);
-          for (var i = 0; i <= 4; i++) {
-            card = po.add.image(100 + i * 120, height / 8, data[i].handno);
-          }//足した
 
-          end_fin = data.endCheck;
+          end222 = data.some(({ endCheck2 }) => endCheck2 === 1) ? 1 : 0;
 
-          console.log(data.endCheck);
-          var hand_text = "";
-          data.forEach(function (hand) {
-            hand_text = hand_text + "[id]" + hand.id + "[handno]" + hand.handno + "[player]" + hand.player + "[endCheck]" + hand.endCheck + "<br/>";
-            array_card = hand.handno;
-          });
-          $('#pprinterReply').html(hand_text);
+          console.log(end222);
         },
         errorHandler: updateErrorMessage
 
@@ -662,13 +781,14 @@
       });
     }
 
-    function updateHandno(arr, ply, end) {
+    function updateHandno(arr, ply, end, res) {
       var hand_inf = {
-        "id": 1, "player": ply, "endCheck": end,
+        "id": 1, "player": ply, "endCheck": end, "result": res,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
       };
+      end111 = 1;
       CardPrinter.updateHand(hand_inf, {
         callback: function () {
           console.log("updateHand実行完了")
@@ -677,16 +797,35 @@
       });
     }
 
-    function updateHandno2(arr, ply, end2) {
+    function updateHandno2(arr, ply, end2, res2) {
       var hand_inf = {
-        "id": 1, "player": ply, "endCheck2": end2,
+        "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
       };
+      end222 = 1;
       CardPrinter.updateHand2(hand_inf, {
         callback: function () {
           console.log("updateHand2実行完了");
+        },
+        errorHandler: updateErrorMessage
+      });
+    }
+
+    function resetResult() {
+      var hand_inf = {
+        "endCheck": 0, "result": 0
+      };
+      CardPrinter.resetResult(hand_inf, {
+        callback: function () {
+          console.log("resetResult実行完了")
+        },
+        errorHandler: updateErrorMessage
+      });
+      CardPrinter.resetResult2(hand_inf, {
+        callback: function () {
+          console.log("resetResult2実行完了")
         },
         errorHandler: updateErrorMessage
       });

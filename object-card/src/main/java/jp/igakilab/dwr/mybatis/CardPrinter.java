@@ -50,9 +50,10 @@ public class CardPrinter {
     try (SqlSession session = factory.openSession()) {
       String player = handList.getPlayer();
       int endCheck = handList.getEndCheck();
+      int result = handList.getResult();
       int hpid = handList.getId(), atkid = handList.getId(), typeid = handList.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(player, endCheck));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(player, endCheck, result));
       System.out.println(ret);
 
       for (int HP : handList.getHP()) {
@@ -83,9 +84,10 @@ public class CardPrinter {
     try (SqlSession session = factory.openSession()) {
       String player = handList2.getPlayer();
       int endCheck2 = handList2.getEndCheck2();
+      int result2 = handList2.getResult2();
       int hpid = handList2.getId(), atkid = handList2.getId(), typeid = handList2.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateHand2", new Card2(player, endCheck2));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateHand2", new Card2(player, endCheck2, result2));
       System.out.println(ret);
 
       for (int HP : handList2.getHP()) {
@@ -103,6 +105,28 @@ public class CardPrinter {
         System.out.println(typeret);
         typeid++;
       }
+      session.commit();
+    }
+  }
+
+  public void resetResult(Hand resetList) {
+    try (SqlSession session = factory.openSession()) {
+      int endCheck = resetList.getEndCheck();
+      int result = resetList.getResult();
+
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult", new Card(endCheck, result));
+      System.out.println(ret);
+      session.commit();
+    }
+  }
+
+  public void resetResult2(Hand2 resetList2) {
+    try (SqlSession session = factory.openSession()) {
+      int endCheck2 = resetList2.getEndCheck2();
+      int result2 = resetList2.getResult2();
+
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult2", new Card2(endCheck2, result2));
+      System.out.println(ret);
       session.commit();
     }
   }
