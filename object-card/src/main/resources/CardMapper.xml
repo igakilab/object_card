@@ -9,6 +9,12 @@
   <select id="selectHand2" resultType="jp.igakilab.dwr.mybatis.Card2">
     select id, player, endCheck2, result2, HP, ATK, TYPE from hand2;
   </select>
+  <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
+    select player, plyHP, result from player;
+  </select>
+  <select id="selectLog" resultType="jp.igakilab.dwr.mybatis.Logch">
+    select logid, log from log;
+  </select>
   <insert id="insertHand">
     insert into hand (id,handno,player,endCheck)
     values (#{id}, #{player}, #{endCheck})
@@ -17,7 +23,7 @@
     update hand
     set
       player = #{player},
-      endCheck = #{endCheck}
+      endCheck = #{endCheck},
       result = #{result}
   </update>
   <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.HP">
@@ -42,7 +48,7 @@
     update hand2
     set
       player = #{player},
-      endCheck2 = #{endCheck2}
+      endCheck2 = #{endCheck2},
       result2 = #{result2}
   </update>
   <update id ="updateHP2" parameterType="jp.igakilab.dwr.mybatis.HP">
@@ -74,5 +80,18 @@
     set
       endCheck2 = #{endCheck2},
       result2 = #{result2}
+  </update>
+  <update id ="updatePlayer" parameterType="jp.igakilab.dwr.mybatis.Player">
+    update player
+    set
+      plyHP = #{plyHP},
+      result = #{result}
+    where player = #{player}
+  </update>
+  <update id ="updateLog" parameterType="jp.igakilab.dwr.mybatis.Logch">
+    update log
+    set
+      log = #{log}
+    where logid = #{logid}
   </update>
 </mapper>

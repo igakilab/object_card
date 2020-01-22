@@ -12,11 +12,6 @@ public class Card {
   private int ATK;
   private String TYPE;
 
-  public Card(int endCheck, int result) {
-    this.endCheck = endCheck;
-    this.result = result;
-  }
-
   public Card(String player, int endCheck, int result) {
     this.player = player;
     this.endCheck = endCheck;

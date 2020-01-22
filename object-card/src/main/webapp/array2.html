@@ -120,14 +120,6 @@
     </div>
   </div>
   <p>
-    <form id="pprinter_form">
-      <input value="GetHandList" type="button" onclick="selectHand()" />
-    </form>
-  </p>
-  <p>
-    Reply: <span id="pprinterReply"></span>
-  </p>
-  <p>
     <span id="error_message" class="error"></span>
   </p>
 
@@ -193,6 +185,8 @@
     var objects = {};
     var end111 = 0;
     var end222 = 0;
+    var p2_result_data = [];
+    var p2_vslog_TEXT = [];
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -382,8 +376,37 @@
       instanText = this.add.text(100, 500, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
     }
 
+    function p2_result() {
+      if (p2_result_data[1].result == 1) {
+        if (wins >= 1) {
+          wins++;
+          WINText.setText('WINS:' + wins);
+        } else {
+          wins = 1;
+          WINText.setText('WIN');
+          //resultdbに投げる数字(1);p1が勝つと1,p2が勝つと2 resuletっていう別テーブルを作ってHPと勝ち負けを記録
+        }
+        if (p2_HP == 1) {
+          ErrorText.setText('YOU WIN');
+        }
+      } else if (p2_result_data[1].result == 2) {
+        WINText.setText('LOSE');
+        //resultdbに投げる数字(2);
+        if (HP == 1) {
+          ErrorText.setText('YOU LOSE');
+        }
+      } else {
+        WINText.setText('Draw');
+      }
+      HP = p2_result_data[1].plyHP;
+      p2_HP = p2_result_data[0].plyHP;
+      HPText.setText('1P HP' + HP);
+      p2_HPText.setText('2P HP' + p2_HP);
+    }//p1が勝つとwin,p2が勝つとlose // p2がdataを受け取って表示するためのデータ
 
     function result(count1, count2) {
+      updatePlayer("" + 1, HP, 0);
+      updatePlayer("" + 2, p2_HP, 0);
       if (count2 > count1) {
         if (wins >= 1) {
           wins++;
@@ -393,6 +416,8 @@
           WINText.setText('WIN');
         }
         p2_HP--;
+        updatePlayer("" + 1, HP, 1);
+        updatePlayer("" + 2, p2_HP, 2);
         if (p2_HP == 1) {
           ErrorText.setText('YOU WIN');
         }
@@ -402,9 +427,50 @@
           ErrorText.setText('YOU LOSE');
         }
         HP -= 1;
+        updatePlayer("" + 1, HP, 2);
+        updatePlayer("" + 2, p2_HP, 1);
+
       } else {
         WINText.setText('Draw');
+
+        updatePlayer("" + 1, HP, 3);
+        updatePlayer("" + 2, p2_HP, 3);
       }
+      p2_result_data = selectPlayer();
+      HPText.setText('1P HP' + HP);
+      p2_HPText.setText('2P HP' + p2_HP);
+    }
+
+    function p2_result() {
+
+      if (wins >= 1) {
+        wins++;
+        WINText.setText('WINS:' + wins);
+      } else {
+        wins = 1;
+        WINText.setText('WIN');
+      }
+      p2_HP--;
+      updatePlayer("" + 1, HP, 1);
+      updatePlayer("" + 2, p2_HP, 2);
+      if (p2_HP == 1) {
+        ErrorText.setText('YOU WIN');
+      } else if (count1 > count2) {
+        WINText.setText('LOSE');
+        if (HP == 1) {
+          ErrorText.setText('YOU LOSE');
+        }
+        HP -= 1;
+        updatePlayer("" + 1, HP, 2);
+        updatePlayer("" + 2, p2_HP, 1);
+
+      } else {
+        WINText.setText('Draw');
+
+        updatePlayer("" + 1, HP, 3);
+        updatePlayer("" + 2, p2_HP, 3);
+      }
+      p2_result = selectPlayer();
       HPText.setText('1P HP' + HP);
       p2_HPText.setText('2P HP' + p2_HP);
     }
@@ -422,23 +488,35 @@
         plog_end = 0;
       }
       vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      vslog_TEXT[plog_num].setText("p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "] VS p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]");
+      p2_vslog_TEXT[plog_num] = "p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "] VS p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]";
+      vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+      console.log("****************" + p2_vslog_TEXT[plog_num]);
       plog_num++;
       if (k == 1) {
-        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("white");;
-        vslog_TEXT[plog_num].setText("引き分け");
+        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("white");
+        p2_vslog_TEXT[plog_num] = "引き分け";
+        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 2) {
         vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
-        vslog_TEXT[plog_num].setText("p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]の勝利");
+        p2_vslog_TEXT[plog_num] = "p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]の勝利";
+        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 3) {
-        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");;
-        vslog_TEXT[plog_num].setText("p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "]の勝利");
+        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+        p2_vslog_TEXT[plog_num] = "p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "]の勝利";
+        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       }
+      updateLog(p2_vslog_TEXT);
       plog_num++;
     }//戦闘のログを実際に画面に表示する？
 
 
-    function duel(f, p2_f, po) {
+
+
+
+
+
+
+    function duel(f, p2_f, p) {
       var cnum = 0;
       while ((count1 != 3 && count2 != 3) && cnum++ != 30) {
         var r1 = Math.floor(Math.random() * 3 + 1);
@@ -451,17 +529,17 @@
             console.log("Draw");
             count1++;
             count2++;
-            print_log(po, r1, r2, 1, f, p2_f);
+            print_log(p, r1, r2, 1, f, p2_f);
           } else {
             if (f[r1].HP <= 0) {
               count1++;//カードが倒されたp1の
               console.log("p2_f[" + r2 + "]の勝利");
-              print_log(po, r1, r2, 2, f, p2_f);
+              print_log(p, r1, r2, 2, f, p2_f);
             }
             if (p2_f[r2].HP <= 0) {
               count2++;//カードが倒されたp2の
               console.log("f[" + r1 + "]の勝利");
-              print_log(po, r1, r2, 3, f, p2_f);
+              print_log(p, r1, r2, 3, f, p2_f);
             }
           }
         }
@@ -545,7 +623,7 @@
 
 
       function refresh() {
-        resetResult();
+        resetResult("" + val.player);
         ready_flag = 0;
         set_num = "";
         instanText.setText("");
@@ -624,11 +702,12 @@
           //},1000);
           //}
           //while文で相手のendボタンを待つ
+          var pa = this;
           if (val.player == 1) {
-            updateHandno(instance_card, "" + val.player, 1, 0);
+            updateHandno(instance_card, "" + val.player, 1, 1);
             document.getElementById("modal").style.display = "inline";
             var end_fin = setInterval(function () {
-              selectHand();
+              selectHand2();
               if (end111 == 1 && end222 == 1) {
                 getP2Hand().then(hand_inf => {
                   const p2hand_inf = [null, ...hand_inf];
@@ -637,7 +716,7 @@
                   clearInterval(end_fin);
                   end_fin = 0;
                   if (val.player == 1) {
-                    duel(instance_card, p2_instance_card, this);
+                    duel(instance_card, p2_instance_card, pa);
                   }
                   copy_array(ff_card, copy_card);
                   copy_array(p2_instance_card, p2_copy_card);
@@ -648,6 +727,26 @@
             }, 1000);
           } else {
             updateHandno2(instance_card, "" + val.player, 1, 0);
+            document.getElementById("modal").style.display = "inline";
+            var end_fin = setInterval(function () {
+              //result222=0じゃなくなる関数
+              console.log("*********" + p2_result_data);
+              if (p2_result_data[1].result != 0) {
+                getP1Hand().then(hand_inf => {
+                  const p1hand_inf = [null, ...hand_inf];
+                  copy_array(p2_instance_card, p1hand_inf);//p1のハンドコピー
+                  document.getElementById("modal").style.display = "none";
+                  clearInterval(end_fin);
+                  end_fin = 0;
+                  p2_result_data = selectPlayer();
+                  p2_result(p2_result_data);
+                  //selecthand p1のもってくるやつ
+                  copy_array(ff_card, copy_card);
+                  copy_array(p2_instance_card, p2_copy_card);
+                  refresh();
+                });
+              }
+            }, 1000);
           }
 
         }
@@ -716,6 +815,18 @@
       }, this);//一番左出す
     }
 
+    function getP1Hand() {
+      return new Promise((resolve, reject) => {
+        CardPrinter.execute({
+          callback: data => resolve(data),
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
+          }
+        });
+      });
+    }
+
     function getP2Hand() {
       return new Promise((resolve, reject) => {
         CardPrinter.execute2({
@@ -728,7 +839,30 @@
       });
     }
 
+    function selectPlayer() {
+      CardPrinter.plyexe({
+        callback: function (data) {
+          $('#error_message').text("");
+          return data;
+        },
+        errorHandler: updateErrorMessage
+
+      });
+    }
+
     function selectHand() {
+      CardPrinter.execute({
+        callback: function (data) {
+          $('#error_message').text("");
+          //for (var i = 0; i <= 4; i++) {
+          //card = po.add.image(100 + i * 120, height / 8, data[i].handno);
+          //}
+        },
+        errorHandler: updateErrorMessage
+      });
+    }
+
+    function selectHand2() {
       CardPrinter.execute2({
         callback: function (data) {
           $('#error_message').text("");
@@ -738,31 +872,20 @@
           console.log(end222);
         },
         errorHandler: updateErrorMessage
-
       });
     }
 
-    function selectHand2(po) {
-      CardPrinter.execute2({
+    function selectLog() {
+      CardPrinter.logexe({
         callback: function (data) {
           $('#error_message').text("");
-          console.log(data);
-          for (var i = 0; i <= 4; i++) {
-            card = po.add.image(100 + i * 120, height / 8, data[i].handno);
-          }//足した
 
-          end_fin = data.endCheck2;
+          //data.forEach(function (food) {
+          //  food_text = food_text + "[name]" + food.name + "[price]" + food.price + "<br/>";
+          //});
 
-          console.log(data.endCheck2);
-          var hand_text = "";
-          data.forEach(function (hand) {
-            hand_text = hand_text + "[id]" + hand.id + "[handno]" + hand.handno + "[player]" + hand.player + "[endCheck2]" + hand.endCheck2 + "<br/>";
-            array_card = hand.handno;
-          });
-          $('#pprinterReply').html(hand_text);
         },
         errorHandler: updateErrorMessage
-
       });
     }
 
@@ -813,9 +936,33 @@
       });
     }
 
-    function resetResult() {
+    function updatePlayer(ply, plyHP, result) {
+      var player_inf = {
+        "player": ply, "plyHP": plyHP, "result": result,
+      };
+      CardPrinter.updatePlayer(player_inf, {
+        callback: function () {
+          console.log("updatePlayer実行完了");
+        },
+        errorHandler: updateErrorMessage
+      });
+    }
+
+    function updateLog(log) {
+      var log_inf = {
+        "logid": 1, "log": [log[1], log[2], log[3], log[4], log[5], log[6]]
+      };
+      CardPrinter.updateLog(log_inf, {
+        callback: function () {
+          console.log("updateLog実行完了");
+        },
+        errorHandler: updateErrorMessage
+      });
+    }
+
+    function resetResult(ply) {
       var hand_inf = {
-        "endCheck": 0, "result": 0
+        "player": ply, "endCheck": 0, "result": 0
       };
       CardPrinter.resetResult(hand_inf, {
         callback: function () {
@@ -829,6 +976,8 @@
         },
         errorHandler: updateErrorMessage
       });
+      end111 = 0;
+      end222 = 0;
     }
 
   </script>

@@ -17,6 +17,7 @@ public class CardPrinter {
         System.out.println(f.getId());
         System.out.println(f.getPlayer());
         System.out.println(f.getEndCheck());
+        System.out.println(f.getResult());
         System.out.println(f.getHP());
         System.out.println(f.getATK());
         System.out.println(f.getTYPE());
@@ -33,6 +34,7 @@ public class CardPrinter {
         System.out.println(f.getId());
         System.out.println(f.getPlayer());
         System.out.println(f.getEndCheck2());
+        System.out.println(f.getResult2());
         System.out.println(f.getHP());
         System.out.println(f.getATK());
         System.out.println(f.getTYPE());
@@ -41,11 +43,35 @@ public class CardPrinter {
     return handList2;
   }
 
+  public List<Player> plyexe() {
+    List<Player> playerList = new ArrayList<>();
+    try (SqlSession session = factory.openSession()) {
+      playerList = session.selectList("igakilab.mybatis.CardMapper.selectPlayer");
+      for (Player f : playerList) {
+        System.out.println(f.getPlayer());
+        System.out.println(f.getPlyHP());
+        System.out.println(f.getResult());
+      }
+    }
+    return playerList;
+  }
+
+  public List<Logch> logexe() {
+    List<Logch> logList = new ArrayList<>();
+    try (SqlSession session = factory.openSession()) {
+      logList = session.selectList("igakilab.mybatis.CardMapper.selectLog");
+      for (Logch f : logList) {
+        System.out.println(f.getLogid());
+        System.out.println(f.getLog());
+      }
+    }
+    return logList;
+  }
+
   /**
    *
    * @param handList
    */
-
   public void updateHand(Hand handList) {
     try (SqlSession session = factory.openSession()) {
       String player = handList.getPlayer();
@@ -79,7 +105,6 @@ public class CardPrinter {
    *
    * @param handList2
    */
-
   public void updateHand2(Hand2 handList2) {
     try (SqlSession session = factory.openSession()) {
       String player = handList2.getPlayer();
@@ -109,12 +134,41 @@ public class CardPrinter {
     }
   }
 
+  /**
+   *
+   * @param playerList
+   */
+  public void updatePlayer(Player playerList) {
+    try (SqlSession session = factory.openSession()) {
+
+      int ret = session.update("igakilab.mybatis.CardMapper.updatePlayer", playerList);
+      System.out.println(ret);
+
+      session.commit();
+    }
+  }
+
+  public void updateLog(Log logList) {
+    try (SqlSession session = factory.openSession()) {
+      int logid = logList.getLogid();
+
+      for (String i : logList.getLog()) {
+        int ret = session.update("igakilab.mybatis.CardMapper.updateLog", new Logch(logid, i));
+        System.out.println(ret);
+        logid++;
+      }
+
+      session.commit();
+    }
+  }
+
   public void resetResult(Hand resetList) {
     try (SqlSession session = factory.openSession()) {
+      String player = resetList.getPlayer();
       int endCheck = resetList.getEndCheck();
       int result = resetList.getResult();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.resetResult", new Card(endCheck, result));
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult", new Card(player, endCheck, result));
       System.out.println(ret);
       session.commit();
     }
@@ -122,10 +176,11 @@ public class CardPrinter {
 
   public void resetResult2(Hand2 resetList2) {
     try (SqlSession session = factory.openSession()) {
+      String player = resetList2.getPlayer();
       int endCheck2 = resetList2.getEndCheck2();
       int result2 = resetList2.getResult2();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.resetResult2", new Card2(endCheck2, result2));
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult2", new Card2(player, endCheck2, result2));
       System.out.println(ret);
       session.commit();
     }
@@ -134,6 +189,8 @@ public class CardPrinter {
   public static void main(String[] args) {
     CardPrinter pp = new CardPrinter();
     pp.execute();
+    pp.execute2();
+    pp.plyexe();
   }
 
 }
