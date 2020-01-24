@@ -24,7 +24,7 @@ public class Logch {
     return log;
   }
 
-  public void setLogs(String log) {
+  public void setLog(String log) {
     this.log = log;
   }
 }

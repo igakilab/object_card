@@ -877,9 +877,9 @@
 
     function selectLog() {
       CardPrinter.logexe({
-        callback: function (data) {
+        callback: function (logdata) {
           $('#error_message').text("");
-
+          return logdata;
           //data.forEach(function (food) {
           //  food_text = food_text + "[name]" + food.name + "[price]" + food.price + "<br/>";
           //});
@@ -950,7 +950,7 @@
 
     function updateLog(log) {
       var log_inf = {
-        "logid": 1, "log": [log[1], log[2], log[3], log[4], log[5], log[6]]
+        "logid": 1, "log": [log[0], log[1], log[2], log[3], log[4], log[5]]
       };
       CardPrinter.updateLog(log_inf, {
         callback: function () {

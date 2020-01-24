@@ -21,7 +21,7 @@ public class Log {
     return log;
   }
 
-  public void setLogs(ArrayList<String> log) {
+  public void setLog(ArrayList<String> log) {
     this.log = log;
   }
 }
