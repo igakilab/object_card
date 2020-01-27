@@ -185,7 +185,6 @@
     var objects = {};
     var end111 = 0;
     var end222 = 0;
-    var p2_result_data = [];
     var p2_vslog_TEXT = [];
 
     function getUrlVars() {
@@ -376,7 +375,7 @@
       instanText = this.add.text(100, 500, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
     }
 
-    function p2_result() {
+    function p2_result(p2_result_data) {
       if (p2_result_data[1].result == 1) {
         if (wins >= 1) {
           wins++;
@@ -386,6 +385,9 @@
           WINText.setText('WIN');
           //resultdbに投げる数字(1);p1が勝つと1,p2が勝つと2 resuletっていう別テーブルを作ってHPと勝ち負けを記録
         }
+        p2_HP--;
+        updatePlayer("" + 1, HP, 1);
+        updatePlayer("" + 2, p2_HP, 2);
         if (p2_HP == 1) {
           ErrorText.setText('YOU WIN');
         }
@@ -395,14 +397,20 @@
         if (HP == 1) {
           ErrorText.setText('YOU LOSE');
         }
+        HP -= 1;
+        updatePlayer("" + 1, HP, 2);
+        updatePlayer("" + 2, p2_HP, 1);
       } else {
         WINText.setText('Draw');
+        updatePlayer("" + 1, HP, 3);
+        updatePlayer("" + 2, p2_HP, 3);
       }
       HP = p2_result_data[1].plyHP;
       p2_HP = p2_result_data[0].plyHP;
       HPText.setText('1P HP' + HP);
       p2_HPText.setText('2P HP' + p2_HP);
     }//p1が勝つとwin,p2が勝つとlose // p2がdataを受け取って表示するためのデータ
+
 
     function result(count1, count2) {
       updatePlayer("" + 1, HP, 0);
@@ -436,44 +444,12 @@
         updatePlayer("" + 1, HP, 3);
         updatePlayer("" + 2, p2_HP, 3);
       }
-      p2_result_data = selectPlayer();
+      // selectPlayer();
       HPText.setText('1P HP' + HP);
       p2_HPText.setText('2P HP' + p2_HP);
     }
 
-    function p2_result() {
 
-      if (wins >= 1) {
-        wins++;
-        WINText.setText('WINS:' + wins);
-      } else {
-        wins = 1;
-        WINText.setText('WIN');
-      }
-      p2_HP--;
-      updatePlayer("" + 1, HP, 1);
-      updatePlayer("" + 2, p2_HP, 2);
-      if (p2_HP == 1) {
-        ErrorText.setText('YOU WIN');
-      } else if (count1 > count2) {
-        WINText.setText('LOSE');
-        if (HP == 1) {
-          ErrorText.setText('YOU LOSE');
-        }
-        HP -= 1;
-        updatePlayer("" + 1, HP, 2);
-        updatePlayer("" + 2, p2_HP, 1);
-
-      } else {
-        WINText.setText('Draw');
-
-        updatePlayer("" + 1, HP, 3);
-        updatePlayer("" + 2, p2_HP, 3);
-      }
-      p2_result = selectPlayer();
-      HPText.setText('1P HP' + HP);
-      p2_HPText.setText('2P HP' + p2_HP);
-    }
 
     function print_log_ref() {
       for (var i = 1; i < plog_num; i++) {
@@ -509,6 +485,23 @@
       plog_num++;
     }//戦闘のログを実際に画面に表示する？
 
+    async function p2_print_log(po) {
+      if (plog_end == 1) {
+        print_log_ref();
+        plog_end = 0;
+      }
+      if (val.player == 2) {
+        p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);
+        for (var i = 0; i < 3; i++) {
+          vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+          plog_num++;
+          vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+          plog_num++;
+        }
+      }
+    }//戦闘のログを実際に画面に表示する？
 
 
 
@@ -681,6 +674,7 @@
       }, this);
 
       end.on('pointerdown', function (pointer) {
+        var k = this;
         console.log("end:" + field_card);
         if (ready_flag != 4) {
           ErrorText.setText("Instanceを押してインスタンス化してください");
@@ -728,7 +722,8 @@
           } else {
             updateHandno2(instance_card, "" + val.player, 1, 0);
             document.getElementById("modal").style.display = "inline";
-            var end_fin = setInterval(function () {
+            var end_fin = setInterval(async function () {
+              const p2_result_data = await selectPlayer();
               //result222=0じゃなくなる関数
               console.log("*********" + p2_result_data);
               if (p2_result_data[1].result != 0) {
@@ -738,7 +733,7 @@
                   document.getElementById("modal").style.display = "none";
                   clearInterval(end_fin);
                   end_fin = 0;
-                  p2_result_data = selectPlayer();
+                  p2_print_log(k);
                   p2_result(p2_result_data);
                   //selecthand p1のもってくるやつ
                   copy_array(ff_card, copy_card);
@@ -840,13 +835,14 @@
     }
 
     function selectPlayer() {
-      CardPrinter.plyexe({
-        callback: function (data) {
-          $('#error_message').text("");
-          return data;
-        },
-        errorHandler: updateErrorMessage
-
+      return new Promise((resolve, reject) => {
+        CardPrinter.plyexe({
+          callback: data => resolve(data),
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
+          }
+        });
       });
     }
 
@@ -876,17 +872,26 @@
     }
 
     function selectLog() {
-      CardPrinter.logexe({
-        callback: function (logdata) {
-          $('#error_message').text("");
-          return logdata;
-          //data.forEach(function (food) {
-          //  food_text = food_text + "[name]" + food.name + "[price]" + food.price + "<br/>";
-          //});
-
-        },
-        errorHandler: updateErrorMessage
+      return new Promise((resolve, reject) => {
+        CardPrinter.logexe({
+          callback: data => resolve(data),
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
+          }
+        });
       });
+      // CardPrinter.logexe({
+      //   callback: function (logdata) {
+      //     $('#error_message').text("");
+
+      //     //data.forEach(function (food) {
+      //     //  food_text = food_text + "[name]" + food.name + "[price]" + food.price + "<br/>";
+      //     //});
+
+      //   },
+      //   errorHandler: updateErrorMessage
+      // });
     }
 
     function updateErrorMessage(message, exception) {
