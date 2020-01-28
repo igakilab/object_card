@@ -1,22 +1,34 @@
 package jp.igakilab.dwr.mybatis;
 
+/**
+ * Player
+ */
 public class Player {
-  String name;
-  int no;
+  private String player = new String();
+  private int plyHP;
+  private int result;
 
-  public String getName() {
-    return name;
+  public String getPlayer() {
+    return player;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setPlayer(String player) {
+    this.player = player;
   }
 
-  public int getNo() {
-    return no;
+  public int getPlyHP() {
+    return plyHP;
   }
 
-  public void setNo(int no) {
-    this.no = no;
+  public void setPlyHP(int plyHP) {
+    this.plyHP = plyHP;
+  }
+
+  public int getResult() {
+    return result;
+  }
+
+  public void setResult(int result) {
+    this.result = result;
   }
 }

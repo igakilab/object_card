@@ -3,18 +3,95 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="igakilab.mybatis.CardMapper">
-  <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
-    select no, name from player;
-  </select>
   <select id="selectHand" resultType="jp.igakilab.dwr.mybatis.Card">
-    select handno, player, end_check from hand;
+    select id, player, endCheck, result, HP, ATK, TYPE from hand;
   </select>
-  <insert id="insertPlayer">
-    insert into player (no,name)
-    values (#{no}, #{name})
-  </insert>
+  <select id="selectHand2" resultType="jp.igakilab.dwr.mybatis.Card2">
+    select id, player, endCheck2, result2, HP, ATK, TYPE from hand2;
+  </select>
+  <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
+    select player, plyHP, result from player;
+  </select>
+  <select id="selectLog" resultType="jp.igakilab.dwr.mybatis.Logch">
+    select logid, log from log;
+  </select>
   <insert id="insertHand">
-    insert into hand (handno,player,end_check)
-    values (#{handno}, #{player}, #{end_check})
+    insert into hand (id,handno,player,endCheck)
+    values (#{id}, #{player}, #{endCheck})
   </insert>
+  <update id ="updateHand" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      player = #{player},
+      endCheck = #{endCheck},
+      result = #{result}
+  </update>
+  <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.HP">
+    update hand
+    set
+      HP = #{HP}
+    where id = #{id}
+  </update>
+  <update id ="updateATK" parameterType="jp.igakilab.dwr.mybatis.ATK">
+    update hand
+    set
+      ATK = #{ATK}
+    where id = #{id}
+  </update>
+  <update id ="updateTYPE" parameterType="jp.igakilab.dwr.mybatis.TYPE">
+    update hand
+    set
+      TYPE = #{TYPE}
+    where id = #{id}
+  </update>
+  <update id ="updateHand2" parameterType="jp.igakilab.dwr.mybatis.Card2">
+    update hand2
+    set
+      player = #{player},
+      endCheck2 = #{endCheck2},
+      result2 = #{result2}
+  </update>
+  <update id ="updateHP2" parameterType="jp.igakilab.dwr.mybatis.HP">
+    update hand2
+    set
+      HP = #{HP}
+    where id = #{id}
+  </update>
+  <update id ="updateATK2" parameterType="jp.igakilab.dwr.mybatis.ATK">
+    update hand2
+    set
+      ATK = #{ATK}
+    where id = #{id}
+  </update>
+  <update id ="updateTYPE2" parameterType="jp.igakilab.dwr.mybatis.TYPE">
+    update hand2
+    set
+      TYPE = #{TYPE}
+    where id = #{id}
+  </update>
+  <update id ="resetResult" parameterType="jp.igakilab.dwr.mybatis.Card">
+    update hand
+    set
+      endCheck = #{endCheck},
+      result = #{result}
+  </update>
+  <update id ="resetResult2" parameterType="jp.igakilab.dwr.mybatis.Card2">
+    update hand2
+    set
+      endCheck2 = #{endCheck2},
+      result2 = #{result2}
+  </update>
+  <update id ="updatePlayer" parameterType="jp.igakilab.dwr.mybatis.Player">
+    update player
+    set
+      plyHP = #{plyHP},
+      result = #{result}
+    where player = #{player}
+  </update>
+  <update id ="updateLog" parameterType="jp.igakilab.dwr.mybatis.Logch">
+    update log
+    set
+      log = #{log}
+    where logid = #{logid}
+  </update>
 </mapper>

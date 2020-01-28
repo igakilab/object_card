@@ -1,21 +1,21 @@
 package jp.igakilab.dwr.mybatis;
 
 /**
- * Card
+ * Card2
  */
-public class Card {
+public class Card2 {
   private int id;
   private String player = "";
-  private int endCheck;
-  private int result;
+  private int endCheck2;
+  private int result2;
   private int HP;
   private int ATK;
   private String TYPE;
 
-  public Card(String player, int endCheck, int result) {
+  public Card2(String player, int endCheck2, int result2) {
     this.player = player;
-    this.endCheck = endCheck;
-    this.result = result;
+    this.endCheck2 = endCheck2;
+    this.result2 = result2;
   }
 
   public int getId() {
@@ -34,20 +34,20 @@ public class Card {
     this.player = player;
   }
 
-  public int getEndCheck() {
-    return endCheck;
+  public int getEndCheck2() {
+    return endCheck2;
   }
 
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
+  public void setEndCheck2(int endCheck2) {
+    this.endCheck2 = endCheck2;
   }
 
-  public int getResult() {
-    return result;
+  public int getResult2() {
+    return result2;
   }
 
-  public void setResult(int result) {
-    this.result = result;
+  public void setResult2(int result2) {
+    this.result2 = result2;
   }
 
   public int getHP() {
@@ -73,4 +73,5 @@ public class Card {
   public void setTYPE(String TYPE) {
     this.TYPE = TYPE;
   }
+
 }
