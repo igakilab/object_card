@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-//1
 
 <head>
   <meta http-equiv="content-language" content="ja">
@@ -699,7 +698,7 @@
           //while文で相手のendボタンを待つ
           var pa = this;
           if (val.player == 1) {
-            updateHandno(instance_card, "" + val.player, 1, 1);
+            updateField(instance_card, "" + val.player, 1, 1);
             document.getElementById("modal").style.display = "inline";
             var end_fin = setInterval(function () {
               selectHand2();
@@ -721,7 +720,7 @@
               }
             }, 1000);
           } else {
-            updateHandno2(instance_card, "" + val.player, 1, 0);
+            updateField2(instance_card, "" + val.player, 1, 0);
             document.getElementById("modal").style.display = "inline";
             var end_fin = setInterval(async function () {
               const p2_result_data = await selectPlayer();
@@ -835,18 +834,6 @@
       });
     }
 
-    function selectPlayer() {
-      return new Promise((resolve, reject) => {
-        CardPrinter.plyexe({
-          callback: data => resolve(data),
-          errorHandler: (message, exception) => {
-            updateErrorMessage(message, exception);
-            reject(exception);
-          }
-        });
-      });
-    }
-
     function selectHand() {
       CardPrinter.execute({
         callback: function (data) {
@@ -869,6 +856,18 @@
           console.log(end222);
         },
         errorHandler: updateErrorMessage
+      });
+    }
+
+    function selectPlayer() {
+      return new Promise((resolve, reject) => {
+        CardPrinter.plyexe({
+          callback: data => resolve(data),
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
+          }
+        });
       });
     }
 
@@ -900,17 +899,7 @@
       $('#pprinterReply').text("");
     }
 
-    function insertHandno(arr, ply, end) {
-      var hand_inf = { "id": 1, "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "endCheck": end };
-      CardPrinter.insertHand(hand_inf, {
-        callback: function () {
-          console.log("insertHand実行完了")
-        },
-        errorHandler: updateErrorMessage
-      });
-    }
-
-    function updateHandno(arr, ply, end, res) {
+    function updateField(arr, ply, end, res) {
       var hand_inf = {
         "id": 1, "player": ply, "endCheck": end, "result": res,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
@@ -918,7 +907,7 @@
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
       };
       end111 = 1;
-      CardPrinter.updateHand(hand_inf, {
+      CardPrinter.updateField(hand_inf, {
         callback: function () {
           console.log("updateHand実行完了")
         },
@@ -926,7 +915,7 @@
       });
     }
 
-    function updateHandno2(arr, ply, end2, res2) {
+    function updateField2(arr, ply, end2, res2) {
       var hand_inf = {
         "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
@@ -934,7 +923,7 @@
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
       };
       end222 = 1;
-      CardPrinter.updateHand2(hand_inf, {
+      CardPrinter.updateField2(hand_inf, {
         callback: function () {
           console.log("updateHand2実行完了");
         },

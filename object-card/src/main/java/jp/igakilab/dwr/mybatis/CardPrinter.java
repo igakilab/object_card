@@ -72,14 +72,14 @@ public class CardPrinter {
    *
    * @param handList
    */
-  public void updateHand(Hand handList) {
+  public void updateField(Hand handList) {
     try (SqlSession session = factory.openSession()) {
       String player = handList.getPlayer();
       int endCheck = handList.getEndCheck();
       int result = handList.getResult();
       int hpid = handList.getId(), atkid = handList.getId(), typeid = handList.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateHand", new Card(player, endCheck, result));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateField", new Card(player, endCheck, result));
       System.out.println(ret);
 
       for (int HP : handList.getHP()) {
@@ -105,14 +105,14 @@ public class CardPrinter {
    *
    * @param handList2
    */
-  public void updateHand2(Hand2 handList2) {
+  public void updateField2(Hand2 handList2) {
     try (SqlSession session = factory.openSession()) {
       String player = handList2.getPlayer();
       int endCheck2 = handList2.getEndCheck2();
       int result2 = handList2.getResult2();
       int hpid = handList2.getId(), atkid = handList2.getId(), typeid = handList2.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateHand2", new Card2(player, endCheck2, result2));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateField2", new Card2(player, endCheck2, result2));
       System.out.println(ret);
 
       for (int HP : handList2.getHP()) {

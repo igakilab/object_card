@@ -599,7 +599,7 @@
 
     function updateHandno(arr, ply, end) {
       var hand_inf = { "id": 1, "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "endCheck": end };
-      CardPrinter.updateHand(hand_inf, {
+      CardPrinter.updateField(hand_inf, {
         callback: function () {
           console.log("updateHand実行完了")
         },
@@ -609,7 +609,7 @@
 
     function updateHandno2(arr, ply, end2) {
       var hand_inf = { "id": 1, "handno": [arr[1], arr[2], arr[3], arr[4], arr[5]], "player": ply, "endCheck2": end2 };
-      CardPrinter.updateHand2(hand_inf, {
+      CardPrinter.updateField2(hand_inf, {
         callback: function () {
           console.log("updateHand2実行完了" + ", endCheck2:" + end2);
         },
