@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class FLY {
+public class Fly {
   private int id;
   private int FLY;
 
-  public FLY(int id, int FLY) {
+  public Fly(int id, int FLY) {
     this.id = id;
     this.FLY = FLY;
   }

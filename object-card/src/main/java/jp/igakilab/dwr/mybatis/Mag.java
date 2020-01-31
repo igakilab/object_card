@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class MAG {
+public class Mag {
   private int id;
   private int MAG;
 
-  public MAG(int id, int MAG) {
+  public Mag(int id, int MAG) {
     this.id = id;
     this.MAG = MAG;
   }
