@@ -73,27 +73,27 @@ public class Hand2 {
     this.TYPE = TYPE;
   }
 
-  public ArrayList<Integer> getFly() {
+  public ArrayList<Integer> getFLY() {
     return FLY;
   }
 
-  public void setFly(ArrayList<Integer> FLY) {
+  public void setFLY(ArrayList<Integer> FLY) {
     this.FLY = FLY;
   }
 
-  public ArrayList<Integer> getPhs() {
+  public ArrayList<Integer> getPHS() {
     return PHS;
   }
 
-  public void setPhs(ArrayList<Integer> PHS) {
+  public void setPHS(ArrayList<Integer> PHS) {
     this.PHS = PHS;
   }
 
-  public ArrayList<Integer> getMag() {
+  public ArrayList<Integer> getMAG() {
     return MAG;
   }
 
-  public void setMag(ArrayList<Integer> MAG) {
+  public void setMAG(ArrayList<Integer> MAG) {
     this.MAG = MAG;
   }
 }

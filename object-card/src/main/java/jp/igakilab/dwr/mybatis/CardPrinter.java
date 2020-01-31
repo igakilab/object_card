@@ -21,6 +21,9 @@ public class CardPrinter {
         System.out.println(f.getHP());
         System.out.println(f.getATK());
         System.out.println(f.getTYPE());
+        System.out.println(f.getFLY());
+        System.out.println(f.getPHS());
+        System.out.println(f.getMAG());
       }
     }
     return fieldList;
@@ -38,6 +41,9 @@ public class CardPrinter {
         System.out.println(f.getHP());
         System.out.println(f.getATK());
         System.out.println(f.getTYPE());
+        System.out.println(f.getFLY());
+        System.out.println(f.getPHS());
+        System.out.println(f.getMAG());
       }
     }
     return fieldList2;
@@ -98,18 +104,18 @@ public class CardPrinter {
         System.out.println(typeret);
         typeid++;
       }
-      for (int FLY : fieldList.getFly()) {
-        int flyret = session.update("igakilab.mybatis.CardMapper.updateFly", new Fly(flyid, FLY));
+      for (int FLY : fieldList.getFLY()) {
+        int flyret = session.update("igakilab.mybatis.CardMapper.updateFLY", new FLY(flyid, FLY));
         System.out.println(flyret);
         flyid++;
       }
-      for (int PHS : fieldList.getPhs()) {
-        int phsret = session.update("igakilab.mybatis.CardMapper.updatePhs", new Phs(phsid, PHS));
+      for (int PHS : fieldList.getPHS()) {
+        int phsret = session.update("igakilab.mybatis.CardMapper.updatePHS", new PHS(phsid, PHS));
         System.out.println(phsret);
         phsid++;
       }
-      for (int MAG : fieldList.getMag()) {
-        int magret = session.update("igakilab.mybatis.CardMapper.updateMag", new Mag(magid, MAG));
+      for (int MAG : fieldList.getMAG()) {
+        int magret = session.update("igakilab.mybatis.CardMapper.updateMAG", new MAG(magid, MAG));
         System.out.println(magret);
         magid++;
       }
@@ -147,18 +153,18 @@ public class CardPrinter {
         System.out.println(typeret);
         typeid++;
       }
-      for (int FLY : fieldList2.getFly()) {
-        int flyret = session.update("igakilab.mybatis.CardMapper.updateFly2", new Fly(flyid, FLY));
+      for (int FLY : fieldList2.getFLY()) {
+        int flyret = session.update("igakilab.mybatis.CardMapper.updateFLY2", new FLY(flyid, FLY));
         System.out.println(flyret);
         flyid++;
       }
-      for (int PHS : fieldList2.getPhs()) {
-        int phsret = session.update("igakilab.mybatis.CardMapper.updatePhs2", new Phs(phsid, PHS));
+      for (int PHS : fieldList2.getPHS()) {
+        int phsret = session.update("igakilab.mybatis.CardMapper.updatePHS2", new PHS(phsid, PHS));
         System.out.println(phsret);
         phsid++;
       }
-      for (int MAG : fieldList2.getMag()) {
-        int magret = session.update("igakilab.mybatis.CardMapper.updateMag2", new Mag(magid, MAG));
+      for (int MAG : fieldList2.getMAG()) {
+        int magret = session.update("igakilab.mybatis.CardMapper.updateMAG2", new MAG(magid, MAG));
         System.out.println(magret);
         magid++;
       }

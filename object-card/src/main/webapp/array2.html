@@ -136,21 +136,20 @@
       }
     };
 
-    //ff_cardはバフするときの途中に使うやつ
-    var ff_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
-    var p2_ff_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
+    var field_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" } };
+    var p2_field_card = { 1: { HP: 1, ATK: 1, TYPE: "MAG", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" } };
 
     //instance_cardは最後のインスタン化するときのやつ
-    var instance_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
-    var p2_instance_card = { 1: { HP: 2, ATK: 2, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
+    var instance_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" } };
+    var p2_instance_card = { 1: { HP: 2, ATK: 2, TYPE: "MAG", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 2: { HP: 1, ATK: 1, TYPE: "MAG", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" }, 3: { HP: 1, ATK: 1, TYPE: "MAG", FLY: 0, PHS: 0, MAG: 0, NAME: "スライム" } };
 
-    var hands_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 4: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 5: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
+    var hands_card = { 1: { HP: 1, ATK: 1, TYPE: undefined, NAME: undefined, KIND: "MO" }, 2: { HP: 1, ATK: 1, TYPE: undefined, NAME: undefined, KIND: "MO" }, 3: { HP: 1, ATK: 1, TYPE: undefined, NAME: undefined, KIND: "MO" }, 4: { HP: 1, ATK: 1, TYPE: undefined, NAME: undefined, KIND: "MO" }, 5: { HP: 1, ATK: 1, TYPE: undefined, NAME: undefined, KIND: "MO" } };
 
-    var copy_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
-    var p2_copy_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "" } };
+    var copy_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" } };
+    var p2_copy_card = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", FLY: 0, PHS: 0, MAG: 0, NAME: "" } };
 
     var game = new Phaser.Game(config);
-    var hand = 5;
+    var hand = 3;
     var deck = 30;
     var HP = 10;
     var HPText;
@@ -161,10 +160,7 @@
     var width = 1600;
     var height = 800;
     var cards = [];
-    var hands = [];
     var dug = hand;
-    var field_card = [];//p1の場札のカードの表示
-    var p2_field_card = [];//p2の場札のカードの表示
     var count1 = 0;//p1
     var count2 = 0;//p2
     var wins = 0;//連勝数記録
@@ -179,13 +175,20 @@
     var set_num = "";//どれをインスタンス化するかの数値
     var hand_num = 0;//手札の何枚目を場に出したかがわかる数値
     var end_count = 0;//
-    var vslog_TEXT = [];//iは行？
+    var vslog_TEXT = [];//iは行
+    var p2_vslog_TEXT = [];
     var plog_num = 0;//行
     var plog_end = 0;
     var objects = {};
-    var end111 = 0;
-    var end222 = 0;
-    var p2_vslog_TEXT = [];
+    var status_text = [];
+    var buffed = 0;
+    var typs = 0;//場札のタイプの数
+    var status_max = 0;//今出てるステータスの数
+    var capsule_flag = 0;
+    var flag = [];
+    var st_t = [];//status_log_text
+    var capsule_now = 0;
+    var capsule_str = "";
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -202,75 +205,27 @@
 
       return vars;
     }
-
-
     var val = getUrlVars();
     console.log(val.player);
     var p2_HP = 10;
 
-
-
     function preload() {
       this.load.image('card', 'img/card.png');
       this.load.image('card2', 'img/card2.png');
-      this.load.image('cardc01', 'img/c01.png');
-      this.load.image('cardc02', 'img/c02.png');
-      this.load.image('cardc03', 'img/c03.png');
-      this.load.image('cardc04', 'img/c04.png');
-      this.load.image('cardc05', 'img/c05.png');
-      this.load.image('cardc06', 'img/c06.png');
-      this.load.image('cardc07', 'img/c07.png');
-      this.load.image('cardc08', 'img/c08.png');
-      this.load.image('cardc09', 'img/c09.png');
-      this.load.image('cardc10', 'img/c10.png');
-      this.load.image('cardc11', 'img/c11.png');
-      this.load.image('cardc12', 'img/c12.png');
-      this.load.image('cardc13', 'img/c13.png');
-      this.load.image('cardd01', 'img/d01.png');
-      this.load.image('cardd02', 'img/d02.png');
-      this.load.image('cardd03', 'img/d03.png');
-      this.load.image('cardd04', 'img/d04.png');
-      this.load.image('cardd05', 'img/d05.png');
-      this.load.image('cardd06', 'img/d06.png');
-      this.load.image('cardd07', 'img/d07.png');
-      this.load.image('cardd08', 'img/d08.png');
-      this.load.image('cardd09', 'img/d09.png');
-      this.load.image('cardd10', 'img/d10.png');
-      this.load.image('cardd11', 'img/d11.png');
-      this.load.image('cardd12', 'img/d12.png');
-      this.load.image('cardd13', 'img/d13.png');
-      this.load.image('cardh01', 'img/h01.png');
-      this.load.image('cardh02', 'img/h02.png');
-      this.load.image('cardh03', 'img/h03.png');
-      this.load.image('cardh04', 'img/h04.png');
-      this.load.image('cardh05', 'img/h05.png');
-      this.load.image('cardh06', 'img/h06.png');
-      this.load.image('cardh07', 'img/h07.png');
-      this.load.image('cardh08', 'img/h08.png');
-      this.load.image('cardh09', 'img/h09.png');
-      this.load.image('cardh10', 'img/h10.png');
-      this.load.image('cardh11', 'img/h11.png');
-      this.load.image('cardh12', 'img/h12.png');
-      this.load.image('cardh13', 'img/h13.png');
-      this.load.image('cards01', 'img/s01.png');
-      this.load.image('cards02', 'img/s02.png');
-      this.load.image('cards03', 'img/s03.png');
-      this.load.image('cards04', 'img/s04.png');
-      this.load.image('cards05', 'img/s05.png');
-      this.load.image('cards06', 'img/s06.png');
-      this.load.image('cards07', 'img/s07.png');
-      this.load.image('cards08', 'img/s08.png');
-      this.load.image('cards09', 'img/s09.png');
-      this.load.image('cards10', 'img/s10.png');
-      this.load.image('cards11', 'img/s11.png');
-      this.load.image('cards12', 'img/s12.png');
-      this.load.image('cards13', 'img/s13.png');
       this.load.image('slimc11', 'img/slimee.png');
       this.load.image('magic11', 'img/magg.png');
       this.load.image('phsic11', 'img/phss.png');
       this.load.image('flyic11', 'img/flyy.png');
-      this.load.image('toric11', 'img/tori.png');
-      this.load.image('green', 'img/green.png');
+      this.load.image('gree', 'img/green.png');
+      this.load.image('magic12', 'img/Rmag.png');
+      this.load.image('magic13', 'img/Bmag.png');
+      this.load.image('magic14', 'img/Ymag.png');
+      this.load.image('phsic12', 'img/Rphs.png');
+      this.load.image('phsic13', 'img/Bphs.png');
+      this.load.image('phsic14', 'img/Yphs.png');
+      this.load.image('flyic12', 'img/Rfly.png');
+      this.load.image('flyic13', 'img/Bfly.png');
+      this.load.image('flyic14', 'img/Yfly.png');
     }
 
     function copy_array(c1, c2) {
@@ -278,11 +233,33 @@
         c1[i].ATK = c2[i].ATK;
         c1[i].HP = c2[i].HP;
         c1[i].NAME = c2[i].NAME;
+        c1[i].FLY = c2[i].FLY;
+        c1[i].MAG = c2[i].MAG;
+        c1[i].PHS = c2[i].PHS;
+        if (c2[i].KIND != null) {
+          c1[i].KIND = c2[i].KIND;
+        }
       }
     }//前のやつに後ろのやつを入れる
 
+    function hands_kind(s, st) {
+      var n = Number(st.slice(6, 7))
+      if (n != NaN) {
+        if (n <= 9) {
+          hands_card[s].KIND = "CP";
+          if (n <= 6) {
+            hands_card[s].KIND = "OR";
+            if (n <= 3) {
+              hands_card[s].KIND = "OL";
+            }
+          }
+        }
+      }
+    }//OLorORorCPのカードにする　カードの出現率にもなってる
+
     function hands_status(i) {
-      var str1 = '' + hands[i];
+      var str1 = '' + hands_card[i].NAME;
+      console.log(i + "番目のカード:" + str1);
       if (str1.slice(4, 5) == 'c') {
         hands_card[i].ATK = 1;
         hands_card[i].TYPE = "FLY";
@@ -294,26 +271,79 @@
         hands_card[i].TYPE = "MAG";
       } else if (str1.slice(4, 5) == 'h') {
         hands_card[i].ATK = 4;
-        hands_card[i].TYPE = "SLI";
+        hands_card[i].TYPE = "FLY";
       }
-      hands_card[i].HP = Number(str1.slice(6, 7));
-      hands_STAT_TEXT[i].setText(hands_card[i].HP + ":" + hands_card[i].ATK);
-      hands_TYPE_TEXT[i].setText(hands_card[i].TYPE);
+      if (hands_card[i].KIND == "MO") {
+        hands_card[i].HP = Number(2);
+      } else {
+        hands_card[i].HP = Number(str1.slice(6, 7));
+      }
+      if (hands_card[i].NAME != null) {
+        hands_STAT_TEXT[i].setText(hands_card[i].ATK + ":" + hands_card[i].HP);
+        if (hands_card[i].KIND == "MO") {
+          hands_TYPE_TEXT[i].setText(hands_card[i].NAME);
+        } else {
+          hands_TYPE_TEXT[i].setText(hands_card[i].TYPE);
+        }
+      }
     }
 
     function status_card(po) {
       for (var i = 1; i <= 5; i++) {
         hands_STAT_TEXT[i] = po.add.text(-40 + i * 120, height / 8 * 7 + 50, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+        hands_STAT_TEXT[i].setText("");
         hands_TYPE_TEXT[i] = po.add.text(-30 + i * 120 - 25, height / 8 * 7 - 75, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+        hands_TYPE_TEXT[i].setText("");
         hands_status(i);
       }
     }//手札のカードの値をカードの下に表示する？？
+
+    function type_print(a) {
+      //console.log("TYPE_PRINT:"+a.NAME);
+      if (a.NAME == null) {
+        return "gree";
+      }
+      if (a.NAME != null) {
+        if (a.TYPE == "SLIME") {
+          return "slimc11";
+        } else if (a.TYPE == "FLY") {
+          if (a.KIND == "OL") {
+            return "flyic12";
+          } else if (a.KIND == "OR") {
+            return "flyic13";
+          } else if (a.KIND == "CP") {
+            return "flyic14";
+          }
+          return "flyic11";
+        } else if (a.TYPE == "MAG") {
+          if (a.KIND == "OL") {
+            return "magic12";
+          } else if (a.KIND == "OR") {
+            return "magic13";
+          } else if (a.KIND == "CP") {
+            return "magic14";
+          }
+          return "magic11";
+        } else if (a.TYPE == "PHS") {
+          if (a.KIND == "OL") {
+            return "phsic12";
+          } else if (a.KIND == "OR") {
+            return "phsic13";
+          } else if (a.KIND == "CP") {
+            return "phsic14";
+          }
+          return "phsic11";
+        }
+      } else {
+        return "gree";
+      }
+    }
 
     function create() {
       objects.camera = this.cameras.add(0, 0, 1600, 800);//どっからどこまでカメラ
       objects.camera.setBackgroundColor('rgba(0,255,0, 0.5)');//背景色を帰れるよ
 
-      var x = 0;
+      var x = 1;
 
       for (var i = 1; i <= 9; i++) {
         cards[x] = 'cardc0' + i;
@@ -344,24 +374,26 @@
         cards[r] = w;
       }//shuffle
 
-      for (var i = 1; i <= hand; i++) {
-        hands[i] = cards[i];
-        card = this.add.image(-20 + i * 120, height / 8 * 7, hands[i]);
-      }//p1 hand under
+      function monster_card(thas) {
+        var monster = { 1: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "RED", KIND: "MO" }, 2: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "GREEN", KIND: "MO" }, 3: { HP: 1, ATK: 1, TYPE: "SLIME", NAME: "BLUE", KIND: "MO" } };
+        for (var i = 1; i <= hand; i++) {
+          hands_card[i] = monster[i];
+          card = thas.add.image(-20 + i * 120, height / 8 * 7, type_print(hands_card[i]));
+        }
+      }
 
+      monster_card(this);
       status_card(this);
 
       for (var i = 1; i <= 3; i++) {
-        STAT_TEXT[i] = this.add.text(80 + i * 120, 450, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-        TYPE_TEXT[i] = this.add.text(80 + i * 120 - 25, 325, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-        field_card[i] = 'slimc11';
-        p2_field_card[i] = "slimc11";
-        STAT_TEXT[i].setText(ff_card[i].HP + ":" + ff_card[i].ATK);
-        TYPE_TEXT[i].setText(ff_card[i].TYPE);
+        STAT_TEXT[i] = this.add.text(180 * i - 45, 450, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+        TYPE_TEXT[i] = this.add.text(180 * i - 45, 325, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
+        STAT_TEXT[i].setText(field_card[i].ATK + ":" + field_card[i].HP);
+        TYPE_TEXT[i].setText(field_card[i].NAME);//動くの？？
         p2_STAT_TEXT[i] = this.add.text(80 + i * 120, 150, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-        p2_TYPE_TEXT[i] = this.add.text(80 + i * 120 - 25, 25, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-        p2_STAT_TEXT[i].setText(p2_ff_card[i].HP + ":" + p2_ff_card[i].ATK);
-        p2_TYPE_TEXT[i].setText(p2_ff_card[i].TYPE);
+        p2_TYPE_TEXT[i] = this.add.text(80 + i * 120 - 25, 25, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
+        p2_STAT_TEXT[i].setText(p2_field_card[i].ATK + ":" + p2_field_card[i].HP);
+        p2_TYPE_TEXT[i].setText(p2_field_card[i].NAME);
       }//typeと数値を出すp1とp2 場札
 
       deck = this.add.image(700, height / 8 * 2, 'card');
@@ -370,11 +402,14 @@
       SCText = this.add.text(300, 250, 'SET:' + set).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       p2_HPText = this.add.text(650, 300, '2P HP:' + p2_HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       HPText = this.add.text(650, 450, '1P HP:' + HP).setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      WINText = this.add.text(450, 250, 'WL').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      ErrorText = this.add.text(300, 550, 'E').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+      WINText = this.add.text(450, 250, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+      ErrorText = this.add.text(200, 550, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       instanText = this.add.text(100, 500, '').setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-    }
 
+      for (var i = 1; i <= 8; i++) {
+        status_text[i] = this.add.text(900, height / 2 + 40 * i, "").setInteractive();
+      }
+    }
     function p2_result(p2_result_data) {
       if (p2_result_data[1].result == 1) {
         if (wins >= 1) {
@@ -464,7 +499,7 @@
         plog_end = 0;
       }
       vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-      p2_vslog_TEXT[plog_num] = "p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "] VS p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]";
+      p2_vslog_TEXT[plog_num] = "p1の" + instance_card[r1].NAME + "[" + instance_card[r1].TYPE + "] VS p2の" + p2_instance_card[r2].NAME + "[" + p2_instance_card[r2].TYPE + "]";
       vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       console.log("****************" + p2_vslog_TEXT[plog_num]);
       plog_num++;
@@ -474,11 +509,13 @@
         vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 2) {
         vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
-        p2_vslog_TEXT[plog_num] = "p2の" + p2_copy_card[r2].TYPE + "[" + p2_copy_card[r2].HP + ":" + p2_copy_card[r2].ATK + "]の勝利";
+        //p2_vslog_TEXT[plog_num]="p2の"+p2_instance_card[r2].NAME+"["+p2_instance_card[r2].ATK+":"+p2_instance_card[r2].HP+"]の勝利";
+        p2_vslog_TEXT[plog_num] = "p2の" + p2_instance_card[r2].NAME + "[" + p2_instance_card[r2].TYPE + "]の勝利";
+
         vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 3) {
         vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
-        p2_vslog_TEXT[plog_num] = "p1の" + copy_card[r1].TYPE + "[" + copy_card[r1].HP + ":" + copy_card[r1].ATK + "]の勝利";
+        p2_vslog_TEXT[plog_num] = "p1の" + instance_card[r1].NAME + "[" + instance_card[r1].TYPE + "]の勝利";
         vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       }
       updateLog(p2_vslog_TEXT);
@@ -503,36 +540,58 @@
       }
     }//戦闘のログを実際に画面に表示する？
 
+    function print_type_text(a) {
+      typs = 0;
+      if (a.FLY == 1) {
+        typs++;
+      }
+      if (a.MAG == 1) {
+        typs++
+      }
+      if (a.PHS == 1) {
+        typs++;
+      }
+    }
+
+    function type_rndm_select(a) {
+      const types = ["FLY", "MAG", "PHS"].filter(type => a[type] === 1)
+      return types[Math.floor(Math.random() * types.length)] || null
+    }
 
 
 
 
 
-
-    function duel(f, p2_f, p) {
+    function duel(f, p2_f, po) {
       var cnum = 0;
       while ((count1 != 3 && count2 != 3) && cnum++ != 30) {
         var r1 = Math.floor(Math.random() * 3 + 1);
         var r2 = Math.floor(Math.random() * 3 + 1);
         if (f[r1].HP > 0 && p2_f[r2].HP > 0) {
           console.log("f[" + r1 + "]" + "VS" + "p2_f[" + r2 + "]");
-          f[r1].HP -= p2_f[r2].ATK;
-          p2_f[r2].HP -= f[r1].ATK;
+          f[r1].TYPE = type_rndm_select(f[r1]);
+          p2_f[r2].TYPE = type_rndm_select(p2_f[r2]);
+          console.log(p2_f[r2]);
+          if (f[r1].TYPE != p2_f[r2].TYPE) {
+            f[r1].HP -= p2_f[r2].ATK;
+            p2_f[r2].HP -= f[r1].ATK;
+          }
+
           if (f[r1].HP <= 0 && p2_f[r2].HP <= 0) {
             console.log("Draw");
             count1++;
             count2++;
-            print_log(p, r1, r2, 1, f, p2_f);
+            print_log(po, r1, r2, 1, f, p2_f);
           } else {
             if (f[r1].HP <= 0) {
               count1++;//カードが倒されたp1の
               console.log("p2_f[" + r2 + "]の勝利");
-              print_log(p, r1, r2, 2, f, p2_f);
+              print_log(po, r1, r2, 2, f, p2_f);
             }
             if (p2_f[r2].HP <= 0) {
               count2++;//カードが倒されたp2の
               console.log("f[" + r1 + "]の勝利");
-              print_log(p, r1, r2, 3, f, p2_f);
+              print_log(po, r1, r2, 3, f, p2_f);
             }
           }
         }
@@ -543,129 +602,358 @@
     }//p1からp2への戦い一方的
     //今p2の場札1を1.1じゃなくて2.2にしてるよ
 
-
     function buff() {
-      console.log("もとのやつ:" + ff_card[set].ATK + "," + ff_card[set].HP);
+      console.log("もとのやつ:" + field_card[set].ATK + "," + field_card[set].HP);
       console.log("足した奴:" + hands_card[hand_num].ATK + "," + hands_card[hand_num].HP);
-      ff_card[set].ATK += hands_card[hand_num].ATK;
-      ff_card[set].HP += hands_card[hand_num].HP;
-      console.log("ATK合計:" + ff_card[set].ATK);
-      console.log("HP合計:" + ff_card[set].HP);
+      field_card[set].ATK += hands_card[hand_num].ATK;
+      field_card[set].HP += hands_card[hand_num].HP;
+      console.log("ATK合計:" + field_card[set].ATK);
+      console.log("HP合計:" + field_card[set].HP);
+    }
+
+    function overload() {
+      if (hands_card[hand_num].TYPE == "FLY") {
+        field_card[set].FLY = 1;
+      } else if (hands_card[hand_num].TYPE == "MAG") {
+        field_card[set].MAG = 1;
+      } else if (hands_card[hand_num].TYPE == "PHS") {
+        field_card[set].PHS = 1;
+      }
+    }//オーバーロードカードの動き
+
+    function override() {
+      var ch = 0;
+      if (field_card[set].FLY == 1 && hands_card[hand_num].TYPE == "FLY") {
+        ch = 1;
+      } else if (field_card[set].MAG == 1 && hands_card[hand_num].TYPE == "MAG") {
+        ch = 1;
+      } else if (field_card[set].PHS == 1 && hands_card[hand_num].TYPE == "PHS") {
+        ch = 1;
+      }
+      if (ch == 1) {
+        field_card[set].HP *= 2;
+        ErrorText.setText('オーバーライドしました');
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    function overrideold() {
+      if (hands_card[hand_num].TYPE == field_card[set].TYPE) {
+        field_card[set].HP *= 2;
+        ErrorText.setText('オーバーライドしました');
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    function capsule(ps) {
+      for (var i = 1; i <= status_max - 1; i++) {
+        flag[i] = 1;
+        //status_text[i]=ps.add.text(900-20,height/2+40*i,""+flag[i]).setInteractive();
+      }
+      status_max = 0;
+      instanText.setText("どれをカプセル化しますか");
+    }//カプセル化
+
+    function inheri_check() {
+      if (field_card[set].NAME == "GREENスライム") {
+        return 1;
+      } else if (field_card[set].NAME == "REDスライム") {
+        return 1;
+      } else if (field_card[set].NAME == "BLUEスライム") {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    function replen_card(p) {
+      for (var i = hand + 1; i <= 5; i++) {
+        hand++;
+        dug++;//掘り進めた数
+        hands_card[i].NAME = '' + String(cards[dug]);
+        hands_kind(i, hands_card[i].NAME);
+        hands_status(i);
+        console.log(hands_card[i]);
+      }
+    }//カードの補充
+
+    function capsule_cap(k) {
+      var capsule_str = "" + st_t[k];
+      if (capsule_str == "FLY") {
+        field_card[set].FLY = 0;
+      } else if (capsule_str == "MAG") {
+        field_card[set].MAG = 0;
+      } else if (capsule_str == "PHS") {
+        field_card[set].PHS = 0;
+      }
+      for (var i = 1; i <= typs * 2; i++) {
+        flag[i] = 0;
+      }
+      for (var i = k; i <= typs * 2; i++) {
+        status_text[i].setText("");
+        status_text[i] = status_text[i + 1];
+      }
+      print_type_text(field_card[set]);
+
+
+      ErrorText.setText("カプセル化:" + capsule_str);
+    }//どれをカプセル化するかのとこ
+
+    function print_TEXT() {
+      for (i = 1; i <= 3; i++) {
+        p2_STAT_TEXT[i].setText(p2_field_card[i].ATK + ":" + p2_field_card[i].HP);
+        p2_TYPE_TEXT[i].setText(p2_field_card[i].NAME);
+        STAT_TEXT[i].setText(field_card[i].ATK + ":" + field_card[i].HP);
+        TYPE_TEXT[i].setText(field_card[i].NAME);
+      }//p2 dbから帰ってきたようのやつ
+      for (i = 1; i <= hand; i++) {
+        hands_STAT_TEXT[i].setText(hands_card[i].ATK + ":" + hands_card[i].HP);
+        if (hands_card[i].KIND == "MO") {
+          hands_TYPE_TEXT[i].setText(hands_card[i].NAME);
+        } else {
+          hands_TYPE_TEXT[i].setText(hands_card[i].TYPE);
+        }
+      }//手札の情報
+    }
+
+    function status_log(pa) {
+      var check_card = [];
+      var c = hand_num;
+
+      if (status_text[0] != null) {
+        for (var i = 0; i <= typs * 2; i++) {
+          status_text[i].setText("");
+        }
+      }//reset status_log
+      var i = 0;
+      if (inheri_check() == 0) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "");
+        status_text[i].setText("継承:" + field_card[set].NAME + "(" + field_card[set].TYPE + ")");
+        i++;
+      } else {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "");
+        status_text[i].setText("継承:" + field_card[set].NAME + "(" + field_card[set].TYPE + ")<-" + copy_card[set].NAME + "(" + copy_card[set].TYPE + ")");
+        i++;
+      }
+      print_type_text(field_card[set]);
+      if (field_card[set].FLY == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "FLY";
+        status_text[i].setText("int attack(" + st_t[i] + ")");
+        i++;
+      }
+      if (field_card[set].MAG == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "MAG";
+        status_text[i].setText("int attack(" + st_t[i] + ")");
+        i++;
+      }
+      if (field_card[set].PHS == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "PHS";
+        status_text[i].setText("int attack(" + st_t[i] + ")");
+        i++;
+      }
+      if (field_card[set].FLY == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "FLY";
+        status_text[i].setText("int deffence(" + st_t[i] + ")");
+        i++;
+      }
+      if (field_card[set].MAG == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "MAG";
+        status_text[i].setText("int deffence(" + st_t[i] + ")");
+        i++;
+      }
+      if (field_card[set].PHS == 1) {
+        status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
+        st_t[i] = "PHS";
+        status_text[i].setText("int deffence(" + st_t[i] + ")");
+        i++;
+      }
+      status_max = i;
+    }//beta status_log
+
+    function update_hands() {
+      hand--;
+      for (var i = hand_num; i <= hand; i++) {
+        hands_card[i].NAME = hands_card[i + 1].NAME;
+        hands_card[i].KIND = hands_card[i + 1].KIND;
+        hands_card[i].TYPE = hands_card[i + 1].TYPE;
+        hands_status(i);
+      }
+      hands_STAT_TEXT[hand + 1].setText("");
+      hands_TYPE_TEXT[hand + 1].setText("");
+      hands_card[hand + 1].NAME = null;
+      console.log(hands_card);
+    }//手札の順番ソート
+
+    function inheri() {
+      buff();
+      buffed = 1;
+      field_card[set].NAME = hands_card[hand_num].NAME + field_card[set].NAME;
+      update_hands();
+    }//継承
+
+    function instance(str) {
+      j = 1;
+      for (var i = 2; i <= 6; i = i + 2) {
+        instance_card[j] = field_card[str.slice(i - 1, i)];
+        console.log("strslice" + i + ":" + str.slice(i - 1, i));
+        j++;
+      }
+    }//インスタンス
+
+    function print() {
+      for (i = 1; i <= 3; i++) {
+        console.log("f1[" + i + ":" + field_card[i].HP + ":" + field_card[i].ATK);
+        console.log("f2[" + i + ":" + p2_field_card[i].HP + ":" + p2_field_card[i].ATK);
+        console.log("instance_Card[" + i + "]:" + instance_card[i].HP + ":" + instance_card[i].ATK);
+        console.log("p2_instance_Card[" + i + "]:" + p2_instance_card[i].HP + ":" + p2_instance_card[i].ATK);
+      }
+    }
+
+    function refresh() {
+      resetResult("" + val.player);
+      ready_flag = 0;
+      set_num = "";
+      instanText.setText("");
+      count1 = 0;
+      count2 = 0;
+      plog_end = 1;
+    }
+
+    function ready_set() {
+      if (ready_flag >= 1 && ready_flag < 4) {
+        set_num = set_num + " " + set;
+        ErrorText.setText("順番:" + set_num);
+        ready_flag++;
+      } else if (ready_flag >= 4) {
+        ready_flag = 1;
+        set_num = "";
+        ErrorText.setText("順番:" + set_num);
+      }
+    }
+
+    function TYPE_CHECK(ty, p) {
+      var t = "";
+      if (ty == "MAG") {
+        field_card[set].MAG = 1;
+        t += "魔法";
+      } else if (ty == "FLY") {
+        field_card[set].FLY = 1;
+        t += "飛行";
+      } else if (ty == "PHS") {
+        field_card[set].PHS = 1;
+        t += "物理";
+      }
+      ErrorText.setText(t + 'をオーバーロードしました');
+    }
+
+    function card_deal(po) {
+      if (set != null && hands_card[hand_num].NAME != "gree" && hands_card[hand_num].NAME != null) {
+        var okor = 1;
+        if (inheri_check() == 1) {
+          if (hands_card[hand_num].KIND == "CP") {
+            capsule_now = 1;
+            capsule(po);
+            buff();
+            buffed = 1;
+            update_hands();
+          } else {
+            if (hands_card[hand_num].KIND == "OL") {
+              field_card[set].TYPE = hands_card[hand_num].TYPE;
+              overload();
+              TYPE_CHECK(field_card[set].TYPE, po);
+            } else if (hands_card[hand_num].KIND == "OR") {
+              if (okor = override()) {
+                field_card[set].TYPE = hands_card[hand_num].TYPE;
+              }
+            }
+            if (okor == 1) {
+              buff();
+              buffed = 1;
+              update_hands();
+            } else {
+              ErrorText.setText('タイプが違うと,オーバーロードできません');
+            }
+          }
+        } else if (hands_card[hand_num].KIND == "MO") {
+          inheri();
+
+        } else if (hands_card[hand_num].KIND != "MO") {
+          ErrorText.setText('継承していないとオーバーライド,オーバーロードできません');
+        }
+      } else if (set == null) {
+        ErrorText.setText("場にある継承元を選んでください");
+      }
+    }
+
+    function capsule_print(l) {
+      if (flag[l] == 1) {
+        return "+";
+      } else {
+        return "";
+      }
     }
 
     function update() {
       let draw = this.add.text(800, 400, 'Draw').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let end = this.add.text(700, 400, 'End').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
-      let ready = this.add.text(150, 300, 'Instance').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
-      let card1 = this.add.image(100, height / 8 * 7, hands[1]).setOrigin(0.5).setInteractive();
-      let card2 = this.add.image(220, height / 8 * 7, hands[2]).setOrigin(0.5).setInteractive();
-      let card3 = this.add.image(340, height / 8 * 7, hands[3]).setOrigin(0.5).setInteractive();
-      let card4 = this.add.image(460, height / 8 * 7, hands[4]).setOrigin(0.5).setInteractive();
-      let card5 = this.add.image(580, height / 8 * 7, hands[5]).setOrigin(0.5).setInteractive();
-      var slime1 = this.add.image(-20 + 2 * 120, height / 2, field_card[1]).setInteractive();
-      var slime2 = this.add.image(-20 + 3 * 120, height / 2, field_card[2]).setInteractive();
-      var slime3 = this.add.image(-20 + 4 * 120, height / 2, field_card[3]).setInteractive();
-      let p2_ff_card1 = this.add.image(-20 + 2 * 120, height / 8, p2_field_card[1]).setInteractive();
-      let p2_ff_card2 = this.add.image(-20 + 3 * 120, height / 8, p2_field_card[2]).setInteractive();
-      let p2_ff_card3 = this.add.image(-20 + 4 * 120, height / 8, p2_field_card[3]).setInteractive();
+      let ready = this.add.text(150, 300, 'インスタンス').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let card1 = this.add.image(100, height / 8 * 7, type_print(hands_card[1])).setOrigin(0.5).setInteractive();
+      let card2 = this.add.image(220, height / 8 * 7, type_print(hands_card[2])).setOrigin(0.5).setInteractive();
+      let card3 = this.add.image(340, height / 8 * 7, type_print(hands_card[3])).setOrigin(0.5).setInteractive();
+      let card4 = this.add.image(460, height / 8 * 7, type_print(hands_card[4])).setOrigin(0.5).setInteractive();
+      let card5 = this.add.image(580, height / 8 * 7, type_print(hands_card[5])).setOrigin(0.5).setInteractive();
+      let slime1 = this.add.image(160, height / 2, type_print(field_card[1])).setInteractive();
+      let slime2 = this.add.image(340, height / 2, type_print(field_card[2])).setInteractive();
+      let slime3 = this.add.image(520, height / 2, type_print(field_card[3])).setInteractive();
+      let p2_field_card1 = this.add.image(-20 + 2 * 120, height / 8, type_print(p2_field_card[1])).setInteractive();
+      let p2_field_card2 = this.add.image(-20 + 3 * 120, height / 8, type_print(p2_field_card[2])).setInteractive();
+      let p2_field_card3 = this.add.image(-20 + 4 * 120, height / 8, type_print(p2_field_card[3])).setInteractive();
+      let status1 = this.add.text(900 - 20, height / 2 + 40 * 1, capsule_print(1)).setInteractive();
+      let status2 = this.add.text(900 - 20, height / 2 + 40 * 2, capsule_print(2)).setInteractive();
+      let status3 = this.add.text(900 - 20, height / 2 + 40 * 3, capsule_print(3)).setInteractive();
+      let status4 = this.add.text(900 - 20, height / 2 + 40 * 4, capsule_print(4)).setInteractive();
+      let status5 = this.add.text(900 - 20, height / 2 + 40 * 5, capsule_print(5)).setInteractive();
+      let status6 = this.add.text(900 - 20, height / 2 + 40 * 6, capsule_print(6)).setInteractive();
       SCText.setText('SET:' + set);//出したいカードの場所テキスト
       deck = this.add.image(700, height / 8 * 6, 'card').setInteractive();//山札クリックしてもドローできるよ
       text = this.add.text(680, 550, '山札');
-
-
-
-      function p2_stat_update() {
-        for (i = 1; i <= 3; i++) {
-          p2_STAT_TEXT[i].setText(p2_ff_card[i].HP + ":" + p2_ff_card[i].ATK);
-          p2_TYPE_TEXT[i].setText(p2_ff_card[i].TYPE);
-        }//p2 dbから帰ってきたようのやつ
+      print_TEXT();
+      if (set != null) {
+        status_log(this);
       }
 
+      status1.on('pointerdown', function (pointer) {
+        capsule_cap(1);
+      }, this);
 
-      function update_hands(hands, hand, j) {
-        for (var i = j; i <= hand; i++) {
-          hands[i] = hands[i + 1];
-          hands_status(i);
-        }
-        hands[hand + 1] = "green";
-        hands_STAT_TEXT[i].setText("");
-        hands_TYPE_TEXT[i].setText("");
-        // array_check(hands);
-        STAT_TEXT[set].setText(ff_card[set].HP + ":" + ff_card[set].ATK);
-        TYPE_TEXT[set].setText(ff_card[set].TYPE);
-      }//手札の順番ソート
+      status2.on('pointerdown', function (pointer) {
+        capsule_cap(2);
+      }, this);
 
-      function instance(str) {
-        j = 1;
-        for (var i = 2; i <= 6; i = i + 2) {
-          instance_card[j] = ff_card[str.slice(i - 1, i)];
-          console.log("strslice" + i + ":" + str.slice(i - 1, i));
-          j++;
-        }
-      }
+      status3.on('pointerdown', function (pointer) {
+        capsule_cap(3);
+      }, this);
 
-      function print() {
-        for (i = 1; i <= 3; i++) {
-          console.log("f1[" + i + ":" + ff_card[i].HP + ":" + ff_card[i].ATK);
-          console.log("f2[" + i + ":" + p2_ff_card[i].HP + ":" + p2_ff_card[i].ATK);
-          console.log("instance_Card[" + i + "]:" + instance_card[i].HP + ":" + instance_card[i].ATK);
-          console.log("p2_instance_Card[" + i + "]:" + p2_instance_card[i].HP + ":" + p2_instance_card[i].ATK);
-        }
-      }
+      status4.on('pointerdown', function (pointer) {
+        capsule_cap(4);
+      }, this);
 
+      status5.on('pointerdown', function (pointer) {
+        capsule_cap(5);
+      }, this);
 
-
-      function refresh() {
-        resetResult("" + val.player);
-        ready_flag = 0;
-        set_num = "";
-        instanText.setText("");
-        count1 = 0;
-        count2 = 0;
-        plog_end = 1;
-      }
-
-      function ready_set() {
-        if (ready_flag >= 1 && ready_flag < 4) {
-          set_num = set_num + " " + set;
-          ErrorText.setText("順番:" + set_num);
-          ready_flag++;
-        } else if (ready_flag >= 4) {
-          ready_flag = 1;
-          set_num = "";
-          ErrorText.setText("順番:" + set_num);
-        }
-      }
-
-      function TYPE_CHECK(ty, p) {
-        if (ty == "MAG") {
-          field_card[set] = 'magic11';
-          ErrorText.setText('魔法継承しました');
-        } else if (ty == "FLY") {
-          field_card[set] = 'flyic11';
-          ErrorText.setText('飛行継承しました');
-        } else if (ty == "PHS") {
-          field_card[set] = 'phsic11';
-          ErrorText.setText('物理継承しました');
-        } else {
-          field_card[set] = 'slimc11';
-          ErrorText.setText('パワーアップ');
-        }
-      }
-
-      function card_deal(po) {
-        if (set != null && hands[hand_num] != "green") {
-          buff();
-          ff_card[set].NAME = hands[hand_num];
-          ff_card[set].TYPE = hands_card[hand_num].TYPE;
-          TYPE_CHECK(ff_card[set].TYPE, po);
-          hand--;
-          update_hands(hands, hand, hand_num);
-          console.log(ff_card[set].TYPE);
-        } else {
-          ErrorText.setText("場にある継承元を選んでください");
-        }
-      }
+      status6.on('pointerdown', function (pointer) {
+        capsule_cap(6);
+      }, this);
 
       ready.on('pointerdown', function (pointer) {
         instanText.setText("どれを戦闘に参加させますか？(インスタンス化)");
@@ -677,28 +965,17 @@
         var k = this;
         console.log("end:" + field_card);
         if (ready_flag != 4) {
-          ErrorText.setText("Instanceを押してインスタンス化してください");
+          ErrorText.setText("インスタンスを押してインスタンス化してください");
         } else {
           instance(set_num);
           console.log("instance_card:" + instance_card);
           print();
-          copy_array(copy_card, ff_card);
+          copy_array(copy_card, field_card);
           copy_array(p2_copy_card, p2_instance_card);
-          console.log("p2" + p2_field_card);
-          console.log("p1" + instance_card);
-          //DBと更新DB上の値が２になるまで待つ関数？
-          //ここで相手の場札のカードをp2_field_cardに入れる
-          //**insertHandno(hands, "" + val.player, 1);
 
-          //while(end_fin==0){
-          //setInterval(function(){
-          //endc(this);
-          //},1000);
-          //}
-          //while文で相手のendボタンを待つ
           var pa = this;
           if (val.player == 1) {
-            updateField(instance_card, "" + val.player, 1, 1, 1, 1, 1);
+            updateField(instance_card, "" + val.player, 1, 1);
             document.getElementById("modal").style.display = "inline";
             var end_fin = setInterval(function () {
               selectHand2();
@@ -712,7 +989,7 @@
                   if (val.player == 1) {
                     duel(instance_card, p2_instance_card, pa);
                   }
-                  copy_array(ff_card, copy_card);
+                  copy_array(field_card, copy_card);
                   copy_array(p2_instance_card, p2_copy_card);
                   refresh();
 
@@ -735,7 +1012,7 @@
                   end_fin = 0;
                   p2_print_log(k);
                   p2_result(p2_result_data);
-                  //selecthand p1のもってくるやつ
+                  //selecthand(); p1のもってくるやつ
                   copy_array(ff_card, copy_card);
                   copy_array(p2_instance_card, p2_copy_card);
                   refresh();
@@ -745,43 +1022,53 @@
           }
 
         }
+        refresh();
       }, this);
 
       slime1.on('pointerdown', function (pointer) {
         set = 1;
         ready_set();
+        if (buffed == 0) {
+          copy_array(copy_card, field_card);
+        }
+        //status_log(this);
       }, this);//場にあるひな形スライムの１個目
 
       slime2.on('pointerdown', function (pointer) {
         set = 2;
         ready_set();
+        if (buffed == 0) {
+          copy_array(copy_card, field_card);
+        }
+        //status_log(this);
       }, this);
 
       slime3.on('pointerdown', function (pointer) {
         set = 3;
         ready_set();
+        if (buffed == 0) {
+          copy_array(copy_card, field_card);
+        }
+        //status_log(this);
       }, this);
 
       draw.on('pointerdown', function (pointer) {
         if (hand < 5) {
           hand++;
           dug++;//掘り進めた数
-          card6 = this.add.image(-20 + hand * 120, height / 8 * 7, cards[dug]);
-          hands[hand] = cards[dug];
+          hands_card[hand].NAME = '' + String(cards[dug]);
+          hands_kind(hand, hands_card[hand].NAME);
           hands_status(hand);
+          card6 = this.add.image(-20 + hand * 120, height / 8 * 7, type_print(hands_card[hand]));
         }
-        console.log(field_card[1]);
+        console.log(hands_card[hand]);
       }, this);//draw　手札上限五枚で五枚以上はドローできない
 
       deck.on('pointerdown', function (pointer) {
         if (hand < 5) {
-          hand++;
-          dug++;//掘り進めた数
-          card6 = this.add.image(-20 + hand * 120, height / 8 * 7, cards[dug]);
-          hands[hand] = cards[dug];
-          hands_status(hand);
+          replen_card(this);
         }
-        console.log(field_card[1]);
+        console.log(hands_card);
       }, this);//draw　手札上限五枚で五枚以上はドローできない
 
       card5.on('pointerdown', function (pointer) {

@@ -77,27 +77,27 @@ public class Card {
     this.TYPE = TYPE;
   }
 
-  public int getFly() {
+  public int getFLY() {
     return FLY;
   }
 
-  public void setFly(int FLY) {
+  public void setFLY(int FLY) {
     this.FLY = FLY;
   }
 
-  public int getPhs() {
+  public int getPHS() {
     return PHS;
   }
 
-  public void setPhs(int PHS) {
+  public void setPHS(int PHS) {
     this.PHS = PHS;
   }
 
-  public int getMag() {
+  public int getMAG() {
     return MAG;
   }
 
-  public void setMag(int MAG) {
+  public void setMAG(int MAG) {
     this.MAG = MAG;
   }
 }

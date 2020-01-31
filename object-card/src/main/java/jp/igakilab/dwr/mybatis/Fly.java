@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class Fly {
+public class FLY {
   private int id;
   private int FLY;
 
-  public Fly(int id, int FLY) {
+  public FLY(int id, int FLY) {
     this.id = id;
     this.FLY = FLY;
   }
@@ -17,11 +17,11 @@ public class Fly {
     this.id = id;
   }
 
-  public int getFly() {
+  public int getFLY() {
     return FLY;
   }
 
-  public void setFly(int FLY) {
+  public void setFLY(int FLY) {
     this.FLY = FLY;
   }
 }
