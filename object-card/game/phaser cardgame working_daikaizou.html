@@ -117,6 +117,10 @@
       this.load.image('flyic13', '/object-cardgame/game/img/Bfly.png');
       this.load.image('flyic14', '/object-cardgame/game/img/Yfly.png');
       this.load.image('gree', '/object-cardgame/game/img/green.png');
+      this.load.image('greea', '/object-cardgame/game/img/greena.png');
+
+      this.load.image('greebou', '/object-cardgame/game/img/greenbou.png');
+
     }
 
     function copy_array(c1, c2) {
@@ -527,6 +531,7 @@
       }
       for(var i=1;i<=typs*2;i++){
         flag[i]=0;
+        console.log(flag);
       }
       for(var i=k;i<=typs*2;i++){
         status_text[i].setText("");
@@ -732,8 +737,12 @@
       if(flag[l]==1){
         return "+";
       }else{
-        return "";
+        return null;
       }
+    }
+
+    function hide_capsule(h){
+      var hc=h.add.image(900-20,height/2+40*3,"greea").setInteractive();
     }
 
     function update() {
@@ -757,6 +766,9 @@
       let status4 = this.add.text(900-20,height/2+40*4,capsule_print(4)).setInteractive();
       let status5 = this.add.text(900-20,height/2+40*5,capsule_print(5)).setInteractive();
       let status6 = this.add.text(900-20,height/2+40*6,capsule_print(6)).setInteractive();
+      if(flag[1]==0){
+        hide_capsule(this);
+      }
       // var status1 = status_text[1];
       // var status2 = status_text[2];
       // var status3 = status_text[3];
