@@ -703,8 +703,8 @@
             var end_fin = setInterval(function () {
               selectHand2();
               if (end111 == 1 && end222 == 1) {
-                getP2Hand().then(hand_inf => {
-                  const p2hand_inf = [null, ...hand_inf];
+                getP2Hand().then(field_inf => {
+                  const p2hand_inf = [null, ...field_inf];
                   copy_array(p2_instance_card, p2hand_inf);
                   document.getElementById("modal").style.display = "none";
                   clearInterval(end_fin);
@@ -727,8 +727,8 @@
               //result222=0じゃなくなる関数
               console.log("*********" + p2_result_data);
               if (p2_result_data[1].result != 0) {
-                getP1Hand().then(hand_inf => {
-                  const p1hand_inf = [null, ...hand_inf];
+                getP1Hand().then(field_inf => {
+                  const p1hand_inf = [null, ...field_inf];
                   copy_array(p2_instance_card, p1hand_inf);//p1のハンドコピー
                   document.getElementById("modal").style.display = "none";
                   clearInterval(end_fin);
@@ -899,15 +899,16 @@
       $('#pprinterReply').text("");
     }
 
-    function updateField(arr, ply, end, res) {
-      var hand_inf = {
+    function updateField(arr, ply, end, res, fly, phs, mag) {
+      var field_inf = {
         "id": 1, "player": ply, "endCheck": end, "result": res,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
-        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
+        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
+        "fly": fly, "phs": phs, "mag": mag
       };
       end111 = 1;
-      CardPrinter.updateField(hand_inf, {
+      CardPrinter.updateField(field_inf, {
         callback: function () {
           console.log("updateHand実行完了")
         },
@@ -916,14 +917,14 @@
     }
 
     function updateField2(arr, ply, end2, res2) {
-      var hand_inf = {
+      var field_inf = {
         "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
       };
       end222 = 1;
-      CardPrinter.updateField2(hand_inf, {
+      CardPrinter.updateField2(field_inf, {
         callback: function () {
           console.log("updateHand2実行完了");
         },
@@ -956,16 +957,16 @@
     }
 
     function resetResult(ply) {
-      var hand_inf = {
+      var reset_inf = {
         "player": ply, "endCheck": 0, "result": 0
       };
-      CardPrinter.resetResult(hand_inf, {
+      CardPrinter.resetResult(reset_inf, {
         callback: function () {
           console.log("resetResult実行完了")
         },
         errorHandler: updateErrorMessage
       });
-      CardPrinter.resetResult2(hand_inf, {
+      CardPrinter.resetResult2(reset_inf, {
         callback: function () {
           console.log("resetResult2実行完了")
         },

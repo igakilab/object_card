@@ -20,7 +20,10 @@
     set
       player = #{player},
       endCheck = #{endCheck},
-      result = #{result}
+      result = #{result},
+      fly = #{fly},
+      phs = #{phs},
+      mag = #{mag}
   </update>
   <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.HP">
     update field
