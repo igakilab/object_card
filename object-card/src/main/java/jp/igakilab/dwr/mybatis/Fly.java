@@ -1,5 +1,6 @@
 package jp.igakilab.dwr.mybatis;
 
+//FLY
 public class FLY {
   private int id;
   private int FLY;

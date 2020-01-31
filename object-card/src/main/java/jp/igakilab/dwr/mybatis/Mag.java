@@ -1,5 +1,6 @@
 package jp.igakilab.dwr.mybatis;
 
+//MAG
 public class MAG {
   private int id;
   private int MAG;

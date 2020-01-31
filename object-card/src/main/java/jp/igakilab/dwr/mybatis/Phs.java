@@ -1,5 +1,6 @@
 package jp.igakilab.dwr.mybatis;
 
+//PHS
 public class PHS {
   private int id;
   private int PHS;
