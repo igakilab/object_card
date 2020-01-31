@@ -916,12 +916,13 @@
       });
     }
 
-    function updateField2(arr, ply, end2, res2) {
+    function updateField2(arr, ply, end2, res2, fly, phs, mag) {
       var field_inf = {
         "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
-        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE]
+        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
+        "fly": fly, "phs": phs, "mag": mag
       };
       end222 = 1;
       CardPrinter.updateField2(field_inf, {
