@@ -11,11 +11,23 @@ public class Card {
   private int HP;
   private int ATK;
   private String TYPE;
+  private int fly;
+  private int phs;
+  private int mag;
 
   public Card(String player, int endCheck, int result) {
     this.player = player;
     this.endCheck = endCheck;
     this.result = result;
+  }
+
+  public Card(String player, int endCheck, int result, int fly, int phs, int mag) {
+    this.player = player;
+    this.endCheck = endCheck;
+    this.result = result;
+    this.fly = fly;
+    this.phs = phs;
+    this.mag = mag;
   }
 
   public int getId() {
@@ -72,5 +84,29 @@ public class Card {
 
   public void setTYPE(String TYPE) {
     this.TYPE = TYPE;
+  }
+
+  public int getFly() {
+    return fly;
+  }
+
+  public void setFly(int fly) {
+    this.fly = fly;
+  }
+
+  public int getPhs() {
+    return phs;
+  }
+
+  public void setPhs(int phs) {
+    this.phs = phs;
+  }
+
+  public int getMag() {
+    return mag;
+  }
+
+  public void setMag(int mag) {
+    this.mag = mag;
   }
 }

@@ -13,6 +13,9 @@ public class Hand {
   private ArrayList<Integer> HP = new ArrayList<>();
   private ArrayList<Integer> ATK = new ArrayList<>();
   private ArrayList<String> TYPE = new ArrayList<>();
+  private int fly;
+  private int phs;
+  private int mag;
 
   public int getId() {
     return id;
@@ -68,6 +71,30 @@ public class Hand {
 
   public void setTYPE(ArrayList<String> TYPE) {
     this.TYPE = TYPE;
+  }
+
+  public int getFly() {
+    return fly;
+  }
+
+  public void setFly(int fly) {
+    this.fly = fly;
+  }
+
+  public int getPhs() {
+    return phs;
+  }
+
+  public void setPhs(int phs) {
+    this.phs = phs;
+  }
+
+  public int getMag() {
+    return mag;
+  }
+
+  public void setMag(int mag) {
+    this.mag = mag;
   }
 
 }
