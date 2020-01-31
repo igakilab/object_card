@@ -11,9 +11,9 @@ public class Card2 {
   private int HP;
   private int ATK;
   private String TYPE;
-  private int fly;
-  private int phs;
-  private int mag;
+  private int FLY;
+  private int PHS;
+  private int MAG;
 
   public Card2(String player, int endCheck2, int result2) {
     this.player = player;
@@ -21,13 +21,13 @@ public class Card2 {
     this.result2 = result2;
   }
 
-  public Card2(String player, int endCheck2, int result2, int fly, int phs, int mag) {
+  public Card2(String player, int endCheck2, int result2, int FLY, int PHS, int MAG) {
     this.player = player;
     this.endCheck2 = endCheck2;
     this.result2 = result2;
-    this.fly = fly;
-    this.phs = phs;
-    this.mag = mag;
+    this.FLY = FLY;
+    this.PHS = PHS;
+    this.MAG = MAG;
   }
 
   public int getId() {
@@ -87,26 +87,26 @@ public class Card2 {
   }
 
   public int getFly() {
-    return fly;
+    return FLY;
   }
 
-  public void setFly(int fly) {
-    this.fly = fly;
+  public void setFly(int FLY) {
+    this.FLY = FLY;
   }
 
   public int getPhs() {
-    return phs;
+    return PHS;
   }
 
-  public void setPhs(int phs) {
-    this.phs = phs;
+  public void setPhs(int PHS) {
+    this.PHS = PHS;
   }
 
   public int getMag() {
-    return mag;
+    return MAG;
   }
 
-  public void setMag(int mag) {
-    this.mag = mag;
+  public void setMag(int MAG) {
+    this.MAG = MAG;
   }
 }

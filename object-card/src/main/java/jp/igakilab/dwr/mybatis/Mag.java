@@ -2,11 +2,11 @@ package jp.igakilab.dwr.mybatis;
 
 public class Mag {
   private int id;
-  private int mag;
+  private int MAG;
 
-  public Mag(int id, int mag) {
+  public Mag(int id, int MAG) {
     this.id = id;
-    this.mag = mag;
+    this.MAG = MAG;
   }
 
   public int getId() {
@@ -18,10 +18,10 @@ public class Mag {
   }
 
   public int getMag() {
-    return mag;
+    return MAG;
   }
 
-  public void setMag(int mag) {
-    this.mag = mag;
+  public void setMag(int MAG) {
+    this.MAG = MAG;
   }
 }

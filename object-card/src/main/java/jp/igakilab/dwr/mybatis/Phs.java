@@ -2,11 +2,11 @@ package jp.igakilab.dwr.mybatis;
 
 public class Phs {
   private int id;
-  private int phs;
+  private int PHS;
 
-  public Phs(int id, int phs) {
+  public Phs(int id, int PHS) {
     this.id = id;
-    this.phs = phs;
+    this.PHS = PHS;
   }
 
   public int getId() {
@@ -18,10 +18,10 @@ public class Phs {
   }
 
   public int getPhs() {
-    return phs;
+    return PHS;
   }
 
-  public void setPhs(int phs) {
-    this.phs = phs;
+  public void setPhs(int PHS) {
+    this.PHS = PHS;
   }
 }

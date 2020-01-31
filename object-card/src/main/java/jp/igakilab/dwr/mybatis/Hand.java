@@ -13,9 +13,9 @@ public class Hand {
   private ArrayList<Integer> HP = new ArrayList<>();
   private ArrayList<Integer> ATK = new ArrayList<>();
   private ArrayList<String> TYPE = new ArrayList<>();
-  private ArrayList<Integer> fly = new ArrayList<>();
-  private ArrayList<Integer> phs = new ArrayList<>();
-  private ArrayList<Integer> mag = new ArrayList<>();
+  private ArrayList<Integer> FLY = new ArrayList<>();
+  private ArrayList<Integer> PHS = new ArrayList<>();
+  private ArrayList<Integer> MAG = new ArrayList<>();
 
   public int getId() {
     return id;
@@ -74,27 +74,27 @@ public class Hand {
   }
 
   public ArrayList<Integer> getFly() {
-    return fly;
+    return FLY;
   }
 
-  public void setFly(ArrayList<Integer> fly) {
-    this.fly = fly;
+  public void setFly(ArrayList<Integer> FLY) {
+    this.FLY = FLY;
   }
 
   public ArrayList<Integer> getPhs() {
-    return phs;
+    return PHS;
   }
 
-  public void setPhs(ArrayList<Integer> phs) {
-    this.phs = phs;
+  public void setPhs(ArrayList<Integer> PHS) {
+    this.PHS = PHS;
   }
 
   public ArrayList<Integer> getMag() {
-    return mag;
+    return MAG;
   }
 
-  public void setMag(ArrayList<Integer> mag) {
-    this.mag = mag;
+  public void setMag(ArrayList<Integer> MAG) {
+    this.MAG = MAG;
   }
 
 }
