@@ -20,10 +20,7 @@
     set
       player = #{player},
       endCheck = #{endCheck},
-      result = #{result},
-      fly = #{fly},
-      phs = #{phs},
-      mag = #{mag}
+      result = #{result}
   </update>
   <update id ="updateHP" parameterType="jp.igakilab.dwr.mybatis.HP">
     update field
@@ -41,6 +38,24 @@
     update field
     set
       TYPE = #{TYPE}
+    where id = #{id}
+  </update>
+  <update id ="updateFly" parameterType="jp.igakilab.dwr.mybatis.Fly">
+    update field
+    set
+      fly = #{fly}
+    where id = #{id}
+  </update>
+  <update id ="updatePhs" parameterType="jp.igakilab.dwr.mybatis.Phs">
+    update field
+    set
+      phs = #{phs}
+    where id = #{id}
+  </update>
+  <update id ="updateMag" parameterType="jp.igakilab.dwr.mybatis.Mag">
+    update field
+    set
+      mag = #{mag}
     where id = #{id}
   </update>
   <update id ="updateField2" parameterType="jp.igakilab.dwr.mybatis.Card2">
@@ -66,6 +81,24 @@
     update field2
     set
       TYPE = #{TYPE}
+    where id = #{id}
+  </update>
+  <update id ="updateFly2" parameterType="jp.igakilab.dwr.mybatis.Fly">
+    update field2
+    set
+      fly = #{fly}
+    where id = #{id}
+  </update>
+  <update id ="updatePhs2" parameterType="jp.igakilab.dwr.mybatis.Phs">
+    update field2
+    set
+      phs = #{phs}
+    where id = #{id}
+  </update>
+  <update id ="updateMag2" parameterType="jp.igakilab.dwr.mybatis.Mag">
+    update field2
+    set
+      mag = #{mag}
     where id = #{id}
   </update>
   <update id ="resetResult" parameterType="jp.igakilab.dwr.mybatis.Card">

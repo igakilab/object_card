@@ -21,15 +21,6 @@ public class Card {
     this.result = result;
   }
 
-  public Card(String player, int endCheck, int result, int fly, int phs, int mag) {
-    this.player = player;
-    this.endCheck = endCheck;
-    this.result = result;
-    this.fly = fly;
-    this.phs = phs;
-    this.mag = mag;
-  }
-
   public int getId() {
     return id;
   }

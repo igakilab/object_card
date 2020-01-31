@@ -899,13 +899,15 @@
       $('#pprinterReply').text("");
     }
 
-    function updateField(arr, ply, end, res, fly, phs, mag) {
+    function updateField(arr, ply, end, res) {
       var field_inf = {
         "id": 1, "player": ply, "endCheck": end, "result": res,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
-        "fly": fly, "phs": phs, "mag": mag
+        "fly": [arr[1].fly, arr[2].fly, arr[3].fly],
+        "phs": [arr[1].phs, arr[2].phs, arr[3].phs],
+        "mag": [arr[1].mag, arr[2].mag, arr[3].mag]
       };
       end111 = 1;
       CardPrinter.updateField(field_inf, {
@@ -916,13 +918,15 @@
       });
     }
 
-    function updateField2(arr, ply, end2, res2, fly, phs, mag) {
+    function updateField2(arr, ply, end2, res2) {
       var field_inf = {
         "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
         "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
         "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
         "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
-        "fly": fly, "phs": phs, "mag": mag
+        "fly": [arr[1].fly, arr[2].fly, arr[3].fly],
+        "phs": [arr[1].phs, arr[2].phs, arr[3].phs],
+        "mag": [arr[1].mag, arr[2].mag, arr[3].mag]
       };
       end222 = 1;
       CardPrinter.updateField2(field_inf, {
