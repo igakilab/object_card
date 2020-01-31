@@ -40,19 +40,19 @@
       TYPE = #{TYPE}
     where id = #{id}
   </update>
-  <update id ="updateFLY" parameterType="jp.igakilab.dwr.mybatis.FLY">
+  <update id ="updateFLY" parameterType="jp.igakilab.dwr.mybatis.FLYER">
     update field
     set
       FLY = #{FLY}
     where id = #{id}
   </update>
-  <update id ="updatePHS" parameterType="jp.igakilab.dwr.mybatis.PHS">
+  <update id ="updatePHS" parameterType="jp.igakilab.dwr.mybatis.PHYSIC">
     update field
     set
       PHS = #{PHS}
     where id = #{id}
   </update>
-  <update id ="updateMAG" parameterType="jp.igakilab.dwr.mybatis.MAG">
+  <update id ="updateMAG" parameterType="jp.igakilab.dwr.mybatis.MAGIC">
     update field
     set
       MAG = #{MAG}
@@ -83,19 +83,19 @@
       TYPE = #{TYPE}
     where id = #{id}
   </update>
-  <update id ="updateFLY2" parameterType="jp.igakilab.dwr.mybatis.FLY">
+  <update id ="updateFLY2" parameterType="jp.igakilab.dwr.mybatis.FLYER">
     update field2
     set
       FLY = #{FLY}
     where id = #{id}
   </update>
-  <update id ="updatePHS2" parameterType="jp.igakilab.dwr.mybatis.PHS">
+  <update id ="updatePHS2" parameterType="jp.igakilab.dwr.mybatis.PHYSIC">
     update field2
     set
       PHS = #{PHS}
     where id = #{id}
   </update>
-  <update id ="updateMAG2" parameterType="jp.igakilab.dwr.mybatis.MAG">
+  <update id ="updateMAG2" parameterType="jp.igakilab.dwr.mybatis.MAGIC">
     update field2
     set
       MAG = #{MAG}
