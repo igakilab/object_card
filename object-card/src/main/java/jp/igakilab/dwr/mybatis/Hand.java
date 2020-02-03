@@ -8,14 +8,14 @@ import java.util.ArrayList;
 public class Hand {
   private int id;
   private String player = new String();
-  private int endCheck;
+  private int endcheck;
   private int result;
-  private ArrayList<Integer> HP = new ArrayList<>();
-  private ArrayList<Integer> ATK = new ArrayList<>();
-  private ArrayList<String> TYPE = new ArrayList<>();
-  private ArrayList<Integer> FLY = new ArrayList<>();
-  private ArrayList<Integer> PHS = new ArrayList<>();
-  private ArrayList<Integer> MAG = new ArrayList<>();
+  private ArrayList<Integer> hp = new ArrayList<>();
+  private ArrayList<Integer> atk = new ArrayList<>();
+  private ArrayList<String> type = new ArrayList<>();
+  private ArrayList<Integer> fly = new ArrayList<>();
+  private ArrayList<Integer> phs = new ArrayList<>();
+  private ArrayList<Integer> mag = new ArrayList<>();
 
   public int getId() {
     return id;
@@ -33,12 +33,12 @@ public class Hand {
     this.player = player;
   }
 
-  public int getEndCheck() {
-    return endCheck;
+  public int getEndcheck() {
+    return endcheck;
   }
 
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
+  public void setEndcheck(int endcheck) {
+    this.endcheck = endcheck;
   }
 
   public int getResult() {
@@ -49,52 +49,52 @@ public class Hand {
     this.result = result;
   }
 
-  public ArrayList<Integer> getHP() {
-    return HP;
+  public ArrayList<Integer> getHp() {
+    return hp;
   }
 
-  public void setHP(ArrayList<Integer> HP) {
-    this.HP = HP;
+  public void setHp(ArrayList<Integer> hp) {
+    this.hp = hp;
   }
 
-  public ArrayList<Integer> getATK() {
-    return ATK;
+  public ArrayList<Integer> getAtk() {
+    return atk;
   }
 
-  public void setATK(ArrayList<Integer> ATK) {
-    this.ATK = ATK;
+  public void setAtk(ArrayList<Integer> atk) {
+    this.atk = atk;
   }
 
-  public ArrayList<String> getTYPE() {
-    return TYPE;
+  public ArrayList<String> getType() {
+    return type;
   }
 
-  public void setTYPE(ArrayList<String> TYPE) {
-    this.TYPE = TYPE;
+  public void setType(ArrayList<String> type) {
+    this.type = type;
   }
 
-  public ArrayList<Integer> getFLY() {
-    return FLY;
+  public ArrayList<Integer> getFly() {
+    return fly;
   }
 
-  public void setFLY(ArrayList<Integer> FLY) {
-    this.FLY = FLY;
+  public void setFly(ArrayList<Integer> fly) {
+    this.fly = fly;
   }
 
-  public ArrayList<Integer> getPHS() {
-    return PHS;
+  public ArrayList<Integer> getPhs() {
+    return phs;
   }
 
-  public void setPHS(ArrayList<Integer> PHS) {
-    this.PHS = PHS;
+  public void setPhs(ArrayList<Integer> phs) {
+    this.phs = phs;
   }
 
-  public ArrayList<Integer> getMAG() {
-    return MAG;
+  public ArrayList<Integer> getMag() {
+    return mag;
   }
 
-  public void setMAG(ArrayList<Integer> MAG) {
-    this.MAG = MAG;
+  public void setMag(ArrayList<Integer> mag) {
+    this.mag = mag;
   }
 
 }

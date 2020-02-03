@@ -1,12 +1,12 @@
 package jp.igakilab.dwr.mybatis;
 
-public class TYPE {
+public class Type {
   private int id;
-  private String TYPE;
+  private String type;
 
-  public TYPE(int id, String TYPE) {
+  public Type(int id, String type) {
     this.id = id;
-    this.TYPE = TYPE;
+    this.type = type;
   }
 
   public int getId() {
@@ -17,11 +17,11 @@ public class TYPE {
     this.id = id;
   }
 
-  public String getTYPE() {
-    return TYPE;
+  public String getType() {
+    return type;
   }
 
-  public void setTYPE(String TYPE) {
-    this.TYPE = TYPE;
+  public void setType(String type) {
+    this.type = type;
   }
 }
