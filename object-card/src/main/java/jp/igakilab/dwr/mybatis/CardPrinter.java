@@ -202,7 +202,7 @@ public class CardPrinter {
 
   public void updateLog(Log logList) {
     try (SqlSession session = factory.openSession()) {
-      int logid = logList.getLogid();
+      int logid = 1;
 
       for (String i : logList.getLog()) {
         int ret = session.update("igakilab.mybatis.CardMapper.updateLog", new Logch(logid, i));
