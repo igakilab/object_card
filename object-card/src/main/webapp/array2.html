@@ -875,10 +875,10 @@
       for (var i = 1; i <= typs * 2; i++) {
         flag[i] = 0;
       }
-      for (var i = k; i <= typs * 2; i++) {
-        status_text[i].setText("");
-        status_text[i] = status_text[i + 1];
-      }
+      // for (var i = k; i <= typs * 2; i++) {
+      //   status_text[i].setText("");
+      //   status_text[i] = status_text[i + 1];
+      // }
       print_type_text(field_card[set]);
 
 
@@ -1104,9 +1104,9 @@
       let card3 = this.add.image(340, height / 8 * 7, type_print(hands_card[3])).setOrigin(0.5).setInteractive();
       let card4 = this.add.image(460, height / 8 * 7, type_print(hands_card[4])).setOrigin(0.5).setInteractive();
       let card5 = this.add.image(580, height / 8 * 7, type_print(hands_card[5])).setOrigin(0.5).setInteractive();
-      let status1 = this.add.text(900 - 20, (height + 100) / 2 + 40 * 1, capsule_print(1)).setInteractive();
-      let status2 = this.add.text(900 - 20, (height + 100) / 2 + 40 * 2, capsule_print(2)).setInteractive();
-      let status3 = this.add.text(900 - 20, (height + 100) / 2 + 40 * 3, capsule_print(3)).setInteractive();
+      let status1 = this.add.text(900 - 20, height / 2 + 40 * 1, capsule_print(1)).setInteractive();
+      let status2 = this.add.text(900 - 20, height / 2 + 40 * 2, capsule_print(2)).setInteractive();
+      let status3 = this.add.text(900 - 20, height / 2 + 40 * 3, capsule_print(3)).setInteractive();
       let slime1 = this.add.image(160, height / 2, type_print(field_card[1])).setInteractive();
       let slime2 = this.add.image(340, height / 2, type_print(field_card[2])).setInteractive();
       let slime3 = this.add.image(520, height / 2, type_print(field_card[3])).setInteractive();
