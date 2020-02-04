@@ -16,6 +16,7 @@ public class Hand2 {
   private ArrayList<Integer> fly = new ArrayList<>();
   private ArrayList<Integer> phs = new ArrayList<>();
   private ArrayList<Integer> mag = new ArrayList<>();
+  private ArrayList<String> name = new ArrayList<>();
 
   public int getId() {
     return id;
@@ -95,5 +96,13 @@ public class Hand2 {
 
   public void setMag(ArrayList<Integer> mag) {
     this.mag = mag;
+  }
+
+  public ArrayList<String> getName() {
+    return name;
+  }
+
+  public void setName(ArrayList<String> name) {
+    this.name = name;
   }
 }

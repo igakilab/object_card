@@ -14,6 +14,7 @@ public class Card2 {
   private int fly;
   private int phs;
   private int mag;
+  private String name;
 
   public Card2(String player, int endcheck2, int result2) {
     this.player = player;
@@ -99,5 +100,13 @@ public class Card2 {
 
   public void setMag(int mag) {
     this.mag = mag;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }
