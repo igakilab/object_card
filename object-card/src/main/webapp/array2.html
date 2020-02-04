@@ -217,6 +217,8 @@
       this.load.image('phsic11', 'img/phss.png');
       this.load.image('flyic11', 'img/flyy.png');
       this.load.image('gree', 'img/green.png');
+      this.load.image('capsule', 'img/capsule.png');
+
       this.load.image('magic12', 'img/Rmag.png');
       this.load.image('magic13', 'img/Bmag.png');
       this.load.image('magic14', 'img/Ymag.png');
@@ -226,22 +228,6 @@
       this.load.image('flyic12', 'img/Rfly.png');
       this.load.image('flyic13', 'img/Bfly.png');
       this.load.image('flyic14', 'img/Yfly.png');
-      this.load.image('capsule', 'img/capsule.png');
-
-    }
-
-    function cpy(c1, c2) {
-      for (var i = 1; i <= 3; i++) {
-        c1[i].ATK = c2[i].atk;
-        c1[i].HP = c2[i].hp;
-        c1[i].NAME = c2[i].name;
-        c1[i].FLY = c2[i].fly;
-        c1[i].MAG = c2[i].mag;
-        c1[i].PHS = c2[i].phs;
-        if (c2[i].KIND != null) {
-          c1[i].KIND = c2[i].KIND;
-        }
-      }
     }
 
     function copy_array(c1, c2) {
@@ -580,7 +566,7 @@
 
     function duel(f, p2_f, po) {
       var cnum = 0;
-      while ((count1 != 3 && count2 != 3) && cnum++ != 100) {
+      while ((count1 != 3 && count2 != 3) && cnum++ != 30) {
         var r1 = Math.floor(Math.random() * 3 + 1);
         var r2 = Math.floor(Math.random() * 3 + 1);
         if (f[r1].HP > 0 && p2_f[r2].HP > 0) {
@@ -592,9 +578,6 @@
             f[r1].HP -= p2_f[r2].ATK;
             p2_f[r2].HP -= f[r1].ATK;
           }
-
-          // f[r1].HP -= p2_f[r2].ATK;
-          // p2_f[r2].HP -= f[r1].ATK;
 
           if (f[r1].HP <= 0 && p2_f[r2].HP <= 0) {
             console.log("Draw");
@@ -1001,9 +984,7 @@
               if (end111 == 1 && end222 == 1) {
                 getP2Hand().then(field_inf => {
                   const p2hand_inf = [null, ...field_inf];
-                  console.log(p2hand_inf);
-                  cpy(p2_instance_card, p2hand_inf);
-                  console.log(p2_instance_card);
+                  copy_array(p2_instance_card, p2hand_inf);
                   document.getElementById("modal").style.display = "none";
                   clearInterval(end_fin);
                   end_fin = 0;
@@ -1021,21 +1002,20 @@
             updateField2(instance_card, "" + val.player, 1, 0);
             document.getElementById("modal").style.display = "inline";
             var end_fin = setInterval(async function () {
-              selectHand();
               const p2_result_data = await selectPlayer();
               //result222=0じゃなくなる関数
               console.log("*********" + p2_result_data);
-              if (end111 == 1 && end222 == 1) {
+              if (p2_result_data[1].result != 0) {
                 getP1Hand().then(field_inf => {
                   const p1hand_inf = [null, ...field_inf];
-                  cpy(p2_instance_card, p1hand_inf);//p1のハンドコピー
+                  copy_array(p2_instance_card, p1hand_inf);//p1のハンドコピー
                   document.getElementById("modal").style.display = "none";
                   clearInterval(end_fin);
                   end_fin = 0;
                   p2_print_log(k);
                   p2_result(p2_result_data);
                   //selecthand(); p1のもってくるやつ
-                  copy_array(field_card, copy_card);
+                  copy_array(ff_card, copy_card);
                   copy_array(p2_instance_card, p2_copy_card);
                   refresh();
                 });
@@ -1044,7 +1024,7 @@
           }
 
         }
-        //refresh();
+        refresh();
       }, this);
 
       slime1.on('pointerdown', function (pointer) {
@@ -1147,8 +1127,9 @@
       CardPrinter.execute({
         callback: function (data) {
           $('#error_message').text("");
-
-          end111 = data.some(({ endcheck }) => endcheck === 1) ? 1 : 0;
+          //for (var i = 0; i <= 4; i++) {
+          //card = po.add.image(100 + i * 120, height / 8, data[i].handno);
+          //}
         },
         errorHandler: updateErrorMessage
       });
@@ -1159,7 +1140,9 @@
         callback: function (data) {
           $('#error_message').text("");
 
-          end222 = data.some(({ endcheck2 }) => endcheck2 === 1) ? 1 : 0;
+          end222 = data.some(({ endCheck2 }) => endCheck2 === 1) ? 1 : 0;
+
+          console.log(end222);
         },
         errorHandler: updateErrorMessage
       });
@@ -1258,7 +1241,6 @@
     }
 
     function updateLog(log) {
-      console.log("updateLog:" + log);
       var log_inf = {
         "logid": 1, "log": [log[0], log[1], log[2], log[3], log[4], log[5]]
       };
@@ -1272,7 +1254,7 @@
 
     function resetResult(ply) {
       var reset_inf = {
-        "player": ply, "endcheck": 0, "result": 0
+        "player": ply, "endCheck": 0, "result": 0
       };
       CardPrinter.resetResult(reset_inf, {
         callback: function () {
@@ -1286,11 +1268,8 @@
         },
         errorHandler: updateErrorMessage
       });
-      if (ply == 1) {
-        end111 = 0;
-      } else {
-        end222 = 0;
-      }
+      end111 = 0;
+      end222 = 0;
     }
 
   </script>

@@ -22,19 +22,19 @@
       endcheck = #{endcheck},
       result = #{result}
   </update>
-  <update id ="updateHp" parameterType="jp.igakilab.dwr.mybatis.Hp">
+  <update id ="updateHp" parameterType="jp.igakilab.dwr.mybatis.Hpp">
     update field
     set
       hp = #{hp}
     where id = #{id}
   </update>
-  <update id ="updateAtk" parameterType="jp.igakilab.dwr.mybatis.Atk">
+  <update id ="updateAtk" parameterType="jp.igakilab.dwr.mybatis.Atkk">
     update field
     set
       atk = #{atk}
     where id = #{id}
   </update>
-  <update id ="updateType" parameterType="jp.igakilab.dwr.mybatis.Type">
+  <update id ="updateType" parameterType="jp.igakilab.dwr.mybatis.Typee">
     update field
     set
       type = #{type}
@@ -71,19 +71,19 @@
       endcheck2 = #{endcheck2},
       result2 = #{result2}
   </update>
-  <update id ="updateHp2" parameterType="jp.igakilab.dwr.mybatis.Hp">
+  <update id ="updateHp2" parameterType="jp.igakilab.dwr.mybatis.Hpp">
     update field2
     set
       hp = #{hp}
     where id = #{id}
   </update>
-  <update id ="updateAtk2" parameterType="jp.igakilab.dwr.mybatis.Atk">
+  <update id ="updateAtk2" parameterType="jp.igakilab.dwr.mybatis.Atkk">
     update field2
     set
       atk = #{atk}
     where id = #{id}
   </update>
-  <update id ="updateType2" parameterType="jp.igakilab.dwr.mybatis.Type">
+  <update id ="updateType2" parameterType="jp.igakilab.dwr.mybatis.Typee">
     update field2
     set
       type = #{type}
