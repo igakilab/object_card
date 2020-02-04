@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class Type {
+public class Typee {
   private int id;
   private String type;
 
-  public Type(int id, String type) {
+  public Typee(int id, String type) {
     this.id = id;
     this.type = type;
   }

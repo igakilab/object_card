@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class Atk {
+public class Atkk {
   private int id;
   private int atk;
 
-  public Atk(int id, int atk) {
+  public Atkk(int id, int atk) {
     this.id = id;
     this.atk = atk;
   }

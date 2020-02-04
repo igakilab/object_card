@@ -1,10 +1,10 @@
 package jp.igakilab.dwr.mybatis;
 
-public class Hp {
+public class Hpp {
   private int id;
   private int hp;
 
-  public Hp(int id, int hp) {
+  public Hpp(int id, int hp) {
     this.id = id;
     this.hp = hp;
   }

@@ -93,17 +93,17 @@ public class CardPrinter {
       System.out.println(ret);
 
       for (int hp : fieldList.getHp()) {
-        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp", new Hp(hpid, hp));
+        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp", new Hpp(hpid, hp));
         System.out.println(hpret);
         hpid++;
       }
       for (int atk : fieldList.getAtk()) {
-        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk", new Atk(atkid, atk));
+        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk", new Atkk(atkid, atk));
         System.out.println(atkret);
         atkid++;
       }
       for (String type : fieldList.getType()) {
-        int typeret = session.update("igakilab.mybatis.CardMapper.updateType", new Type(typeid, type));
+        int typeret = session.update("igakilab.mybatis.CardMapper.updateType", new Typee(typeid, type));
         System.out.println(typeret);
         typeid++;
       }
@@ -148,17 +148,17 @@ public class CardPrinter {
       System.out.println(ret);
 
       for (int hp : fieldList2.getHp()) {
-        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp2", new Hp(hpid, hp));
+        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp2", new Hpp(hpid, hp));
         System.out.println(hpret);
         hpid++;
       }
       for (int atk : fieldList2.getAtk()) {
-        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk2", new Atk(atkid, atk));
+        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk2", new Atkk(atkid, atk));
         System.out.println(atkret);
         atkid++;
       }
       for (String type : fieldList2.getType()) {
-        int typeret = session.update("igakilab.mybatis.CardMapper.updateType2", new Type(typeid, type));
+        int typeret = session.update("igakilab.mybatis.CardMapper.updateType2", new Typee(typeid, type));
         System.out.println(typeret);
         typeid++;
       }
