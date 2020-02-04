@@ -6,18 +6,19 @@ package jp.igakilab.dwr.mybatis;
 public class Card {
   private int id;
   private String player = "";
-  private int endCheck;
+  private int endcheck;
   private int result;
-  private int HP;
-  private int ATK;
-  private String TYPE;
-  private int FLY;
-  private int PHS;
-  private int MAG;
+  private int hp;
+  private int atk;
+  private String type;
+  private int fly;
+  private int phs;
+  private int mag;
+  private String name;
 
-  public Card(String player, int endCheck, int result) {
+  public Card(String player, int endcheck, int result) {
     this.player = player;
-    this.endCheck = endCheck;
+    this.endcheck = endcheck;
     this.result = result;
   }
 
@@ -37,12 +38,12 @@ public class Card {
     this.player = player;
   }
 
-  public int getEndCheck() {
-    return endCheck;
+  public int getEndcheck() {
+    return endcheck;
   }
 
-  public void setEndCheck(int endCheck) {
-    this.endCheck = endCheck;
+  public void setEndcheck(int endcheck) {
+    this.endcheck = endcheck;
   }
 
   public int getResult() {
@@ -53,51 +54,59 @@ public class Card {
     this.result = result;
   }
 
-  public int getHP() {
-    return HP;
+  public int getHp() {
+    return hp;
   }
 
-  public void setHP(int HP) {
-    this.HP = HP;
+  public void setHp(int hp) {
+    this.hp = hp;
   }
 
-  public int getATK() {
-    return ATK;
+  public int getAtk() {
+    return atk;
   }
 
-  public void setATK(int ATK) {
-    this.ATK = ATK;
+  public void setAtk(int atk) {
+    this.atk = atk;
   }
 
-  public String getTYPE() {
-    return TYPE;
+  public String getType() {
+    return type;
   }
 
-  public void setTYPE(String TYPE) {
-    this.TYPE = TYPE;
+  public void setType(String type) {
+    this.type = type;
   }
 
-  public int getFLY() {
-    return FLY;
+  public int getFly() {
+    return fly;
   }
 
-  public void setFLY(int FLY) {
-    this.FLY = FLY;
+  public void setFly(int fly) {
+    this.fly = fly;
   }
 
-  public int getPHS() {
-    return PHS;
+  public int getPhs() {
+    return phs;
   }
 
-  public void setPHS(int PHS) {
-    this.PHS = PHS;
+  public void setPhs(int phs) {
+    this.phs = phs;
   }
 
-  public int getMAG() {
-    return MAG;
+  public int getMag() {
+    return mag;
   }
 
-  public void setMAG(int MAG) {
-    this.MAG = MAG;
+  public void setMag(int mag) {
+    this.mag = mag;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

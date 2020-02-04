@@ -1,12 +1,12 @@
 package jp.igakilab.dwr.mybatis;
 
-public class ATK {
+public class Hpp {
   private int id;
-  private int ATK;
+  private int hp;
 
-  public ATK(int id, int ATK) {
+  public Hpp(int id, int hp) {
     this.id = id;
-    this.ATK = ATK;
+    this.hp = hp;
   }
 
   public int getId() {
@@ -17,11 +17,11 @@ public class ATK {
     this.id = id;
   }
 
-  public int getATK() {
-    return ATK;
+  public int getHp() {
+    return hp;
   }
 
-  public void setATK(int ATK) {
-    this.ATK = ATK;
+  public void setHp(int hp) {
+    this.hp = hp;
   }
 }

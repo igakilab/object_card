@@ -189,6 +189,9 @@
     var st_t = [];//status_log_text
     var capsule_now = 0;
     var capsule_str = "";
+    var end111 = 0;
+    var end222 = 0;
+    var p2res = [];
 
     function getUrlVars() {
       var vars = [], max = 0, hash = "", array = "";
@@ -217,6 +220,7 @@
       this.load.image('phsic11', 'img/phss.png');
       this.load.image('flyic11', 'img/flyy.png');
       this.load.image('gree', 'img/green.png');
+      this.load.image('greea', 'img/greena.png');
       this.load.image('magic12', 'img/Rmag.png');
       this.load.image('magic13', 'img/Bmag.png');
       this.load.image('magic14', 'img/Ymag.png');
@@ -226,6 +230,22 @@
       this.load.image('flyic12', 'img/Rfly.png');
       this.load.image('flyic13', 'img/Bfly.png');
       this.load.image('flyic14', 'img/Yfly.png');
+      this.load.image('capsule', 'img/capsule.png');
+
+    }
+
+    function cpy(c1, c2) {
+      for (var i = 1; i <= 3; i++) {
+        c1[i].ATK = c2[i].atk;
+        c1[i].HP = c2[i].hp;
+        c1[i].NAME = c2[i].name;
+        c1[i].FLY = c2[i].fly;
+        c1[i].MAG = c2[i].mag;
+        c1[i].PHS = c2[i].phs;
+        if (c2[i].KIND != null) {
+          c1[i].KIND = c2[i].KIND;
+        }
+      }
     }
 
     function copy_array(c1, c2) {
@@ -283,7 +303,7 @@
         if (hands_card[i].KIND == "MO") {
           hands_TYPE_TEXT[i].setText(hands_card[i].NAME);
         } else {
-          hands_TYPE_TEXT[i].setText(hands_card[i].TYPE);
+          hands_TYPE_TEXT[i].setText(hands_card[i].KIND);
         }
       }
     }
@@ -312,7 +332,7 @@
           } else if (a.KIND == "OR") {
             return "flyic13";
           } else if (a.KIND == "CP") {
-            return "flyic14";
+            return "capsule";
           }
           return "flyic11";
         } else if (a.TYPE == "MAG") {
@@ -321,7 +341,7 @@
           } else if (a.KIND == "OR") {
             return "magic13";
           } else if (a.KIND == "CP") {
-            return "magic14";
+            return "capsule";
           }
           return "magic11";
         } else if (a.TYPE == "PHS") {
@@ -330,7 +350,7 @@
           } else if (a.KIND == "OR") {
             return "phsic13";
           } else if (a.KIND == "CP") {
-            return "phsic14";
+            return "capsule";
           }
           return "phsic11";
         }
@@ -409,6 +429,128 @@
       for (var i = 1; i <= 8; i++) {
         status_text[i] = this.add.text(900, height / 2 + 40 * i, "").setInteractive();
       }
+
+
+      let draw = this.add.text(800, 400, 'Draw').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let end = this.add.text(700, 400, 'End').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
+      let ready = this.add.text(60, 250, 'インスタンス').setFontSize(30).setFontFamily("Arial").setInteractive();
+
+      if (set != null) {
+        SCText.setText('SET:' + set);//出したいカードの場所テキスト
+      }
+      deck = this.add.image(700, height / 8 * 6, 'card').setInteractive();//山札クリックしてもドローできるよ
+      text = this.add.text(680, 550, '山札');
+
+
+
+      ready.on('pointerdown', function (pointer) {
+        //refresh();
+        instanText.setText("どれを戦闘に参加させますか？(インスタンス化)");
+        ErrorText.setText("順番:" + set_num);
+        ready_flag = 1;
+      }, this);
+
+
+
+
+      end.on('pointerdown', function (pointer) {
+        var k = this;
+        console.log("end:" + field_card);
+        if (ready_flag != 4) {
+          ErrorText.setText("インスタンスを押してインスタンス化してください");
+        } else {
+          instance(set_num);
+          console.log("instance_card:" + instance_card);
+          print();
+          copy_array(copy_card, field_card);
+          copy_array(p2_copy_card, p2_instance_card);
+
+          var pa = this;
+          if (val.player == 1) {
+            //updateField(instance_card, "" + val.player, 1, 1);
+            document.getElementById("modal").style.display = "inline";
+            var end_fin = setInterval(function () {
+              selectHand2();
+              if (end222 == 1) {
+                getP2Hand().then(async field_inf => {
+                  const p2hand_inf = [null, ...field_inf];
+                  console.log(p2hand_inf);
+                  cpy(p2_instance_card, p2hand_inf);
+                  console.log(p2_instance_card);
+                  document.getElementById("modal").style.display = "none";
+                  clearInterval(end_fin);
+                  end_fin = 0;
+                  if (val.player == 1) {
+                    duel(instance_card, p2_instance_card, pa);
+                    updateLog(p2_vslog_TEXT);
+                    updateField(instance_card, "" + val.player, 1, 1);
+                  }
+                  copy_array(field_card, copy_card);
+                  copy_array(p2_instance_card, p2_copy_card);
+                  // const waiter = setInterval(async () => {
+                  //   const inf = await getP2Hand();
+                  //   if (inf.result2 == 1) {
+                  //     refresh();
+                  //     clearInterval(waiter);
+                  //   }
+                  // }, 1000);
+                });
+              }
+            }, 1000);
+          } else {
+            updateField2(instance_card, "" + val.player, 1, 0);
+            document.getElementById("modal").style.display = "inline";
+            var end_fin = setInterval(async function () {
+              selectHand();
+              const p2_result_data = await selectPlayer();
+              //result222=0じゃなくなる関数
+              console.log("*********" + p2_result_data);
+              if (end111 == 1 && end222 == 1) {
+                getP1Hand().then(field_inf => {
+                  const p1hand_inf = [null, ...field_inf];
+                  cpy(p2_instance_card, p1hand_inf);//p1のハンドコピー
+                  document.getElementById("modal").style.display = "none";
+                  clearInterval(end_fin);
+                  end_fin = 0;
+                  p2res = p2_result_data;
+                  //p2_print_log(k); //selectLog
+                  p2_result(p2_result_data);
+                  //selecthand(); p1のもってくるやつ
+                  copy_array(field_card, copy_card);
+                  copy_array(p2_instance_card, p2_copy_card);
+                  //refresh();
+                });
+                updateField2(instance_card, "" + val.player, 1, 1);
+              }
+            }, 1000);
+          }
+        }
+        //refresh();
+        status_log(this, field_card[set]);
+        //
+      }, this);
+
+
+      draw.on('pointerdown', function (pointer) {
+        if (hand < 5) {
+          hand++;
+          dug++;//掘り進めた数
+          hands_card[hand].NAME = String(cards[dug]);
+          hands_kind(hand, hands_card[hand].NAME);
+          hands_status(hand);
+        }
+        console.log(hands_card[hand]);
+        refresh();
+      }, this);//draw　手札上限五枚で五枚以上はドローできない
+
+      deck.on('pointerdown', function (pointer) {
+        if (hand < 5) {
+          replen_card(this);
+        }
+        console.log(hands_card);
+        refresh();
+
+      }, this);//draw　手札上限五枚で五枚以上はドローできない
     }
     function p2_result(p2_result_data) {
       if (p2_result_data[1].result == 1) {
@@ -487,39 +629,40 @@
 
 
     function print_log_ref() {
-      for (var i = 1; i < plog_num; i++) {
+      for (var i = 0; i <= 5; i++) {
         vslog_TEXT[i].setText("");
       }
       plog_num = 0;
     }
 
-    function print_log(po, r1, r2, k, a, c) {
-      if (plog_end == 1) {
-        print_log_ref();
-        plog_end = 0;
-      }
-      vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+    function print_log(po, r1, r2, k, a, c, plog_num) {
+      // if (plog_end == 1) {
+      //   //print_log_ref();
+      //   plog_end = 0;
+      // }
+      // vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
       p2_vslog_TEXT[plog_num] = "p1の" + instance_card[r1].NAME + "[" + instance_card[r1].TYPE + "] VS p2の" + p2_instance_card[r2].NAME + "[" + p2_instance_card[r2].TYPE + "]";
-      vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+      //vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       console.log("****************" + p2_vslog_TEXT[plog_num]);
       plog_num++;
       if (k == 1) {
-        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("white");
+        // vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("white");
         p2_vslog_TEXT[plog_num] = "引き分け";
-        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+        //vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 2) {
-        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+        // vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
         //p2_vslog_TEXT[plog_num]="p2の"+p2_instance_card[r2].NAME+"["+p2_instance_card[r2].ATK+":"+p2_instance_card[r2].HP+"]の勝利";
         p2_vslog_TEXT[plog_num] = "p2の" + p2_instance_card[r2].NAME + "[" + p2_instance_card[r2].TYPE + "]の勝利";
 
-        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+        //vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       } else if (k == 3) {
-        vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+        // vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
         p2_vslog_TEXT[plog_num] = "p1の" + instance_card[r1].NAME + "[" + instance_card[r1].TYPE + "]の勝利";
-        vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
+        //vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
       }
-      updateLog(p2_vslog_TEXT);
       plog_num++;
+      //updateLog(p2_vslog_TEXT);
+
     }//戦闘のログを実際に画面に表示する？
 
     async function p2_print_log(po) {
@@ -527,15 +670,49 @@
         print_log_ref();
         plog_end = 0;
       }
+      var vs_num = 0;
       if (val.player == 2) {
-        p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);
+        p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);//
+        //p2_vslog_TEXT = selectLog();
         for (var i = 0; i < 3; i++) {
-          vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-          vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
-          plog_num++;
-          vslog_TEXT[plog_num] = po.add.text(900, height / 8 + 50 * plog_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
-          vslog_TEXT[plog_num].setText(p2_vslog_TEXT[plog_num]);
-          plog_num++;
+          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          vs_num++;
+          if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p1") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          } else if (p2_vslog_TEXT[vs_num].slice(-2) == "分け") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          } else if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p2") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          }
+          vs_num++;
+        }
+      } else if (val.player == 1) {
+        p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);//
+        for (var i = 0; i < 3; i++) {
+          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          vs_num++;
+          if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p1") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          } else if (p2_vslog_TEXT[vs_num].slice(-2) == "分け") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          } else if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p2") {
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+
+            vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
+          }
+          vs_num++;
         }
       }
     }//戦闘のログを実際に画面に表示する？
@@ -564,7 +741,8 @@
 
     function duel(f, p2_f, po) {
       var cnum = 0;
-      while ((count1 != 3 && count2 != 3) && cnum++ != 30) {
+      var vsnnn = 0;
+      while ((count1 != 3 && count2 != 3) && cnum++ != 100) {
         var r1 = Math.floor(Math.random() * 3 + 1);
         var r2 = Math.floor(Math.random() * 3 + 1);
         if (f[r1].HP > 0 && p2_f[r2].HP > 0) {
@@ -577,21 +755,27 @@
             p2_f[r2].HP -= f[r1].ATK;
           }
 
+          // f[r1].HP -= p2_f[r2].ATK;
+          // p2_f[r2].HP -= f[r1].ATK;
+
           if (f[r1].HP <= 0 && p2_f[r2].HP <= 0) {
             console.log("Draw");
             count1++;
             count2++;
-            print_log(po, r1, r2, 1, f, p2_f);
+            print_log(po, r1, r2, 1, f, p2_f, vsnnn);
+            vsnnn += 2;
           } else {
             if (f[r1].HP <= 0) {
               count1++;//カードが倒されたp1の
               console.log("p2_f[" + r2 + "]の勝利");
-              print_log(po, r1, r2, 2, f, p2_f);
+              print_log(po, r1, r2, 2, f, p2_f, vsnnn);
+              vsnnn += 2;
             }
             if (p2_f[r2].HP <= 0) {
               count2++;//カードが倒されたp2の
               console.log("f[" + r1 + "]の勝利");
-              print_log(po, r1, r2, 3, f, p2_f);
+              print_log(po, r1, r2, 3, f, p2_f, vsnnn);
+              vsnnn += 2;
             }
           }
         }
@@ -650,7 +834,7 @@
     }
 
     function capsule(ps) {
-      for (var i = 1; i <= status_max - 1; i++) {
+      for (var i = 1; i <= status_max; i++) {
         flag[i] = 1;
         //status_text[i]=ps.add.text(900-20,height/2+40*i,""+flag[i]).setInteractive();
       }
@@ -693,10 +877,10 @@
       for (var i = 1; i <= typs * 2; i++) {
         flag[i] = 0;
       }
-      for (var i = k; i <= typs * 2; i++) {
-        status_text[i].setText("");
-        status_text[i] = status_text[i + 1];
-      }
+      // for (var i = k; i <= typs * 2; i++) {
+      //   status_text[i].setText("");
+      //   status_text[i] = status_text[i + 1];
+      // }
       print_type_text(field_card[set]);
 
 
@@ -715,68 +899,70 @@
         if (hands_card[i].KIND == "MO") {
           hands_TYPE_TEXT[i].setText(hands_card[i].NAME);
         } else {
-          hands_TYPE_TEXT[i].setText(hands_card[i].TYPE);
+          hands_TYPE_TEXT[i].setText(hands_card[i].KIND);
         }
       }//手札の情報
     }
 
-    function status_log(pa) {
-      var check_card = [];
+    function status_log(pa, ar) {
       var c = hand_num;
 
       if (status_text[0] != null) {
-        for (var i = 0; i <= typs * 2; i++) {
+        for (var i = 0; i <= 6; i++) {
           status_text[i].setText("");
         }
       }//reset status_log
       var i = 0;
       if (inheri_check() == 0) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "");
-        status_text[i].setText("継承:" + field_card[set].NAME + "(" + field_card[set].TYPE + ")");
+        status_text[i].setText("継承:" + ar.NAME + "(" + ar.TYPE + ")");
         i++;
       } else {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "");
-        status_text[i].setText("継承:" + field_card[set].NAME + "(" + field_card[set].TYPE + ")<-" + copy_card[set].NAME + "(" + copy_card[set].TYPE + ")");
+        status_text[i].setText("継承:" + ar.NAME + "(" + ar.TYPE + ")<-" + copy_card[set].NAME + "(" + copy_card[set].TYPE + ")");
         i++;
       }
-      print_type_text(field_card[set]);
-      if (field_card[set].FLY == 1) {
+      print_type_text(ar);
+      if (ar.FLY == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "FLY";
         status_text[i].setText("int attack(" + st_t[i] + ")");
         i++;
       }
-      if (field_card[set].MAG == 1) {
+      if (ar.MAG == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "MAG";
         status_text[i].setText("int attack(" + st_t[i] + ")");
         i++;
       }
-      if (field_card[set].PHS == 1) {
+      if (ar.PHS == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "PHS";
         status_text[i].setText("int attack(" + st_t[i] + ")");
         i++;
       }
-      if (field_card[set].FLY == 1) {
+      if (ar.FLY == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "FLY";
         status_text[i].setText("int deffence(" + st_t[i] + ")");
         i++;
       }
-      if (field_card[set].MAG == 1) {
+      if (ar.MAG == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "MAG";
         status_text[i].setText("int deffence(" + st_t[i] + ")");
         i++;
       }
-      if (field_card[set].PHS == 1) {
+      if (ar.PHS == 1) {
         status_text[i] = pa.add.text(900, height / 2 + 40 * i, "").setInteractive();
         st_t[i] = "PHS";
         status_text[i].setText("int deffence(" + st_t[i] + ")");
         i++;
       }
-      status_max = i;
+      status_max = i / 2;
+      print_TEXT();
+      SCText.setText('SET:' + set);//出したいカードの場所テキスト
+
     }//beta status_log
 
     function update_hands() {
@@ -797,6 +983,7 @@
       buff();
       buffed = 1;
       field_card[set].NAME = hands_card[hand_num].NAME + field_card[set].NAME;
+      instanText.setText(hands_card[hand_num].NAME + "を継承しました");
       update_hands();
     }//継承
 
@@ -820,12 +1007,14 @@
 
     function refresh() {
       resetResult("" + val.player);
+      //print_log_ref();
+      //updateLog(p2_vslog_TEXT);
       ready_flag = 0;
       set_num = "";
       instanText.setText("");
       count1 = 0;
       count2 = 0;
-      plog_end = 1;
+      //plog_end = 1;
     }
 
     function ready_set() {
@@ -855,16 +1044,20 @@
       ErrorText.setText(t + 'をオーバーロードしました');
     }
 
-    function card_deal(po) {
+    function card_deal(po, al) {
       if (set != null && hands_card[hand_num].NAME != "gree" && hands_card[hand_num].NAME != null) {
         var okor = 1;
-        if (inheri_check() == 1) {
+        print_type_text(al);
+        if (inheri_check(al) == 1) {
           if (hands_card[hand_num].KIND == "CP") {
-            capsule_now = 1;
-            capsule(po);
-            buff();
-            buffed = 1;
-            update_hands();
+            if (typs == 0) {
+              instanText.setText("カプセル化できません");
+            } else {
+              capsule(po);
+              buff();
+              buffed = 1;
+              update_hands();
+            }
           } else {
             if (hands_card[hand_num].KIND == "OL") {
               field_card[set].TYPE = hands_card[hand_num].TYPE;
@@ -884,7 +1077,7 @@
             }
           }
         } else if (hands_card[hand_num].KIND == "MO") {
-          inheri();
+          inheri(po);
 
         } else if (hands_card[hand_num].KIND != "MO") {
           ErrorText.setText('継承していないとオーバーライド,オーバーロードできません');
@@ -892,137 +1085,58 @@
       } else if (set == null) {
         ErrorText.setText("場にある継承元を選んでください");
       }
+      status_log(po, field_card[set]);
     }
 
     function capsule_print(l) {
       if (flag[l] == 1) {
         return "+";
       } else {
-        return "";
+        return null;
       }
     }
 
+    function hide_capsule(h) {
+      var hc = h.add.image(900 - 20, height / 2 + 40 * 3, "greea").setInteractive();
+    }
+
     function update() {
-      let draw = this.add.text(800, 400, 'Draw').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
-      let end = this.add.text(700, 400, 'End').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
-      let ready = this.add.text(150, 300, 'インスタンス').setFontSize(30).setFontFamily("Arial").setOrigin(0.5).setInteractive();
       let card1 = this.add.image(100, height / 8 * 7, type_print(hands_card[1])).setOrigin(0.5).setInteractive();
       let card2 = this.add.image(220, height / 8 * 7, type_print(hands_card[2])).setOrigin(0.5).setInteractive();
       let card3 = this.add.image(340, height / 8 * 7, type_print(hands_card[3])).setOrigin(0.5).setInteractive();
       let card4 = this.add.image(460, height / 8 * 7, type_print(hands_card[4])).setOrigin(0.5).setInteractive();
       let card5 = this.add.image(580, height / 8 * 7, type_print(hands_card[5])).setOrigin(0.5).setInteractive();
+      let status1 = this.add.text(900 - 20, height / 2 + 40 * 1, capsule_print(1)).setInteractive();
+      let status2 = this.add.text(900 - 20, height / 2 + 40 * 2, capsule_print(2)).setInteractive();
+      let status3 = this.add.text(900 - 20, height / 2 + 40 * 3, capsule_print(3)).setInteractive();
       let slime1 = this.add.image(160, height / 2, type_print(field_card[1])).setInteractive();
       let slime2 = this.add.image(340, height / 2, type_print(field_card[2])).setInteractive();
       let slime3 = this.add.image(520, height / 2, type_print(field_card[3])).setInteractive();
       let p2_field_card1 = this.add.image(-20 + 2 * 120, height / 8, type_print(p2_field_card[1])).setInteractive();
       let p2_field_card2 = this.add.image(-20 + 3 * 120, height / 8, type_print(p2_field_card[2])).setInteractive();
       let p2_field_card3 = this.add.image(-20 + 4 * 120, height / 8, type_print(p2_field_card[3])).setInteractive();
-      let status1 = this.add.text(900 - 20, height / 2 + 40 * 1, capsule_print(1)).setInteractive();
-      let status2 = this.add.text(900 - 20, height / 2 + 40 * 2, capsule_print(2)).setInteractive();
-      let status3 = this.add.text(900 - 20, height / 2 + 40 * 3, capsule_print(3)).setInteractive();
-      let status4 = this.add.text(900 - 20, height / 2 + 40 * 4, capsule_print(4)).setInteractive();
-      let status5 = this.add.text(900 - 20, height / 2 + 40 * 5, capsule_print(5)).setInteractive();
-      let status6 = this.add.text(900 - 20, height / 2 + 40 * 6, capsule_print(6)).setInteractive();
-      SCText.setText('SET:' + set);//出したいカードの場所テキスト
-      deck = this.add.image(700, height / 8 * 6, 'card').setInteractive();//山札クリックしてもドローできるよ
-      text = this.add.text(680, 550, '山札');
-      print_TEXT();
-      if (set != null) {
-        status_log(this);
+      let logbutton = this.add.text(900, height / 8 - 100, "対戦ログを見る").setInteractive();
+      if (flag[1] == 0) {
+        hide_capsule(this);
       }
+      //status_log(this,field_card[set]);
 
-      status1.on('pointerdown', function (pointer) {
-        capsule_cap(1);
+      logbutton.on('pointerdown', function (pointer) {
+        p2_print_log(this);
+        //print_log_ref();
+        plog_end = 1;
       }, this);
 
-      status2.on('pointerdown', function (pointer) {
-        capsule_cap(2);
+      p2_field_card1.on('pointerdown', function (pointer) {
+        status_log(this, p2_field_card[1]);
       }, this);
 
-      status3.on('pointerdown', function (pointer) {
-        capsule_cap(3);
+      p2_field_card2.on('pointerdown', function (pointer) {
+        status_log(this, p2_field_card[2]);
       }, this);
 
-      status4.on('pointerdown', function (pointer) {
-        capsule_cap(4);
-      }, this);
-
-      status5.on('pointerdown', function (pointer) {
-        capsule_cap(5);
-      }, this);
-
-      status6.on('pointerdown', function (pointer) {
-        capsule_cap(6);
-      }, this);
-
-      ready.on('pointerdown', function (pointer) {
-        instanText.setText("どれを戦闘に参加させますか？(インスタンス化)");
-        ErrorText.setText("順番:" + set_num);
-        ready_flag = 1;
-      }, this);
-
-      end.on('pointerdown', function (pointer) {
-        var k = this;
-        console.log("end:" + field_card);
-        if (ready_flag != 4) {
-          ErrorText.setText("インスタンスを押してインスタンス化してください");
-        } else {
-          instance(set_num);
-          console.log("instance_card:" + instance_card);
-          print();
-          copy_array(copy_card, field_card);
-          copy_array(p2_copy_card, p2_instance_card);
-
-          var pa = this;
-          if (val.player == 1) {
-            updateField(instance_card, "" + val.player, 1, 1);
-            document.getElementById("modal").style.display = "inline";
-            var end_fin = setInterval(function () {
-              selectHand2();
-              if (end111 == 1 && end222 == 1) {
-                getP2Hand().then(field_inf => {
-                  const p2hand_inf = [null, ...field_inf];
-                  copy_array(p2_instance_card, p2hand_inf);
-                  document.getElementById("modal").style.display = "none";
-                  clearInterval(end_fin);
-                  end_fin = 0;
-                  if (val.player == 1) {
-                    duel(instance_card, p2_instance_card, pa);
-                  }
-                  copy_array(field_card, copy_card);
-                  copy_array(p2_instance_card, p2_copy_card);
-                  refresh();
-
-                });
-              }
-            }, 1000);
-          } else {
-            updateField2(instance_card, "" + val.player, 1, 0);
-            document.getElementById("modal").style.display = "inline";
-            var end_fin = setInterval(async function () {
-              const p2_result_data = await selectPlayer();
-              //result222=0じゃなくなる関数
-              console.log("*********" + p2_result_data);
-              if (p2_result_data[1].result != 0) {
-                getP1Hand().then(field_inf => {
-                  const p1hand_inf = [null, ...field_inf];
-                  copy_array(p2_instance_card, p1hand_inf);//p1のハンドコピー
-                  document.getElementById("modal").style.display = "none";
-                  clearInterval(end_fin);
-                  end_fin = 0;
-                  p2_print_log(k);
-                  p2_result(p2_result_data);
-                  //selecthand(); p1のもってくるやつ
-                  copy_array(ff_card, copy_card);
-                  copy_array(p2_instance_card, p2_copy_card);
-                  refresh();
-                });
-              }
-            }, 1000);
-          }
-
-        }
-        refresh();
+      p2_field_card3.on('pointerdown', function (pointer) {
+        status_log(this, p2_field_card[3]);
       }, this);
 
       slime1.on('pointerdown', function (pointer) {
@@ -1031,7 +1145,7 @@
         if (buffed == 0) {
           copy_array(copy_card, field_card);
         }
-        //status_log(this);
+        status_log(this, field_card[set]);
       }, this);//場にあるひな形スライムの１個目
 
       slime2.on('pointerdown', function (pointer) {
@@ -1040,7 +1154,7 @@
         if (buffed == 0) {
           copy_array(copy_card, field_card);
         }
-        //status_log(this);
+        status_log(this, field_card[set]);
       }, this);
 
       slime3.on('pointerdown', function (pointer) {
@@ -1049,51 +1163,50 @@
         if (buffed == 0) {
           copy_array(copy_card, field_card);
         }
-        //status_log(this);
+        status_log(this, field_card[set]);
       }, this);
 
-      draw.on('pointerdown', function (pointer) {
-        if (hand < 5) {
-          hand++;
-          dug++;//掘り進めた数
-          hands_card[hand].NAME = '' + String(cards[dug]);
-          hands_kind(hand, hands_card[hand].NAME);
-          hands_status(hand);
-          card6 = this.add.image(-20 + hand * 120, height / 8 * 7, type_print(hands_card[hand]));
-        }
-        console.log(hands_card[hand]);
-      }, this);//draw　手札上限五枚で五枚以上はドローできない
+      status1.on('pointerdown', function (pointer) {
+        capsule_cap(1);
+        status_log(this, field_card[set]);
+      }, this);
 
-      deck.on('pointerdown', function (pointer) {
-        if (hand < 5) {
-          replen_card(this);
-        }
-        console.log(hands_card);
-      }, this);//draw　手札上限五枚で五枚以上はドローできない
+      status2.on('pointerdown', function (pointer) {
+        capsule_cap(2);
+        status_log(this, field_card[set]);
+      }, this);
+
+      status3.on('pointerdown', function (pointer) {
+        capsule_cap(3);
+        status_log(this, field_card[set]);
+      }, this);
+
+
 
       card5.on('pointerdown', function (pointer) {
         hand_num = 5;
-        card_deal(this);
+        card_deal(this, field_card[set]);
       }, this);
 
       card4.on('pointerdown', function (pointer) {
         hand_num = 4;
-        card_deal(this);
+        card_deal(this, field_card[set]);
       }, this);
 
       card3.on('pointerdown', function (pointer) {
         hand_num = 3;
-        card_deal(this);
+        card_deal(this, field_card[set]);
       }, this);
 
       card2.on('pointerdown', function (pointer) {
         hand_num = 2;
-        card_deal(this);
+        card_deal(this, field_card[set]);
       }, this);
 
       card1.on('pointerdown', function (pointer) {
         hand_num = 1;
-        card_deal(this);
+        card_deal(this, field_card[set]);
+        console.log("****:card1***")
       }, this);//一番左出す
     }
 
@@ -1125,9 +1238,10 @@
       CardPrinter.execute({
         callback: function (data) {
           $('#error_message').text("");
-          //for (var i = 0; i <= 4; i++) {
-          //card = po.add.image(100 + i * 120, height / 8, data[i].handno);
-          //}
+
+          end111 = data.some(({ endcheck }) => endcheck === 1) ? 1 : 0;
+
+          console.log(end111);
         },
         errorHandler: updateErrorMessage
       });
@@ -1138,7 +1252,7 @@
         callback: function (data) {
           $('#error_message').text("");
 
-          end222 = data.some(({ endCheck2 }) => endCheck2 === 1) ? 1 : 0;
+          end222 = data.some(({ endcheck2 }) => endcheck2 === 1) ? 1 : 0;
 
           console.log(end222);
         },
@@ -1188,13 +1302,14 @@
 
     function updateField(arr, ply, end, res) {
       var field_inf = {
-        "id": 1, "player": ply, "endCheck": end, "result": res,
-        "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
-        "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
-        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
-        "FLY": [arr[1].FLY, arr[2].FLY, arr[3].FLY],
-        "PHS": [arr[1].PHS, arr[2].PHS, arr[3].PHS],
-        "MAG": [arr[1].MAG, arr[2].MAG, arr[3].MAG]
+        "id": 1, "player": ply, "endcheck": end, "result": res,
+        "hp": [arr[1].HP, arr[2].HP, arr[3].HP],
+        "atk": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
+        "type": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
+        "fly": [arr[1].FLY, arr[2].FLY, arr[3].FLY],
+        "phs": [arr[1].PHS, arr[2].PHS, arr[3].PHS],
+        "mag": [arr[1].MAG, arr[2].MAG, arr[3].MAG],
+        "name": [arr[1].NAME, arr[2].NAME, arr[3].NAME]
       };
       end111 = 1;
       CardPrinter.updateField(field_inf, {
@@ -1207,13 +1322,14 @@
 
     function updateField2(arr, ply, end2, res2) {
       var field_inf = {
-        "id": 1, "player": ply, "endCheck2": end2, "result2": res2,
-        "HP": [arr[1].HP, arr[2].HP, arr[3].HP],
-        "ATK": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
-        "TYPE": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
-        "FLY": [arr[1].FLY, arr[2].FLY, arr[3].FLY],
-        "PHS": [arr[1].PHS, arr[2].PHS, arr[3].PHS],
-        "MAG": [arr[1].MAG, arr[2].MAG, arr[3].MAG]
+        "id": 1, "player": ply, "endcheck2": end2, "result2": res2,
+        "hp": [arr[1].HP, arr[2].HP, arr[3].HP],
+        "atk": [arr[1].ATK, arr[2].ATK, arr[3].ATK],
+        "type": [arr[1].TYPE, arr[2].TYPE, arr[3].TYPE],
+        "fly": [arr[1].FLY, arr[2].FLY, arr[3].FLY],
+        "phs": [arr[1].PHS, arr[2].PHS, arr[3].PHS],
+        "mag": [arr[1].MAG, arr[2].MAG, arr[3].MAG],
+        "name": [arr[1].NAME, arr[2].NAME, arr[3].NAME]
       };
       end222 = 1;
       CardPrinter.updateField2(field_inf, {
@@ -1237,8 +1353,9 @@
     }
 
     function updateLog(log) {
+      console.log("updateLog:" + log);
       var log_inf = {
-        "logid": 1, "log": [log[0], log[1], log[2], log[3], log[4], log[5]]
+        "log": [log[0], log[1], log[2], log[3], log[4], log[5]]
       };
       CardPrinter.updateLog(log_inf, {
         callback: function () {
@@ -1250,8 +1367,9 @@
 
     function resetResult(ply) {
       var reset_inf = {
-        "player": ply, "endCheck": 0, "result": 0
+        "player": ply, "endcheck": 0, "result": 0
       };
+
       CardPrinter.resetResult(reset_inf, {
         callback: function () {
           console.log("resetResult実行完了")
@@ -1264,8 +1382,11 @@
         },
         errorHandler: updateErrorMessage
       });
-      end111 = 0;
-      end222 = 0;
+      if (ply == 1) {
+        end222 = 0;
+      } else {
+        end111 = 0;
+      }
     }
 
   </script>

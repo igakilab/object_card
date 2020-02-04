@@ -16,14 +16,15 @@ public class CardPrinter {
       for (Card f : fieldList) {
         System.out.println(f.getId());
         System.out.println(f.getPlayer());
-        System.out.println(f.getEndCheck());
+        System.out.println(f.getEndcheck());
         System.out.println(f.getResult());
-        System.out.println(f.getHP());
-        System.out.println(f.getATK());
-        System.out.println(f.getTYPE());
-        System.out.println(f.getFLY());
-        System.out.println(f.getPHS());
-        System.out.println(f.getMAG());
+        System.out.println(f.getHp());
+        System.out.println(f.getAtk());
+        System.out.println(f.getType());
+        System.out.println(f.getFly());
+        System.out.println(f.getPhs());
+        System.out.println(f.getMag());
+        System.out.println(f.getName());
       }
     }
     return fieldList;
@@ -36,14 +37,15 @@ public class CardPrinter {
       for (Card2 f : fieldList2) {
         System.out.println(f.getId());
         System.out.println(f.getPlayer());
-        System.out.println(f.getEndCheck2());
+        System.out.println(f.getEndcheck2());
         System.out.println(f.getResult2());
-        System.out.println(f.getHP());
-        System.out.println(f.getATK());
-        System.out.println(f.getTYPE());
-        System.out.println(f.getFLY());
-        System.out.println(f.getPHS());
-        System.out.println(f.getMAG());
+        System.out.println(f.getHp());
+        System.out.println(f.getAtk());
+        System.out.println(f.getType());
+        System.out.println(f.getFly());
+        System.out.println(f.getPhs());
+        System.out.println(f.getMag());
+        System.out.println(f.getName());
       }
     }
     return fieldList2;
@@ -81,43 +83,49 @@ public class CardPrinter {
   public void updateField(Hand fieldList) {
     try (SqlSession session = factory.openSession()) {
       String player = fieldList.getPlayer();
-      int endCheck = fieldList.getEndCheck();
+      int endcheck = fieldList.getEndcheck();
       int result = fieldList.getResult();
       int hpid = fieldList.getId(), atkid = fieldList.getId(), typeid = fieldList.getId();
       int flyid = fieldList.getId(), phsid = fieldList.getId(), magid = fieldList.getId();
+      int nameid = fieldList.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateField", new Card(player, endCheck, result));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateField", new Card(player, endcheck, result));
       System.out.println(ret);
 
-      for (int HP : fieldList.getHP()) {
-        int hpret = session.update("igakilab.mybatis.CardMapper.updateHP", new HP(hpid, HP));
+      for (int hp : fieldList.getHp()) {
+        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp", new Hpp(hpid, hp));
         System.out.println(hpret);
         hpid++;
       }
-      for (int ATK : fieldList.getATK()) {
-        int atkret = session.update("igakilab.mybatis.CardMapper.updateATK", new ATK(atkid, ATK));
+      for (int atk : fieldList.getAtk()) {
+        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk", new Atkk(atkid, atk));
         System.out.println(atkret);
         atkid++;
       }
-      for (String TYPE : fieldList.getTYPE()) {
-        int typeret = session.update("igakilab.mybatis.CardMapper.updateTYPE", new TYPE(typeid, TYPE));
+      for (String type : fieldList.getType()) {
+        int typeret = session.update("igakilab.mybatis.CardMapper.updateType", new Typee(typeid, type));
         System.out.println(typeret);
         typeid++;
       }
-      for (int FLY : fieldList.getFLY()) {
-        int flyret = session.update("igakilab.mybatis.CardMapper.updateFLY", new FLYER(flyid, FLY));
+      for (int fly : fieldList.getFly()) {
+        int flyret = session.update("igakilab.mybatis.CardMapper.updateFly", new Fly(flyid, fly));
         System.out.println(flyret);
         flyid++;
       }
-      for (int PHS : fieldList.getPHS()) {
-        int phsret = session.update("igakilab.mybatis.CardMapper.updatePHS", new PHYSIC(phsid, PHS));
+      for (int phs : fieldList.getPhs()) {
+        int phsret = session.update("igakilab.mybatis.CardMapper.updatePhs", new Phs(phsid, phs));
         System.out.println(phsret);
         phsid++;
       }
-      for (int MAG : fieldList.getMAG()) {
-        int magret = session.update("igakilab.mybatis.CardMapper.updateMAG", new MAGIC(magid, MAG));
+      for (int mag : fieldList.getMag()) {
+        int magret = session.update("igakilab.mybatis.CardMapper.updateMag", new Mag(magid, mag));
         System.out.println(magret);
         magid++;
+      }
+      for (String name : fieldList.getName()) {
+        int nameret = session.update("igakilab.mybatis.CardMapper.updateName", new Name(nameid, name));
+        System.out.println(nameret);
+        nameid++;
       }
       session.commit();
     }
@@ -130,43 +138,49 @@ public class CardPrinter {
   public void updateField2(Hand2 fieldList2) {
     try (SqlSession session = factory.openSession()) {
       String player = fieldList2.getPlayer();
-      int endCheck2 = fieldList2.getEndCheck2();
+      int endcheck2 = fieldList2.getEndcheck2();
       int result2 = fieldList2.getResult2();
       int hpid = fieldList2.getId(), atkid = fieldList2.getId(), typeid = fieldList2.getId();
       int flyid = fieldList2.getId(), phsid = fieldList2.getId(), magid = fieldList2.getId();
+      int nameid = fieldList2.getId();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.updateField2", new Card2(player, endCheck2, result2));
+      int ret = session.update("igakilab.mybatis.CardMapper.updateField2", new Card2(player, endcheck2, result2));
       System.out.println(ret);
 
-      for (int HP : fieldList2.getHP()) {
-        int hpret = session.update("igakilab.mybatis.CardMapper.updateHP2", new HP(hpid, HP));
+      for (int hp : fieldList2.getHp()) {
+        int hpret = session.update("igakilab.mybatis.CardMapper.updateHp2", new Hpp(hpid, hp));
         System.out.println(hpret);
         hpid++;
       }
-      for (int ATK : fieldList2.getATK()) {
-        int atkret = session.update("igakilab.mybatis.CardMapper.updateATK2", new ATK(atkid, ATK));
+      for (int atk : fieldList2.getAtk()) {
+        int atkret = session.update("igakilab.mybatis.CardMapper.updateAtk2", new Atkk(atkid, atk));
         System.out.println(atkret);
         atkid++;
       }
-      for (String TYPE : fieldList2.getTYPE()) {
-        int typeret = session.update("igakilab.mybatis.CardMapper.updateTYPE2", new TYPE(typeid, TYPE));
+      for (String type : fieldList2.getType()) {
+        int typeret = session.update("igakilab.mybatis.CardMapper.updateType2", new Typee(typeid, type));
         System.out.println(typeret);
         typeid++;
       }
-      for (int FLY : fieldList2.getFLY()) {
-        int flyret = session.update("igakilab.mybatis.CardMapper.updateFLY2", new FLYER(flyid, FLY));
+      for (int fly : fieldList2.getFly()) {
+        int flyret = session.update("igakilab.mybatis.CardMapper.updateFly2", new Fly(flyid, fly));
         System.out.println(flyret);
         flyid++;
       }
-      for (int PHS : fieldList2.getPHS()) {
-        int phsret = session.update("igakilab.mybatis.CardMapper.updatePHS2", new PHYSIC(phsid, PHS));
+      for (int phs : fieldList2.getPhs()) {
+        int phsret = session.update("igakilab.mybatis.CardMapper.updatePhs2", new Phs(phsid, phs));
         System.out.println(phsret);
         phsid++;
       }
-      for (int MAG : fieldList2.getMAG()) {
-        int magret = session.update("igakilab.mybatis.CardMapper.updateMAG2", new MAGIC(magid, MAG));
+      for (int mag : fieldList2.getMag()) {
+        int magret = session.update("igakilab.mybatis.CardMapper.updateMag2", new Mag(magid, mag));
         System.out.println(magret);
         magid++;
+      }
+      for (String name : fieldList2.getName()) {
+        int nameret = session.update("igakilab.mybatis.CardMapper.updateName2", new Name(nameid, name));
+        System.out.println(nameret);
+        nameid++;
       }
       session.commit();
     }
@@ -188,7 +202,7 @@ public class CardPrinter {
 
   public void updateLog(Log logList) {
     try (SqlSession session = factory.openSession()) {
-      int logid = logList.getLogid();
+      int logid = 1;
 
       for (String i : logList.getLog()) {
         int ret = session.update("igakilab.mybatis.CardMapper.updateLog", new Logch(logid, i));
@@ -203,10 +217,10 @@ public class CardPrinter {
   public void resetResult(Hand resetList) {
     try (SqlSession session = factory.openSession()) {
       String player = resetList.getPlayer();
-      int endCheck = resetList.getEndCheck();
+      int endcheck = resetList.getEndcheck();
       int result = resetList.getResult();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.resetResult", new Card(player, endCheck, result));
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult", new Card(player, endcheck, result));
       System.out.println(ret);
       session.commit();
     }
@@ -215,10 +229,10 @@ public class CardPrinter {
   public void resetResult2(Hand2 resetList2) {
     try (SqlSession session = factory.openSession()) {
       String player = resetList2.getPlayer();
-      int endCheck2 = resetList2.getEndCheck2();
+      int endcheck2 = resetList2.getEndcheck2();
       int result2 = resetList2.getResult2();
 
-      int ret = session.update("igakilab.mybatis.CardMapper.resetResult2", new Card2(player, endCheck2, result2));
+      int ret = session.update("igakilab.mybatis.CardMapper.resetResult2", new Card2(player, endcheck2, result2));
       System.out.println(ret);
       session.commit();
     }
