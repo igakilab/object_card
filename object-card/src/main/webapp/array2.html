@@ -220,7 +220,7 @@
       this.load.image('phsic11', 'img/phss.png');
       this.load.image('flyic11', 'img/flyy.png');
       this.load.image('gree', 'img/green.png');
-      this.load.image('greena', 'img/greena.png');
+      this.load.image('greea', 'img/greena.png');
       this.load.image('magic12', 'img/Rmag.png');
       this.load.image('magic13', 'img/Bmag.png');
       this.load.image('magic14', 'img/Ymag.png');
@@ -548,6 +548,8 @@
           replen_card(this);
         }
         console.log(hands_card);
+        refresh();
+
       }, this);//draw　手札上限五枚で五枚以上はドローできない
     }
     function p2_result(p2_result_data) {
@@ -832,7 +834,7 @@
     }
 
     function capsule(ps) {
-      for (var i = 1; i <= status_max - 1; i++) {
+      for (var i = 1; i <= status_max; i++) {
         flag[i] = 1;
         //status_text[i]=ps.add.text(900-20,height/2+40*i,""+flag[i]).setInteractive();
       }
