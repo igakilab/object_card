@@ -507,30 +507,30 @@
           } else {
             updateField2(instance_card, "" + val.player, 1, 0);
             document.getElementById("modal").style.display = "inline";
-            var end_fin = setInterval(async function () {
-              selectHand();
-              const p2_result_data = await selectPlayer();
-              //result222=0じゃなくなる関数
-              console.log("*********" + p2_result_data);
-              if (end111 == 1 && end222 == 1) {
-                getP1Hand().then(field_inf => {
-                  const p1hand_inf = [null, ...field_inf];
-                  cpy(p2_instance_card, p1hand_inf);//p1のハンドコピー
-                  copy_array(p2_copy_card, p2_instance_card);
-                  document.getElementById("modal").style.display = "none";
-                  clearInterval(end_fin);
-                  end_fin = 0;
-                  p2res = p2_result_data;
-                  //p2_print_log(k); //selectLog
-                  p2_result(p2_result_data);
-                  //selecthand(); p1のもってくるやつ
-                  copy_array(field_card, copy_card);
-                  //copy_array(p2_field_card, p2_copy_card);
-                  //refresh();]
-                  nnn = 0;
-                });
-                updateField2(instance_card, "" + val.player, 1, 1);
-              }
+            var end_fin = setInterval(function () {
+              selectHand().then(data => {
+                if (data.some(({ result }) => result === 1) && end111 == 1 && end222 == 1) {
+                  getP1Hand().then(async field_inf => {
+                    const p2_result_data = await selectPlayer();
+                    console.log("p2result" + p2_result_data[1].result);
+                    console.log("p1result" + p2_result_data[0].result);
+                    const p1hand_inf = [null, ...field_inf];
+                    cpy(p2_instance_card, p1hand_inf);//p1のハンドコピー
+                    copy_array(p2_copy_card, p2_instance_card);
+                    document.getElementById("modal").style.display = "none";
+                    clearInterval(end_fin);
+                    end_fin = 0;
+                    //p2_print_log(k); //selectLog
+                    p2_result(p2_result_data);
+                    //selecthand(); p1のもってくるやつ
+                    copy_array(field_card, copy_card);
+                    //copy_array(p2_field_card, p2_copy_card);
+                    //refresh();]
+                    nnn = 0;
+                  });
+                  updateField2(instance_card, "" + val.player, 1, 1);
+                }
+              });
             }, 1000);
           }
         }
@@ -563,7 +563,11 @@
       }, this);//draw　手札上限五枚で五枚以上はドローできない
     }
     function p2_result(p2_result_data) {
-      if (p2_result_data[1].result == 1) {
+      if (p2_result_data[1].result == 3) {
+        WINText.setText('Draw');
+        updatePlayer("" + 1, HP, 3);
+        updatePlayer("" + 2, p2_HP, 3);
+      } else if (p2_result_data[1].result == 1) {
         if (wins >= 1) {
           wins++;
           WINText.setText('WINS:' + wins);
@@ -587,10 +591,6 @@
         p2_HP -= 1;
         updatePlayer("" + 1, HP, 2);
         updatePlayer("" + 2, p2_HP, 1);
-      } else {
-        WINText.setText('Draw');
-        updatePlayer("" + 1, HP, 3);
-        updatePlayer("" + 2, p2_HP, 3);
       }
       // var p2_result_dataa = selectPlayer();
       // HP = p2_result_dataa[1].plyHP;
@@ -601,8 +601,8 @@
 
 
     function result(count1, count2) {
-      updatePlayer("" + 1, HP, 0);
-      updatePlayer("" + 2, p2_HP, 0);
+      //updatePlayer("" + 1, HP, 0);
+      //updatePlayer("" + 2, p2_HP, 0);
       if (count2 > count1) {
         if (wins >= 1) {
           wins++;
@@ -628,7 +628,6 @@
 
       } else {
         WINText.setText('Draw');
-
         updatePlayer("" + 1, HP, 3);
         updatePlayer("" + 2, p2_HP, 3);
       }
@@ -686,7 +685,7 @@
         p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);//
         //p2_vslog_TEXT = selectLog();
         for (var i = 0; i < 3; i++) {
-          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
           if (p2_vslog_TEXT[vs_num] == null) {
             vslog_TEXT[vs_num].setText("");
           } else {
@@ -694,15 +693,15 @@
           }
           vs_num++;
           if (p2_vslog_TEXT[vs_num] == null) {
-            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
             vslog_TEXT[vs_num].setText("");
           } else {
             if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p1") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
             } else if (p2_vslog_TEXT[vs_num].slice(-2) == "分け") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
             } else if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p2") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
             }
             vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
           }
@@ -711,7 +710,7 @@
       } else if (val.player == 1) {
         p2_vslog_TEXT = (await selectLog()).map(({ log }) => log);//
         for (var i = 0; i < 3; i++) {
-          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+          vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
           if (p2_vslog_TEXT[vs_num] == null) {
             vslog_TEXT[vs_num].setText("");
           } else {
@@ -719,15 +718,15 @@
           }
           vs_num++;
           if (p2_vslog_TEXT[vs_num] == null) {
-            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+            vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
             vslog_TEXT[vs_num].setText("");
           } else {
             if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p1") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("red");
             } else if (p2_vslog_TEXT[vs_num].slice(-2) == "分け") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive();
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive();
             } else if (p2_vslog_TEXT[vs_num].slice(-2) == "勝利" && p2_vslog_TEXT[vs_num].slice(0, 2) == "p2") {
-              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(30).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
+              vslog_TEXT[vs_num] = po.add.text(900, height / 8 + 50 * vs_num, "").setFontSize(20).setFontFamily("Arial").setOrigin(0).setInteractive().setFill("blue");
             }
             vslog_TEXT[vs_num].setText(p2_vslog_TEXT[vs_num]);
           }
@@ -1268,21 +1267,24 @@
     }
 
     function selectHand() {
-      CardPrinter.execute({
-        callback: function (data) {
-          $('#error_message').text("");
-          if (nnn == 0) {
-            p2_field_carda = [null, ...data];
-            cpy(p2_field_card, p2_field_carda)
-            console.log("selectHand" + p2_field_card);
-            nnn++;
+      return new Promise((resolve, reject) => {
+        CardPrinter.execute({
+          callback: data => {
+            if (nnn == 0) {
+              p2_field_carda = [null, ...data];
+              cpy(p2_field_card, p2_field_carda)
+              console.log("selectHand" + p2_field_card);
+              nnn++;
+            }
+
+            end111 = data.some(({ endcheck }) => endcheck === 1) ? 1 : 0;
+            resolve(data);
+          },
+          errorHandler: (message, exception) => {
+            updateErrorMessage(message, exception);
+            reject(exception);
           }
-
-          end111 = data.some(({ endcheck }) => endcheck === 1) ? 1 : 0;
-
-          console.log(end111);
-        },
-        errorHandler: updateErrorMessage
+        });
       });
     }
 

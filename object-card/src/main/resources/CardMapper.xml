@@ -10,7 +10,7 @@
     select * from field2;
   </select>
   <select id="selectPlayer" resultType="jp.igakilab.dwr.mybatis.Player">
-    select player, plyHP, result from player;
+    select * from player order by player asc;
   </select>
   <select id="selectLog" resultType="jp.igakilab.dwr.mybatis.Logch">
     select logid, log from log;
