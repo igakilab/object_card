@@ -17,8 +17,8 @@ create database object_card; --coloring_with_programmingという名前のDBを�
 \c object_card --object_cardというDBにアクセスする．\dを入力すると，DB内のテーブルを一覧表示する．\d {テーブル名}を入力すると，指定したテーブルの属性を一覧表示する．
 create table field(id int, player varchar(7), end_check int, result int, hp int, atk int, type varchar(7), fly int, phs int, mag int, name varchar(32));
 create table field2(id int, player varchar(7), end_check2 int, result2 int, hp int, atk int, type varchar(7), fly int, phs int, mag int, name varchar(32));
-creatre table player(player varchar(8), plyhp int, result int);
-creatre table log(logid int, log varchar(64));
+create table player(player varchar(8), plyhp int, result int);
+create table log(logid int, log varchar(64));
 insert into field (id) values (1);
 insert into field (id) values (2);
 insert into field (id) values (3);
