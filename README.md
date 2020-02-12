@@ -18,7 +18,7 @@ create database object_card; --coloring_with_programmingという名前のDBを�
 create table field(id int, player varchar(7), end_check int, result int, hp int, atk int, type varchar(7), fly int, phs int, mag int, name varchar(32));
 create table field2(id int, player varchar(7), end_check2 int, result2 int, hp int, atk int, type varchar(7), fly int, phs int, mag int, name varchar(32));
 creatre table player(player varchar(8), plyhp int, result int);
-creatre table player(logid int, log varchar(64));
+creatre table log(logid int, log varchar(64));
 insert into field (id) values (1);
 insert into field (id) values (2);
 insert into field (id) values (3);
